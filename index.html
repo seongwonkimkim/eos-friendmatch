@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>EOS FriendMatch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&family=Jua&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+/* Layout: 학교 이름표 콘셉트 — 한 문제씩 넘기는 질문 카드 → 결과(내 이름표 + 추천 이름표) */
+:root{
+  --bg:#eef2f4; --paper:#ffffff; --ink:#17232b; --muted:#5b6b75; --line:#d5dde2;
+  --accent:#1f5f8b; --accent-ink:#ffffff; --accent-soft:#dbe9f3;
+  --tag:#f2c94c; --tag-ink:#3a2c00; --bad:#b4483a; --heart:#e0245e;
+  --display:"Do Hyeon","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","PingFang SC","Hiragino Sans",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10181d; --paper:#18232a; --ink:#e6edf1; --muted:#9aabb5; --line:#2a3a44;
+  --accent:#6fb1de; --accent-ink:#0c1a23; --accent-soft:#1d3444;
+  --tag:#e0b83e; --tag-ink:#231a00; --bad:#e88a7c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10181d; --paper:#18232a; --ink:#e6edf1; --muted:#9aabb5; --line:#2a3a44;
+  --accent:#6fb1de; --accent-ink:#0c1a23; --accent-soft:#1d3444;
+  --tag:#e0b83e; --tag-ink:#231a00; --bad:#e88a7c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;justify-content:space-between;padding-bottom:14px;border-bottom:2px solid var(--ink);margin-bottom:22px}
+.brand h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,44px);margin:0;line-height:1}
+.brand h1 span{color:var(--accent)}
+.brand p{margin:6px 0 0;color:var(--muted)}
+.langsel{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+input[type=text],input[type=date],input[type=password],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.banner{background:var(--accent-soft);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:16px}
+
+.quiz{max-width:640px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.qtop{background:var(--accent);color:var(--accent-ink);padding:12px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.qtop b{font-family:var(--display);font-weight:400;font-size:20px}
+.qtop span{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.progress{height:6px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--tag);transition:width .3s}
+.qbody{padding:24px 18px 20px;display:flex;flex-direction:column;gap:16px;min-height:280px}
+.qbody h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0;text-wrap:balance}
+.qbody .sub{color:var(--muted);margin:-8px 0 0}
+.namerow{display:grid;grid-template-columns:minmax(0,1fr) 130px;gap:10px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:15px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:7px 14px;cursor:pointer;transition:background .12s}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.qnav{display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--line);align-items:center}
+.qnav .grow{flex:1}
+.btn{font:inherit;font-size:14px;border-radius:9px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700;padding:10px 22px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.review{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.review button{font:inherit;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:10px 12px;cursor:pointer;color:var(--ink);display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px}
+.review button:last-child{border-bottom:none}
+.review button:hover{background:var(--bg)}
+.review .k{font-size:13px;color:var(--muted)}
+.review .v.empty{color:var(--muted)}
+.warn{color:var(--bad);font-size:13px;margin:0}
+
+.grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+h2.sec{font-family:var(--display);font-weight:400;font-size:26px;margin:0}
+.mytag{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mytag .band{background:var(--accent);color:var(--accent-ink);padding:8px 16px;font-family:var(--display);font-size:18px}
+.mytag .inner{padding:16px;display:flex;flex-direction:column;gap:12px}
+.nm{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nm b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1}
+.gpill{font-size:12px;font-weight:700;background:var(--ink);color:var(--bg);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.minichips{display:flex;flex-wrap:wrap;gap:4px}
+.minichips span{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:1px 8px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btnrow .btn{font-size:13px;padding:6px 11px}
+.btn.danger{color:var(--bad)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.card .hole{position:absolute;top:10px;left:50%;width:34px;height:7px;margin-left:-17px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+.card .top{padding:26px 16px 12px;display:flex;gap:12px;align-items:center;border-bottom:1px solid var(--line)}
+.avatar{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-size:22px;flex:none;background:var(--accent-soft);color:var(--accent)}
+.who{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.who .nm b{font-family:var(--body);font-weight:700;font-size:17px}
+.exb{font-size:11px;color:var(--muted);border:1px dashed var(--muted);border-radius:5px;padding:0 6px;width:max-content}
+.meter{text-align:right;flex:none}
+.meter .pct{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;line-height:1}
+.meter .lv{font-size:11px;color:var(--muted)}
+.bar{height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin:4px 0 0 auto;width:72px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.card .body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.shared{display:flex;flex-wrap:wrap;gap:5px}
+.stag{font-size:12px;background:var(--tag);color:var(--tag-ink);border-radius:5px;padding:2px 8px;font-weight:500}
+.starter{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14px;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.starter q{quotes:none;flex:1 1 160px}
+.mini{font:inherit;font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:7px;padding:3px 8px;cursor:pointer;flex:none}
+.locked{background:var(--paper);border:1px dashed var(--muted);border-radius:14px;padding:28px 20px;text-align:center;color:var(--muted)}
+.locked h3{font-family:var(--display);font-weight:400;font-size:22px;color:var(--ink);margin:0 0 6px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);z-index:30}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hright{display:flex;gap:8px;align-items:center;position:relative}
+.mailbtn{position:relative;width:42px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;display:grid;place-items:center;padding:0}
+.mailbtn svg{width:22px;height:22px}
+.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:99px;background:var(--heart);color:#fff;font:700 11px/20px var(--mono);text-align:center;padding:0 5px;border:2px solid var(--bg)}
+.inbox{position:absolute;top:calc(100% + 8px);right:0;width:min(340px,calc(100vw - 32px));background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);z-index:6;overflow:hidden}
+.inbox .ih{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700}
+.inbox ul{list-style:none;margin:0;padding:0;max-height:360px;overflow:auto}
+.inbox li{display:flex;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.inbox li:last-child{border-bottom:none}
+.inbox li.new{background:var(--accent-soft)}
+.inbox li .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--bg);color:var(--heart)}
+.inbox li .ic svg{width:16px;height:16px}
+.inbox li q{quotes:none;display:block;color:var(--muted);font-size:13px}
+.inbox .empty{padding:20px 14px;color:var(--muted);font-size:14px;text-align:center}
+.social{display:flex;gap:6px;align-items:center;border-top:1px solid var(--line);padding:10px 16px 0;margin:0 -16px}
+.heartbtn,.replybtn{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;padding:5px 11px;cursor:pointer}
+.heartbtn svg,.replybtn svg{width:17px;height:17px}
+.heartbtn.on{color:var(--heart);border-color:var(--heart)}
+.heartbtn.on svg path{fill:var(--heart)}
+.heartbtn.pop svg{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.35)}}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{font:inherit;font-size:13px;border:1px solid var(--accent);color:var(--accent);background:none;border-radius:99px;padding:4px 10px;cursor:pointer}
+.presets button.on{background:var(--accent);color:var(--accent-ink)}
+.replies{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.replies b{font-weight:700;margin-right:5px}
+.recv{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
+@media (max-width:480px){.namerow{grid-template-columns:minmax(0,1fr) 104px}.review button{grid-template-columns:84px minmax(0,1fr)}}
+/* ===== 꾸미기: 목걸이 이름표 + 모눈 배경 ===== */
+:root{--dot:#cfd9df;--strap:#1f5f8b;--clip:#b8c2c8;--av0:#ffd8a8;--av0i:#8a4b00;--av1:#c3f0d8;--av1i:#1d6b43;--av2:#d6dcff;--av2i:#33408f;--av3:#ffd3e1;--av3i:#9a2350;--av4:#d2f1f7;--av4i:#1b6474;--av5:#f1e3b5;--av5i:#6e5a12;--shadow:0 1px 2px rgba(23,35,43,.06),0 8px 24px rgba(23,35,43,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--dot:#1e2b33;--strap:#6fb1de;--clip:#5d6a72;--av0:#4a3418;--av0i:#ffc98a;--av1:#173d2b;--av1i:#8fe3b7;--av2:#262e5c;--av2i:#b9c3ff;--av3:#4b1d2e;--av3i:#ffb3cb;--av4:#173c45;--av4i:#9fe3f0;--av5:#40371a;--av5i:#ecd88f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--dot:#1e2b33;--strap:#6fb1de;--clip:#5d6a72;--av0:#4a3418;--av0i:#ffc98a;--av1:#173d2b;--av1i:#8fe3b7;--av2:#262e5c;--av2i:#b9c3ff;--av3:#4b1d2e;--av3i:#ffb3cb;--av4:#173c45;--av4i:#9fe3f0;--av5:#40371a;--av5i:#ecd88f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35)}
+body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.2px,transparent 1.2px);background-size:22px 22px}
+header{border-bottom:none;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:99px;background:repeating-linear-gradient(90deg,var(--ink) 0 18px,transparent 18px 26px)}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:52px;height:52px;flex:none}
+.brand h1 span{position:relative}
+.brand h1 span::after{content:"";position:absolute;left:-2px;right:-2px;bottom:2px;height:.32em;background:var(--tag);opacity:.55;z-index:-1;border-radius:3px}
+.brand h1{position:relative;z-index:0}
+
+/* 목걸이 끈 + 클립 */
+.lanyard{position:relative;margin-top:46px}
+.lanyard::before{content:"";position:absolute;left:50%;top:-46px;width:22px;height:38px;margin-left:-11px;background:repeating-linear-gradient(180deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 80%,var(--paper)) 6px 8px);border-radius:3px 3px 0 0}
+.lanyard::after{content:"";position:absolute;left:50%;top:-12px;width:40px;height:20px;margin-left:-20px;background:var(--clip);border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.15);z-index:2}
+.quiz{overflow:visible;box-shadow:var(--shadow);border-radius:18px}
+.qtop{border-radius:18px 18px 0 0;padding-top:16px}
+.mytag{overflow:visible;box-shadow:var(--shadow)}
+.mytag .band{border-radius:14px 14px 0 0;padding-top:14px;display:flex;justify-content:space-between;align-items:center}
+.mytag .band small{font-family:var(--mono);font-size:11px;opacity:.8;letter-spacing:.08em}
+
+/* 진행 칸 */
+.segs{display:flex;gap:5px;padding:12px 18px 0}
+.segs i{flex:1;height:8px;border-radius:99px;background:var(--line);transition:background .25s}
+.segs i.done{background:var(--tag)}
+.segs i.cur{background:var(--accent)}
+.segs i.cur.done{background:linear-gradient(90deg,var(--accent) 50%,var(--tag) 50%)}
+.qhead{display:flex;gap:14px;align-items:flex-start}
+.qnum{font-family:var(--mono);font-size:15px;background:var(--ink);color:var(--bg);border-radius:10px;padding:6px 9px;line-height:1;flex:none;margin-top:6px}
+.qhead>div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qhead .sub{margin:0}
+.qbody{animation:slidein .3s ease-out}
+@keyframes slidein{from{transform:translateX(14px);opacity:.4}to{transform:none;opacity:1}}
+
+/* 선택지 */
+.chip{background:var(--paper);box-shadow:0 1px 0 var(--line);transition:transform .12s,background .12s,box-shadow .12s}
+.chip:hover{transform:translateY(-2px);box-shadow:0 3px 0 var(--line)}
+.chip.on{box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 60%,var(--ink))}
+.chip.on::before{content:"✓";margin-right:5px;font-weight:700}
+.btn.primary{box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 60%,var(--ink));transition:transform .1s,box-shadow .1s}
+.btn.primary:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 60%,var(--ink))}
+
+/* 추천 카드 */
+.card{box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s;animation:rise .4s ease-out backwards}
+.card:hover{transform:translateY(-3px) rotate(-.3deg)}
+.cards .card:nth-child(2){animation-delay:.05s}.cards .card:nth-child(3){animation-delay:.1s}.cards .card:nth-child(4){animation-delay:.15s}.cards .card:nth-child(5){animation-delay:.2s}.cards .card:nth-child(n+6){animation-delay:.25s}
+@keyframes rise{from{transform:translateY(10px)}to{transform:none}}
+.card .top{background:linear-gradient(180deg,var(--accent-soft),transparent)}
+.av0{background:var(--av0);color:var(--av0i)}.av1{background:var(--av1);color:var(--av1i)}.av2{background:var(--av2);color:var(--av2i)}.av3{background:var(--av3);color:var(--av3i)}.av4{background:var(--av4);color:var(--av4i)}.av5{background:var(--av5);color:var(--av5i)}
+.avatar{border-radius:50%;width:50px;height:50px;font-size:24px;box-shadow:0 0 0 3px var(--paper),0 0 0 4px var(--line)}
+.ring{width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin-left:auto}
+.ring span{width:46px;height:46px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+.meter .lv{margin-top:4px;text-align:center}
+.stag{background:linear-gradient(transparent 35%,var(--tag) 35%);color:var(--ink);padding:0 3px;border-radius:2px;font-size:13px}
+.starter{border-left:3px solid var(--accent);border-radius:4px 10px 10px 4px}
+.locked{box-shadow:var(--shadow)}
+.mailbtn{box-shadow:var(--shadow)}
+.badge{animation:badgepop .4s}
+@keyframes badgepop{0%{transform:scale(0)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+/* 설정: 배경 색 */
+:root[data-bg="mint"]{--bg:#e6f3ec;--dot:#c3dfcf}
+:root[data-bg="peach"]{--bg:#fbede5;--dot:#efcfbe}
+:root[data-bg="lavender"]{--bg:#eeedf8;--dot:#d2cfeb}
+:root[data-bg="lemon"]{--bg:#f8f4dc;--dot:#e5dcaa}
+@media (prefers-color-scheme:dark){
+ :root[data-bg="mint"]:not([data-theme="light"]){--bg:#0e1a15;--dot:#1c2e26}
+ :root[data-bg="peach"]:not([data-theme="light"]){--bg:#1c1512;--dot:#33261f}
+ :root[data-bg="lavender"]:not([data-theme="light"]){--bg:#14131e;--dot:#26243c}
+ :root[data-bg="lemon"]:not([data-theme="light"]){--bg:#1a1810;--dot:#2f2b1b}}
+:root[data-bg="mint"][data-theme="dark"]{--bg:#0e1a15;--dot:#1c2e26}
+:root[data-bg="peach"][data-theme="dark"]{--bg:#1c1512;--dot:#33261f}
+:root[data-bg="lavender"][data-theme="dark"]{--bg:#14131e;--dot:#26243c}
+:root[data-bg="lemon"][data-theme="dark"]{--bg:#1a1810;--dot:#2f2b1b}
+/* 배경 색마다 이름표(포인트) 색도 같이 바뀜 */
+:root{--strap:var(--accent)}
+:root[data-bg="mint"]{--accent:#22795a;--accent-soft:#d3ede1}
+:root[data-bg="peach"]{--accent:#b9532f;--accent-soft:#f7dccf}
+:root[data-bg="lavender"]{--accent:#5a4ca6;--accent-soft:#e1ddf5}
+:root[data-bg="lemon"]{--accent:#8a6400;--accent-soft:#f1e6b8}
+@media (prefers-color-scheme:dark){
+ :root[data-bg="mint"]:not([data-theme="light"]){--accent:#6fd1a5;--accent-soft:#183a2c;--accent-ink:#0b1a13}
+ :root[data-bg="peach"]:not([data-theme="light"]){--accent:#f19a77;--accent-soft:#3d2419;--accent-ink:#1f0f08}
+ :root[data-bg="lavender"]:not([data-theme="light"]){--accent:#b3a8f5;--accent-soft:#2b2747;--accent-ink:#14112a}
+ :root[data-bg="lemon"]:not([data-theme="light"]){--accent:#e7c766;--accent-soft:#3a3216;--accent-ink:#1d1704}}
+:root[data-bg="mint"][data-theme="dark"]{--accent:#6fd1a5;--accent-soft:#183a2c;--accent-ink:#0b1a13}
+:root[data-bg="peach"][data-theme="dark"]{--accent:#f19a77;--accent-soft:#3d2419;--accent-ink:#1f0f08}
+:root[data-bg="lavender"][data-theme="dark"]{--accent:#b3a8f5;--accent-soft:#2b2747;--accent-ink:#14112a}
+:root[data-bg="lemon"][data-theme="dark"]{--accent:#e7c766;--accent-soft:#3a3216;--accent-ink:#1d1704}
+/* 어두운 배경 (항상 어둡게) */
+:root[data-bg="night"]{--bg:#121a2e;--dot:#223052;--paper:#1a2440;--ink:#e8ecf7;--muted:#9aa6c4;--line:#2b3a5e;--accent:#8fb4ff;--accent-ink:#0d1630;--accent-soft:#24345e;--tag:#e9c46a;--tag-ink:#231a00;--bad:#f09486;--clip:#56617d;--shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.4);color-scheme:dark}
+:root[data-bg="cocoa"]{--bg:#1d1613;--dot:#33271f;--paper:#271e19;--ink:#f2e9e2;--muted:#b8a598;--line:#3e3029;--accent:#e8a874;--accent-ink:#2a1608;--accent-soft:#3f2a1d;--tag:#e9c46a;--tag-ink:#231a00;--bad:#f09486;--clip:#6b5a4f;--shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.4);color-scheme:dark}
+:root[data-bg="forest"]{--bg:#111c17;--dot:#1f3229;--paper:#17261f;--ink:#e6f1ea;--muted:#9bb3a6;--line:#27402f;--accent:#7dd8a8;--accent-ink:#0a1a12;--accent-soft:#1c3a2b;--tag:#e9c46a;--tag-ink:#231a00;--bad:#f09486;--clip:#4f6459;--shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.4);color-scheme:dark}
+.stag{background:linear-gradient(transparent 35%,color-mix(in srgb,var(--tag) 55%,transparent) 35%)}
+.priv{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.meta{font-size:12px;color:var(--muted)}
+.fieldrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.fieldrow .seg{margin-bottom:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;flex:none}
+.seg button{font:inherit;font-size:12px;border:none;background:none;color:var(--muted);padding:5px 11px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.savebtn{margin-left:auto}
+.savebtn.on{color:var(--accent);border-color:var(--accent)}
+.savebtn.on svg path{fill:var(--accent)}
+.savedlist{display:flex;flex-wrap:wrap;gap:4px}
+.savedlist span{font-size:12px;background:var(--accent-soft);border-radius:99px;padding:1px 9px}
+.settings{right:0}
+.hright{margin-left:auto}
+:root[data-font="round"]{--display:"Jua","Gowun Dodum",system-ui,sans-serif;--body:"Gowun Dodum",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+:root[data-font="hand"]{--display:"Gaegu",cursive,system-ui;--body:"Gaegu",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+:root[data-font="clean"]{--display:"Noto Sans KR",system-ui,sans-serif;--body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+:root[data-font="hand"] body{font-size:17px}
+:root[data-font="hand"] h1,:root[data-font="hand"] h2,:root[data-font="hand"] .nm b,:root[data-font="hand"] .qtop b{font-weight:700}
+:root[data-font="clean"] h1,:root[data-font="clean"] h2,:root[data-font="clean"] .qtop b,:root[data-font="clean"] .mytag .band{font-weight:900;letter-spacing:-.02em}
+.fonts{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.fontopt{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 10px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.fontopt b{font-size:18px;font-weight:400;line-height:1.2}
+.fontopt small{font-family:var(--body);font-size:11px;color:var(--muted)}
+.fontopt.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.settings .sbody{max-height:min(70vh,560px);overflow:auto;padding:14px;display:flex;flex-direction:column;gap:16px}
+.settings h4{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:500}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;padding:5px 11px;cursor:pointer}
+.opts button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 8px}
+.swatch{font:inherit;font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0}
+.swatch i{width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background-image:radial-gradient(rgba(0,0,0,.12) 1px,transparent 1px);background-size:8px 8px}
+.swatch.on i{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.swatch.on{color:var(--ink);font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+[hidden]{display:none!important}
+.codebox{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
+.codebox code{font-family:var(--mono);font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;user-select:all;color:var(--ink)}
+.codebox .btn{align-self:flex-start;font-size:13px;padding:6px 11px}
+.codesec{display:flex;flex-direction:column;gap:10px;border-top:2px dashed var(--line);padding-top:18px;margin-top:8px}
+.addcode{display:flex;gap:8px}
+.addcode input{flex:1;min-width:0;font-family:var(--mono);font-size:13px}
+h1,h2,h3,.sub,.note,.starter q,.confirm p{word-break:keep-all;overflow-wrap:anywhere}
+.gate .qbody{animation:none}
+/* 잠금 화면 · 이름표 보기 창 · 확인 창 */
+.gate{max-width:440px}
+.gate form{display:flex;flex-direction:column;gap:14px}
+.check{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer;color:var(--ink)}
+.check input{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.err{color:var(--bad);font-size:13px;margin:0;min-height:1.2em}
+.btn.link{border:none;background:none;color:var(--muted);text-decoration:underline;padding:8px 4px;box-shadow:none}
+.modal{position:fixed;inset:0;background:rgba(8,12,18,.55);z-index:20;display:flex;justify-content:center;align-items:flex-start;overflow:auto;padding:calc(48px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.mbox{width:min(420px,100%);display:flex;flex-direction:column;gap:10px}
+.mbox .card{animation:none}
+.mbox .card:hover{transform:none}
+.mbox .mtools{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.confirm{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.confirm h3{font-family:var(--display);font-weight:400;font-size:24px;margin:0}
+.confirm .btnrow{justify-content:flex-end}
+.btn.dangerfill{background:var(--bad);border-color:var(--bad);color:var(--paper);font-weight:700}
+.inbox li{cursor:pointer}
+.inbox li:hover,.inbox li:focus-visible{background:var(--bg);outline:none}
+.mutual{font-size:11px;font-weight:700;color:var(--heart);border:1px solid var(--heart);border-radius:99px;padding:0 7px;width:max-content}
+.linkchip{font:inherit;font-size:12px;background:var(--accent-soft);color:var(--ink);border:none;border-radius:99px;padding:2px 10px;cursor:pointer}
+.linkchip:hover{outline:1px solid var(--accent)}
+.namebtn{font:inherit;font-weight:700;background:none;border:none;color:var(--ink);padding:0;margin-right:5px;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+.unhide{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 52 52" aria-hidden="true">
+        <rect x="21" y="2" width="10" height="12" rx="2" fill="var(--accent)"/>
+        <rect x="6" y="10" width="40" height="38" rx="7" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M6 17a7 7 0 0 1 7-7h26a7 7 0 0 1 7 7v4H6z" fill="var(--accent)"/>
+        <rect x="21" y="13" width="10" height="4" rx="2" fill="var(--bg)"/>
+        <circle cx="19" cy="33" r="5" fill="var(--tag)"/><circle cx="33" cy="33" r="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+        <path d="M23 40h6" stroke="var(--heart)" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div><h1>EOS <span>FriendMatch</span></h1><p id="tagline"></p></div>
+    </div>
+    <div class="hright">
+      <button class="mailbtn" id="setB" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+      <div class="inbox settings" id="settings" hidden></div>
+      <button class="mailbtn" id="mailB" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <span class="badge" id="badge" hidden>0</span>
+      </button>
+      <div class="inbox" id="inbox" hidden></div>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+  <main id="app"></main>
+</div>
+<div class="modal" id="modal" hidden></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 언어: 0 한국어 · 1 English · 2 中文 · 3 Русский · 4 Español · 5 日本語 */
+const LANG_CODES=['ko','en','zh','ru','es','ja'];
+let L=0;
+try{const s=localStorage.getItem('fm_lang');if(s!==null&&+s>=0&&+s<6)L=+s;}catch(_){}
+
+const T={
+tagline:['관심사로 찾는 EOS 친구 추천','Find EOS friends through shared interests','通过共同兴趣找到EOS朋友','Найди друзей в EOS по общим интересам','Encuentra amigos de EOS por intereses comunes','共通の趣味でEOSの友だちを見つけよう'],
+qOf:['질문 {a} / {b}','Question {a} of {b}','第 {a} / {b} 题','Вопрос {a} из {b}','Pregunta {a} de {b}','質問 {a} / {b}'],
+answered:['{b}개 중 {a}개 답함','{a} of {b} answered','已回答 {a} / {b}','Отвечено {a} из {b}','{a} de {b} respondidas','{b}問中 {a}問回答'],
+next:['다음','Next','下一步','Далее','Siguiente','次へ'],
+prev:['이전','Back','上一步','Назад','Atrás','戻る'],
+nameQ:['너는 누구야?','Who are you?','你是谁？','Как тебя зовут?','¿Quién eres?','あなたは誰？'],
+nameSub:['이름(또는 닉네임)과 학년을 알려 줘.','Tell us your name (or nickname) and grade.','告诉我们你的名字（或昵称）和年级。','Напиши имя (или ник) и класс.','Dinos tu nombre (o apodo) y tu grado.','名前（ニックネーム）と学年を教えてね。'],
+nameL:['이름 또는 닉네임','Name or nickname','名字或昵称','Имя или ник','Nombre o apodo','名前・ニックネーム'],
+gradeL:['학년','Grade','年级','Класс','Grado','学年'],
+gradeSel:['선택','Select','选择','Выбрать','Elegir','選択'],
+pickSub:['하나 이상 골라 줘. 여러 개 골라도 돼요.','Pick one or more.','选一个或多个。','Выбери один или несколько.','Elige una o más.','1つ以上選んでね。'],
+reviewQ:['이대로 제출할까요?','Ready to submit?','确认提交吗？','Отправить так?','¿Listo para enviar?','これで提出する？'],
+reviewSub:['고칠 곳이 있으면 눌러서 돌아가요.','Tap any answer to change it.','点击任意项目可以修改。','Нажми на ответ, чтобы изменить его.','Toca una respuesta para cambiarla.','直したいところはタップしてね。'],
+needAll:['아직 답하지 않은 질문이 있어요.','Some questions are still unanswered.','还有问题没有回答。','Есть вопросы без ответа.','Faltan preguntas por responder.','まだ答えていない質問があるよ。'],
+submit:['제출하고 추천받기','Submit & get matches','提交并获取推荐','Отправить и найти друзей','Enviar y ver amigos','提出しておすすめを見る'],
+backRes:['결과로 돌아가기','Back to results','返回结果','Назад к результатам','Volver a resultados','結果に戻る'],
+empty:['선택 안 함','Nothing picked','未选择','Не выбрано','Nada elegido','未選択'],
+basic:['이름·학년','Name & grade','名字·年级','Имя и класс','Nombre y grado','名前・学年'],
+myTag:['HELLO, 내 이름은','HELLO, my name is','你好，我是','ПРИВЕТ, меня зовут','HOLA, me llamo','HELLO, わたしは'],
+edit:['답변 수정하기','Edit answers','修改答案','Изменить ответы','Editar respuestas','答えを直す'],
+remove:['내 이름표 내리기','Remove my name tag','撤下我的名牌','Убрать мой бейдж','Quitar mi gafete','名札を外す'],
+removeQ:['정말 이름표를 내릴까요?','Remove your name tag?','确定撤下名牌吗？','Точно убрать бейдж?','¿Quitar tu gafete?','本当に名札を外す？'],
+removeN:['다른 학생들이 더 이상 나를 볼 수 없고, 내 답변도 지워져요. 비밀번호는 그대로 남아요.',"Other students won't see you anymore and your answers will be deleted. Your password stays.",'其他同学将看不到你，你的回答也会被删除。密码会保留。','Другие перестанут тебя видеть, ответы удалятся. Пароль останется.','Los demás ya no te verán y se borrarán tus respuestas. Tu contraseña se mantiene.','他の人から見えなくなり、答えも消えるよ。パスワードは残るよ。'],
+removeYes:['내리기','Remove','撤下','Убрать','Quitar','外す'],
+removed:['이름표를 내렸어요. 이제 다른 학생에게 안 보여요.','Your name tag was removed.','名牌已撤下，其他同学看不到了。','Бейдж убран.','Tu gafete se quitó.','名札を外したよ。'],
+recTitle:['{n}님과 잘 맞을 친구','Friends who match {n}','和{n}合得来的朋友','Друзья для {n}','Amigos para {n}','{n}さんと合いそうな友だち'],
+participants:['참여 학생 {n}명','{n} students joined','{n} 名同学参与','Участников: {n}','{n} estudiantes','参加者 {n}人'],
+exBadge:['예시 학생','Example','示例','Пример','Ejemplo','例'],
+shared:['공통점 {n}개','{n} in common','{n} 个共同点','Общего: {n}','{n} en común','共通点 {n}個'],
+starter:['이렇게 말 걸어 봐','Try saying','试着这样开口','Попробуй сказать','Prueba a decir','こう話しかけてみて'],
+another:['다른 질문','Another','换一个','Другой','Otra','別の質問'],
+copy:['복사','Copy','复制','Копировать','Copiar','コピー'],
+copied:['복사했어요','Copied','已复制','Скопировано','Copiado','コピーしたよ'],
+copyFail:['복사가 막혀 있어요. 직접 선택해서 복사해 주세요','Select the text to copy it.','请手动选择文字复制。','Выдели текст вручную.','Selecciona el texto.','文字を選択してコピーしてね。'],
+lv90:['최고의 짝꿍','Best match','最佳搭档','Идеально','Pareja ideal','最高の相性'],
+lv80:['아주 잘 맞음','Great match','非常合得来','Очень подходит','Muy compatible','とても合う'],
+lv70:['잘 맞음','Good match','合得来','Подходит','Compatible','合う'],
+lv0:['조금 맞음','Some in common','有点合','Немного похожи','Algo en común','少し合う'],
+noneT:['아직 70% 넘는 친구가 없어요','No one above 70% yet','还没有匹配度超过70%的朋友','Пока никого выше 70%','Aún nadie supera el 70%','まだ70%を超える友だちはいないよ'],
+noneN:['친구들이 더 참여하면 다시 확인해 보세요.','Check back when more students join.','等更多同学参与后再看看。','Загляни позже.','Vuelve cuando se unan más.','参加者が増えたらまた見てね。'],
+saved:['제출 완료!','Submitted!','提交成功！','Готово!','¡Enviado!','提出完了！'],
+saveFail:['저장하지 못했어요. 인터넷 연결을 확인하고 다시 해 주세요.',"Couldn't save. Check your connection and try again.",'保存失败，请检查网络后重试。','Не удалось сохранить. Проверь интернет.','No se pudo guardar. Revisa tu conexión.','保存できませんでした。接続を確認してね。'],
+local:['답변은 이 기기에만 저장돼요. 친구와는 "친구 코드"를 주고받아서 얼마나 잘 맞는지 비교해요.','Your answers stay on this device. Swap friend codes to see how well you match.','回答只保存在这台设备上。和朋友交换“好友码”来比较。','Ответы хранятся только на этом устройстве. Обменивайтесь кодами друзей, чтобы сравниться.','Tus respuestas se quedan en este dispositivo. Intercambia códigos para ver cuánto encajan.','答えはこの端末だけに保存されるよ。フレンドコードを交換して相性を比べよう。'],
+privacy:['연락처나 주소는 받지 않아요.','We never ask for phone numbers or addresses.','我们不收集联系方式或地址。','Мы не просим телефон или адрес.','Nunca pedimos teléfono ni dirección.','連絡先や住所は聞かないよ。'],
+defStarter:['안녕! FriendMatch에서 추천받았어. 요즘 뭐에 빠져 있어?','Hi! FriendMatch matched us. What are you into lately?','嗨！FriendMatch推荐了你。最近在迷什么？','Привет! FriendMatch нас подобрал. Чем увлекаешься?','¡Hola! FriendMatch nos recomendó. ¿Qué te gusta?','やあ！FriendMatchでおすすめされたよ。最近何にハマってる？'],
+settings:['설정','Settings','设置','Настройки','Ajustes','設定'],
+langT:['언어','Language','语言','Язык','Idioma','言語'],
+bgT:['배경 색','Background color','背景颜色','Цвет фона','Color de fondo','背景の色'],
+genderL:['성별','Gender','性别','Пол','Género','性別'],
+gM:['남자','Boy','男','Мальчик','Chico','男子'],
+gF:['여자','Girl','女','Девочка','Chica','女子'],
+gX:['말하고 싶지 않음','Prefer not to say','不想透露','Не указывать','Prefiero no decir','答えない'],
+birthL:['생년월일','Birthday','出生日期','Дата рождения','Fecha de nacimiento','生年月日'],
+bornFmt:['{y}년 {m}월 {d}일생','Born {m}/{d}/{y}','{y}年{m}月{d}日生','Род. {d}.{m}.{y}','Nació el {d}/{m}/{y}','{y}年{m}月{d}日生まれ'],
+pub:['공개','Public','公开','Видно всем','Público','公開'],
+priv:['비공개','Private','不公开','Скрыто','Privado','非公開'],
+privNote:['비공개로 고르면 나만 볼 수 있어요. 성별과 생년월일은 안 적어도 돼요.','Private means only you can see it. Gender and birthday are optional.','设为不公开时只有你能看到。性别和生日可以不填。','«Скрыто» — видно только тебе. Пол и дату рождения можно не указывать.','Privado: solo tú lo ves. Género y cumpleaños son opcionales.','非公開は自分だけ見えるよ。性別と生年月日は書かなくてもOK。'],
+saveL:['저장','Save','收藏','Сохранить','Guardar','保存'],
+saveFrom:['{n}님이 내 이름표를 저장했어요','{n} saved your name tag','{n} 收藏了你的名牌','{n} сохраняет твой бейдж','{n} guardó tu gafete','{n}さんがあなたの名札を保存したよ'],
+savedToast:['저장했어요. 상대방만 알 수 있어요.','Saved. Only they will know.','已收藏，只有对方会知道。','Сохранено. Узнает только этот человек.','Guardado. Solo esa persona lo sabrá.','保存したよ。相手だけが分かるよ。'],
+mySaved:['내가 저장한 친구','Friends I saved','我收藏的朋友','Мои сохранённые','Amigos que guardé','保存した友だち'],
+savedMe:['나를 저장한 친구 {n}명','{n} saved you','{n} 人收藏了你','Тебя сохранили: {n}','{n} te guardaron','{n}人があなたを保存したよ'],
+fontT:['글씨체','Font','字体','Шрифт','Fuente','フォント'],
+modeT:['화면 모드','Display mode','显示模式','Режим экрана','Modo de pantalla','表示モード'],
+inbox:['알림','Notifications','通知','Уведомления','Notificaciones','お知らせ'],
+noInbox:['아직 알림이 없어요. 하트나 답글을 받으면 여기에 떠요.','No notifications yet.','暂无通知。','Пока нет уведомлений.','Sin notificaciones.','まだお知らせはないよ。'],
+heartFrom:['{n}님이 하트를 눌렀어요','{n} liked you','{n} 给你点了爱心','{n} ставит тебе сердечко','A {n} le gustas','{n}さんがハートを押したよ'],
+replyFrom:['{n}님이 답글을 남겼어요','{n} left a reply','{n} 给你留言了','{n} оставляет ответ','{n} te dejó una respuesta','{n}さんが返信したよ'],
+replyBtn:['답글','Reply','留言','Ответить','Responder','返信'],
+received:['받은 하트 {h}개 · 답글 {r}개','{h} hearts · {r} replies','收到 {h} 颗心 · {r} 条留言','Сердечек: {h} · Ответов: {r}','{h} corazones · {r} respuestas','ハート{h} · 返信{r}'],
+sentReply:['답글을 남겼어요','Reply sent','已留言','Ответ отправлен','Respuesta enviada','返信したよ'],
+close:['닫기','Close','关闭','Закрыть','Cerrar','閉じる'],
+cancel:['취소','Cancel','取消','Отмена','Cancelar','キャンセル'],
+exNote:['예시','example','示例','пример','ejemplo','例'],
+you:['나','You','我','Я','Yo','わたし'],
+mutual:['서로 하트!','Mutual hearts!','互相点心！','Взаимно!','¡Corazón mutuo!','相互ハート！'],
+hideP:['이 친구 숨기기','Hide this student','隐藏此同学','Скрыть ученика','Ocultar estudiante','この人を非表示'],
+hiddenL:['숨긴 친구:','Hidden:','已隐藏：','Скрыты:','Ocultos:','非表示：'],
+unhide:['다시 보기','Show again','重新显示','Показать','Mostrar','また表示'],
+hiddenToast:['숨겼어요. 이 친구의 이름표와 알림이 더 이상 안 보여요.',"Hidden. You won't see their name tag or notifications.",'已隐藏，不会再看到他的名牌和通知。','Скрыто. Ты больше не увидишь бейдж и уведомления.','Oculto. No verás su gafete ni sus avisos.','非表示にしたよ。名札もお知らせも見えなくなるよ。'],
+/* 친구 코드 */
+myCodeT:['내 친구 코드','My friend code','我的好友码','Мой код друга','Mi código de amigo','わたしのフレンドコード'],
+myCodeN:['이 코드를 카톡이나 메시지로 보내면, 친구가 나와 얼마나 잘 맞는지 볼 수 있어요. 코드에는 이름·학년·관심사가 들어 있으니 아는 친구에게만 보내 주세요. 답변을 고치면 코드도 바뀌어요.','Send this code by message so a friend can see how well you match. It contains your name, grade and interests, so only send it to people you know. It changes when you edit your answers.','把这个码通过消息发给朋友，朋友就能看到你们有多合得来。码里有你的名字、年级和兴趣，只发给认识的朋友。修改回答后码也会变。','Отправь этот код в сообщении, и друг увидит, насколько вы похожи. В нём имя, класс и интересы — отправляй только знакомым. Код меняется, если изменить ответы.','Envía este código por mensaje y tu amigo verá cuánto encajan. Incluye tu nombre, grado e intereses: envíalo solo a gente que conoces. Cambia si editas tus respuestas.','このコードをメッセージで送ると、友だちが相性を見られるよ。名前・学年・趣味が入っているから知っている人にだけ送ってね。答えを直すとコードも変わるよ。'],
+copyCode:['코드 복사','Copy code','复制码','Скопировать код','Copiar código','コードをコピー'],
+shareMsg:['[EOS FriendMatch] 내 친구 코드야! FriendMatch의 "친구 코드 넣기"에 붙여넣어 줘.','[EOS FriendMatch] Here is my friend code! Paste it into "Add a friend code" in FriendMatch.','[EOS FriendMatch] 这是我的好友码！请粘贴到 FriendMatch 的“输入好友码”。','[EOS FriendMatch] Мой код друга! Вставь его в «Добавить код друга» в FriendMatch.','[EOS FriendMatch] ¡Mi código de amigo! Pégalo en "Añadir código" en FriendMatch.','[EOS FriendMatch] わたしのフレンドコードだよ！FriendMatchの「フレンドコードを入れる」に貼ってね。'],
+addCodeT:['친구 코드 넣기','Add a friend code','输入好友码','Добавить код друга','Añadir código de amigo','フレンドコードを入れる'],
+addCodeN:['친구에게 받은 메시지를 통째로 붙여넣어도 돼요. Claude 계정이 없어도 돼요.','You can paste the whole message. No Claude account needed.','可以直接粘贴整条消息，不需要Claude账号。','Можно вставить всё сообщение целиком. Аккаунт Claude не нужен.','Puedes pegar el mensaje completo. No necesitas cuenta de Claude.','もらったメッセージをそのまま貼ってもOK。Claudeのアカウントはいらないよ。'],
+addCodePh:['FM1-로 시작하는 코드','Code starting with FM1-','以FM1-开头的码','Код, начинающийся с FM1-','Código que empieza por FM1-','FM1-で始まるコード'],
+addB:['추가','Add','添加','Добавить','Añadir','追加'],
+badCode:['코드를 읽을 수 없어요. FM1-부터 끝까지 전부 복사했는지 확인해 주세요.',"Couldn't read that code. Make sure you copied everything from FM1- to the end.",'无法识别这个码，请确认从FM1-开始完整复制。','Не удалось прочитать код. Скопируй всё, начиная с FM1-.','No se pudo leer el código. Copia todo desde FM1- hasta el final.','コードが読めないよ。FM1-から最後まで全部コピーしたか確認してね。'],
+selfCode:['이건 내 코드예요. 친구한테 받은 코드를 넣어 주세요.',"That's your own code. Paste a friend's code.",'这是你自己的码，请输入朋友的码。','Это твой собственный код. Вставь код друга.','Ese es tu propio código. Pega el de un amigo.','それは自分のコードだよ。友だちのコードを入れてね。'],
+codeAdded:['{n}님을 추가했어요','Added {n}','已添加 {n}','{n} добавлен(а)','{n} añadido','{n}さんを追加したよ'],
+codeUpdated:['{n}님 정보를 새 코드로 바꿨어요',"Updated {n}'s info",'已用新码更新 {n} 的信息','Данные {n} обновлены','Datos de {n} actualizados','{n}さんの情報を新しいコードに更新したよ'],
+codeFriendsT:['코드로 추가한 친구','Friends added by code','通过好友码添加的朋友','Друзья по коду','Amigos añadidos por código','コードで追加した友だち'],
+codeBadge:['코드 친구','Code friend','好友码朋友','Друг по коду','Amigo por código','コード友だち'],
+codeNoSocial:['코드 친구에게는 하트·답글을 보낼 수 없어요. 위 질문으로 직접 말을 걸어 보세요!',"Hearts and replies don't work with code friends. Use the question above to say hi in person!",'不能给好友码朋友点心或留言，用上面的问题直接打招呼吧！','Сердечки и ответы не работают с друзьями по коду. Заговори с ними сам!','No puedes enviar corazones ni respuestas a amigos por código. ¡Salúdalos en persona!','コード友だちにはハートや返信は送れないよ。上の質問で直接話しかけてみて！'],
+codeRemove:['목록에서 빼기','Remove','移除','Убрать','Quitar','リストから外す'],
+codeEmpty:['아직 코드로 추가한 친구가 없어요.','No friends added by code yet.','还没有通过好友码添加的朋友。','Пока никого не добавлено по коду.','Aún no has añadido amigos por código.','まだコードで追加した友だちはいないよ。'],
+/* 잠금 비밀번호 */
+setT:['나만의 비밀번호를 만들어 줘','Create your own password','设置你的专属密码','Придумай свой пароль','Crea tu contraseña','自分だけのパスワードを作ろう'],
+setSub:['FriendMatch에서만 쓰는 비밀번호예요. 다른 사이트에서 쓰는 비밀번호는 쓰지 마세요.',"Only for FriendMatch. Don't reuse a password from another site.",'仅用于FriendMatch，请不要使用其他网站的密码。','Только для FriendMatch. Не используй пароль от других сайтов.','Solo para FriendMatch. No uses una contraseña de otro sitio.','FriendMatch専用だよ。他のサイトと同じパスワードは使わないでね。'],
+pwL:['비밀번호 (4자 이상)','Password (4+ characters)','密码（至少4位）','Пароль (от 4 символов)','Contraseña (4+ caracteres)','パスワード（4文字以上）'],
+pw2L:['비밀번호 한 번 더','Type it again','再输入一次','Повтори пароль','Repítela','もう一度入力'],
+autoL:['자동 로그인 (이 기기에서는 다음부터 안 물어봐요)','Stay signed in on this device','自动登录（此设备下次不再询问）','Автовход на этом устройстве','Mantener sesión en este dispositivo','自動ログイン（この端末では次から聞かない）'],
+makeB:['비밀번호 만들기','Create password','创建密码','Создать пароль','Crear contraseña','パスワードを作る'],
+pwShort:['4자 이상 적어 주세요.','Use at least 4 characters.','请至少输入4位。','Минимум 4 символа.','Usa al menos 4 caracteres.','4文字以上にしてね。'],
+pwMismatch:['두 비밀번호가 달라요.',"The passwords don't match.",'两次密码不一致。','Пароли не совпадают.','Las contraseñas no coinciden.','2つのパスワードが違うよ。'],
+pwSet:['비밀번호를 만들었어요','Password created','密码已创建','Пароль создан','Contraseña creada','パスワードを作ったよ'],
+unlockT:['다시 왔구나! 비밀번호를 넣어 줘','Welcome back! Enter your password','欢迎回来！请输入密码','С возвращением! Введи пароль','¡Hola de nuevo! Escribe tu contraseña','おかえり！パスワードを入れてね'],
+unlockSub:['내 이름표를 지키는 잠금 비밀번호예요.','This password keeps your name tag safe.','这个密码保护你的名牌。','Этот пароль защищает твой бейдж.','Esta contraseña protege tu gafete.','名札を守るパスワードだよ。'],
+pwOne:['비밀번호','Password','密码','Пароль','Contraseña','パスワード'],
+enterB:['들어가기','Enter','进入','Войти','Entrar','入る'],
+wrongPw:['비밀번호가 달라요. {n}번 더 틀리면 30초 기다려야 해요.','Wrong password. {n} more tries before a 30-second wait.','密码错误。再错{n}次需等待30秒。','Неверный пароль. Ещё {n} попыток до паузы 30 с.','Contraseña incorrecta. {n} intentos más antes de esperar 30 s.','パスワードが違うよ。あと{n}回で30秒待ち。'],
+waitPw:['너무 많이 틀렸어요. {n}초 뒤에 다시 해 보세요.','Too many tries. Try again in {n}s.','错误次数过多，请{n}秒后再试。','Слишком много попыток. Подожди {n} с.','Demasiados intentos. Espera {n} s.','間違いが多すぎるよ。{n}秒後にもう一度。'],
+forgot:['비밀번호를 잊어버렸어요','I forgot my password','忘记密码','Забыл(а) пароль','Olvidé mi contraseña','パスワードを忘れた'],
+forgotT:['처음부터 다시 만들까요?','Start over?','要重新开始吗？','Начать заново?','¿Empezar de nuevo?','最初からやり直す？'],
+forgotN:['비밀번호는 되찾을 수 없어요. 다시 시작하면 내 이름표와 답변, 내가 누른 하트·답글·저장이 지워지고 새 비밀번호를 만들어요.',"Passwords can't be recovered. Starting over deletes your name tag, answers, and the hearts, replies and saves you gave, then you make a new password.",'密码无法找回。重新开始会删除你的名牌、回答以及你给出的爱心、留言和收藏，然后设置新密码。','Пароль нельзя восстановить. Начав заново, ты удалишь бейдж, ответы и свои сердечки, ответы и сохранения, а потом создашь новый пароль.','La contraseña no se puede recuperar. Empezar de nuevo borra tu gafete, respuestas y los corazones, respuestas y guardados que diste; luego creas una nueva.','パスワードは戻せないよ。やり直すと名札・答え・自分が押したハート・返信・保存が消えて、新しいパスワードを作るよ。'],
+startOver:['지우고 다시 시작','Delete and start over','删除并重新开始','Удалить и начать заново','Borrar y empezar','消してやり直す'],
+lockB:['잠그기','Lock','锁定','Заблокировать','Bloquear','ロック'],
+locking:['확인하는 중…','Checking…','验证中…','Проверяю…','Comprobando…','確認中…'],
+};
+const PRESETS={
+ match:['저와 잘 맞아요!','We match so well!','我们很合得来！','Мы отлично подходим!','¡Somos muy compatibles!','私と相性ぴったり！'],
+ play:['같이 놀아요!',"Let's hang out!",'一起玩吧！','Давай погуляем вместе!','¡Juguemos juntos!','一緒に遊ぼう！'],
+ friend:['친해지고 싶어요!','I want to be friends!','想和你做朋友！','Хочу подружиться!','¡Quiero ser tu amigo!','仲良くなりたい！'],
+ same:['취향이 똑같아요!','We have the same taste!','我们口味一样！','У нас одинаковые вкусы!','¡Tenemos los mismos gustos!','好みが同じ！'],
+};
+const HEART_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+const SAVE_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+const REPLY_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>';
+const t=(k,v={})=>(T[k]?T[k][L]:'').replace(/\{(\w)\}/g,(_,x)=>v[x]);
+
+const GRADES={5:['초5','Grade 5','五年级','5 класс','5.º grado','小5'],6:['초6','Grade 6','六年级','6 класс','6.º grado','小6'],7:['중1','Grade 7','初一','7 класс','7.º grado','中1'],8:['중2','Grade 8','初二','8 класс','8.º grado','中2'],9:['중3','Grade 9','初三','9 класс','9.º grado','中3'],10:['고1','Grade 10','高一','10 класс','10.º grado','高1'],11:['고2','Grade 11','高二','11 класс','11.º grado','高2'],12:['고3','Grade 12','高三','12 класс','12.º grado','高3']};
+const gl=g=>GRADES[g]?GRADES[g][L]:'';
+
+const CATS=[
+ {k:'hobbies',n:['취미','Hobbies','爱好','Хобби','Pasatiempos','趣味'],q:['쉬는 시간에 뭐 하는 걸 좋아해?','What do you like to do for fun?','你空闲时喜欢做什么？','Что ты любишь делать в свободное время?','¿Qué te gusta hacer en tu tiempo libre?','ひまなとき何するのが好き？'],o:{
+  soccer:['축구','Soccer','足球','Футбол','Fútbol','サッカー'],basketball:['농구','Basketball','篮球','Баскетбол','Baloncesto','バスケ'],badminton:['배드민턴','Badminton','羽毛球','Бадминтон','Bádminton','バドミントン'],swim:['수영','Swimming','游泳','Плавание','Natación','水泳'],draw:['그림 그리기','Drawing','画画','Рисование','Dibujar','お絵かき'],bake:['요리·베이킹','Cooking','烹饪','Готовка','Cocinar','料理'],photo:['사진','Photography','摄影','Фотография','Fotografía','写真'],lego:['레고','LEGO','乐高','LEGO','LEGO','レゴ'],dance:['춤','Dancing','跳舞','Танцы','Bailar','ダンス'],read:['독서','Reading','阅读','Чтение','Leer','読書'],pet:['반려동물','Pets','宠物','Питомцы','Mascotas','ペット'],edit:['영상 만들기','Making videos','做视频','Делать видео','Hacer videos','動画づくり']}},
+ {k:'games',n:['게임','Games','游戏','Игры','Juegos','ゲーム'],q:['즐겨 하는 게임은?','Which games do you play?','你常玩什么游戏？','В какие игры ты играешь?','¿A qué juegos juegas?','よく遊ぶゲームは？'],o:{
+  mc:['마인크래프트','Minecraft','我的世界','Minecraft','Minecraft','マインクラフト'],roblox:['로블록스','Roblox','Roblox','Roblox','Roblox','ロブロックス'],brawl:['브롤스타즈','Brawl Stars','荒野乱斗','Brawl Stars','Brawl Stars','ブロスタ'],valo:['발로란트','Valorant','无畏契约','Valorant','Valorant','ヴァロラント'],lol:['리그 오브 레전드','League of Legends','英雄联盟','League of Legends','League of Legends','LoL'],poke:['포켓몬','Pokémon','宝可梦','Покемоны','Pokémon','ポケモン'],among:['어몽어스','Among Us','Among Us','Among Us','Among Us','Among Us'],kart:['마리오카트','Mario Kart','马力欧赛车','Mario Kart','Mario Kart','マリオカート'],board:['보드게임','Board games','桌游','Настолки','Juegos de mesa','ボードゲーム'],typing:['타자 게임','Typing games','打字游戏','Игры на печать','Mecanografía','タイピング'],none:['게임 안 해요',"I don't play games",'不玩游戏','Не играю','No juego','ゲームはしない']}},
+ {k:'music',n:['음악','Music','音乐','Музыка','Música','音楽'],q:['어떤 음악을 들어?','What music do you listen to?','你听什么音乐？','Какую музыку ты слушаешь?','¿Qué música escuchas?','どんな音楽を聴く？'],o:{
+  kpop:['K-pop','K-pop','韩流音乐','K-pop','K-pop','K-POP'],hiphop:['힙합','Hip-hop','嘻哈','Хип-хоп','Hip-hop','ヒップホップ'],band:['밴드 음악','Rock bands','乐队音乐','Рок-группы','Bandas de rock','バンド'],jpop:['J-pop','J-pop','日本流行','J-pop','J-pop','J-POP'],pop:['팝송','Pop','欧美流行','Поп','Pop','洋楽ポップ'],classic:['클래식','Classical','古典音乐','Классика','Clásica','クラシック'],ost:['OST','Soundtracks','影视原声','Саундтреки','Bandas sonoras','サントラ'],play:['악기 연주','Playing an instrument','演奏乐器','Играю на инструменте','Toco un instrumento','楽器を演奏']}},
+ {k:'media',n:['영화·애니·책','Movies & books','影视书籍','Кино и книги','Cine y libros','映画・本'],q:['좋아하는 영화, 애니, 책은?','Favorite movies, anime or books?','你喜欢哪类影视、动漫或书？','Любимые фильмы, аниме или книги?','¿Qué películas, anime o libros te gustan?','好きな映画・アニメ・本は？'],o:{
+  anime:['애니메이션','Anime','动漫','Аниме','Anime','アニメ'],hero:['히어로 영화','Superhero movies','超级英雄电影','Супергерои','Superhéroes','ヒーロー映画'],fantasy:['판타지','Fantasy','奇幻','Фэнтези','Fantasía','ファンタジー'],webtoon:['웹툰','Webtoons','网络漫画','Вебтуны','Webtoons','ウェブトゥーン'],mystery:['추리','Mystery','推理','Детективы','Misterio','推理'],scifi:['SF','Sci-fi','科幻','Фантастика','Ciencia ficción','SF'],comedy:['코미디','Comedy','喜剧','Комедии','Comedia','コメディ'],horror:['공포','Horror','恐怖','Ужасы','Terror','ホラー']}},
+ {k:'personality',n:['성격','Personality','性格','Характер','Personalidad','性格'],q:['나는 어떤 성격이야?','How would you describe yourself?','你是什么性格？','Какой у тебя характер?','¿Cómo eres?','自分はどんな性格？'],o:{
+  calm:['차분함','Calm','沉稳','Спокойный','Tranquilo','おだやか'],active:['활발함','Energetic','活泼','Энергичный','Enérgico','元気'],playful:['장난기 많음','Playful','爱开玩笑','Шутник','Bromista','いたずら好き'],serious:['진지함','Serious','认真','Серьёзный','Serio','まじめ'],kind:['배려심 많음','Kind','体贴','Заботливый','Amable','やさしい'],curious:['호기심 많음','Curious','好奇心强','Любопытный','Curioso','好奇心旺盛'],shy:['낯가림 있음','A bit shy','有点害羞','Стеснительный','Algo tímido','人見知り'],funny:['웃긴 편','Funny','搞笑','Смешной','Divertido','おもしろい']}},
+];
+const CAT=Object.fromEntries(CATS.map(c=>[c.k,c]));
+const lab=(k,v)=>CAT[k]&&CAT[k].o[v]?CAT[k].o[v][L]:String(v);
+
+const TPL={
+ hobbies:[v=>`${v} 좋아한다며! 다음에 같이 할래?`,v=>`You like ${v} too! Want to do it together sometime?`,v=>`你也喜欢${v}！下次一起吗？`,v=>`Тебе тоже нравится «${v}»! Давай как-нибудь вместе?`,v=>`¡También te gusta ${v}! ¿Lo hacemos juntos?`,v=>`${v}好きなんだ！今度一緒にやらない？`],
+ games:[v=>`${v} 해? 요즘 뭐 하고 있어?`,v=>`You play ${v}? What are you up to in it lately?`,v=>`你玩${v}吗？最近在玩什么？`,v=>`Ты играешь в «${v}»? Что сейчас проходишь?`,v=>`¿Juegas ${v}? ¿Qué haces últimamente?`,v=>`${v}やってる？最近どう？`],
+ music:[v=>`${v} 좋아하는구나! 요즘 제일 많이 듣는 곡이 뭐야?`,v=>`You like ${v}! What song are you playing on repeat?`,v=>`你喜欢${v}！最近单曲循环的是哪首？`,v=>`Тебе нравится «${v}»! Какую песню слушаешь на повторе?`,v=>`¡Te gusta ${v}! ¿Qué canción escuchas en bucle?`,v=>`${v}好きなんだ！最近ずっと聴いてる曲は？`],
+ media:[v=>`${v} 좋아해? 제일 재밌었던 거 하나만 추천해 줘!`,v=>`You're into ${v}? Recommend me your favorite!`,v=>`你喜欢${v}？推荐一部你最爱的吧！`,v=>`Тебе нравится «${v}»? Посоветуй любимое!`,v=>`¿Te gusta ${v}? ¡Recomiéndame tu favorito!`,v=>`${v}好き？いちばんのおすすめ教えて！`],
+ personality:[()=>`우리 성격 비슷한 것 같아. 쉬는 시간에 보통 뭐 해?`,()=>`I think we're alike. What do you usually do at break?`,()=>`感觉我们性格挺像的，课间你一般做什么？`,()=>`Кажется, мы похожи. Что ты делаешь на перемене?`,()=>`Creo que nos parecemos. ¿Qué haces en el recreo?`,()=>`性格似てる気がする！休み時間は何してる？`],
+};
+
+/* 예시 학생 (실제 학생 아님) */
+const EXAMPLES=[
+ {id:'ex1',name:'하늘',grade:7,hobbies:['draw','lego','badminton'],games:['mc','roblox'],music:['ost'],media:['webtoon','anime'],personality:['calm','shy']},
+ {id:'ex2',name:'준서',grade:8,hobbies:['basketball','soccer','dance'],games:['brawl','among'],music:['hiphop','kpop'],media:['hero','comedy'],personality:['active','playful','funny']},
+ {id:'ex3',name:'서윤',grade:7,hobbies:['draw','photo','swim'],games:['poke','board'],music:['jpop','play'],media:['fantasy','anime'],personality:['curious','kind']},
+ {id:'ex4',name:'도현',grade:9,hobbies:['edit'],games:['valo','lol','typing'],music:['band'],media:['scifi','mystery'],personality:['serious','calm']},
+ {id:'ex5',name:'지아',grade:6,hobbies:['bake','pet','dance'],games:['roblox','kart'],music:['kpop','pop'],media:['webtoon','comedy'],personality:['active','kind']},
+ {id:'ex6',name:'시우',grade:7,hobbies:['edit','soccer'],games:['typing','brawl','mc'],music:['kpop','ost'],media:['webtoon','anime'],personality:['playful','curious']},
+].map(e=>({...e,example:true}));
+
+/* ===== 친구 코드: 서버 없이 답변을 문자로 주고받기 ===== */
+const CODE_KEYS={hobbies:'h',games:'g',music:'m',media:'v',personality:'p'};
+function cleanProfile(o){
+  // 남이 준 값은 정해진 것만 받아요
+  if(!o||typeof o!=='object') return null;
+  const name=typeof o.name==='string'?o.name.trim().slice(0,12):'';
+  const grade=GRADES[o.grade]?+o.grade:0;
+  if(!name||!grade) return null;
+  const p=blank(); p.name=name; p.grade=grade;
+  p.gender=GENDERS[o.gender]?o.gender:''; p.birth=BIRTH_RE.test(String(o.birth||''))?o.birth:'';
+  p.pub={gender:!!(o.pub&&o.pub.gender),birth:!!(o.pub&&o.pub.birth)};
+  CATS.forEach(c=>{p[c.k]=(Array.isArray(o[c.k])?o[c.k]:[]).filter(v=>typeof v==='string'&&c.o[v]).filter((v,i,a)=>a.indexOf(v)===i);});
+  return p;
+}
+const b64e=str=>{const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
+const b64d=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const bin=atob(s);return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));};
+function makeCode(p){
+  const o={n:p.name,r:p.grade};
+  CATS.forEach(c=>{const keys=Object.keys(c.o);let m=0;p[c.k].forEach(v=>{const i=keys.indexOf(v);if(i>=0)m|=1<<i;});o[CODE_KEYS[c.k]]=m.toString(36);});
+  if(p.pub&&p.pub.gender&&GENDERS[p.gender]) o.x=p.gender;
+  if(p.pub&&p.pub.birth&&BIRTH_RE.test(p.birth)) o.b=p.birth;
+  return 'FM1-'+b64e(JSON.stringify(o));
+}
+function readCode(text){
+  const m=String(text||'').replace(/\s+/g,'').match(/FM1-([A-Za-z0-9_-]{8,600})/);
+  if(!m) return null;
+  let o; try{o=JSON.parse(b64d(m[1]));}catch(_){return null;}
+  if(!o||typeof o!=='object') return null;
+  const raw={name:o.n,grade:o.r,gender:o.x,birth:o.b};
+  CATS.forEach(c=>{const keys=Object.keys(c.o);const mask=parseInt(String(o[CODE_KEYS[c.k]]||'0'),36)||0;raw[c.k]=keys.filter((_,i)=>mask&(1<<i));});
+  const p=cleanProfile(raw); if(!p) return null;
+  p.code='FM1-'+m[1];
+  return p;
+}
+function codeId(code){let h=0;for(const ch of code)h=(h*31+ch.charCodeAt(0))|0;return 'code-'+(h>>>0).toString(36);}
+
+/* ===== 상태 ===== */
+const GENDERS={m:'gM',f:'gF',x:'gX'};
+const BIRTH_RE=/^\d{4}-\d{2}-\d{2}$/;
+function bornText(b){if(!BIRTH_RE.test(String(b)))return '';const [y,m,d]=String(b).split('-');return t('bornFmt',{y,m:+m,d:+d});}
+// 다른 학생이 보낸 값은 정해진 것만 받아요 (이상한 값이 들어와도 화면이 깨지지 않게)
+function metaParts(p,mine){
+  const out=[];
+  if(GENDERS[p.gender]) out.push(t(GENDERS[p.gender])+(mine&&!(p.pub&&p.pub.gender)?`<span class="priv">${t('priv')}</span>`:''));
+  const bt=bornText(p.birth); if(bt) out.push(esc(bt)+(mine&&!(p.pub&&p.pub.birth)?`<span class="priv">${t('priv')}</span>`:''));
+  return out.join(' · ');
+}
+const blank=()=>Object.assign({name:'',grade:0,gender:'',birth:'',pub:{gender:false,birth:false}},Object.fromEntries(CATS.map(c=>[c.k,[]])));
+let me=blank(), profile=null, view='quiz', step=0, others=[], starterIdx={};
+let db=null, uid=null;
+let seenAt=0, demoInbox=[], openReply=null;
+let hiddenSet=new Set(), modalId=null, confirmBox=null;
+let gate=null, lockDoc=null, wrong=0, gateMsg='', gateBusy=false;
+let codeFriends=[], codeMsg='', localProfile=false;
+try{seenAt=+(localStorage.getItem('fm_seen')||0);}catch(_){}
+const STEPS=['basic',...CATS.map(c=>c.k),'review'];
+const QN=STEPS.length-1;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2200)}
+function isDone(i){const s=STEPS[i];if(s==='basic')return !!(me.name.trim()&&me.grade);if(s==='review')return false;return me[s].length>0;}
+const doneCount=()=>STEPS.slice(0,QN).filter((_,i)=>isDone(i)).length;
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(_){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
+const lsDel=k=>{try{localStorage.removeItem(k)}catch(_){}};
+const userCol=()=>db.collection('data/users/'+uid);
+// 코드 친구 목록은 이 기기에만 저장 (이름 → 코드 하나씩)
+function loadCodeFriends(){
+  try{const arr=JSON.parse(lsGet('fm_codes')||'[]');codeFriends=(Array.isArray(arr)?arr:[]).map(readCode).filter(Boolean).map(p=>({...p,id:codeId(p.name+p.grade),codeFriend:true}));}catch(_){codeFriends=[];}
+}
+function saveCodeFriends(){lsSet('fm_codes',JSON.stringify(codeFriends.map(f=>f.code)));}
+loadCodeFriends();
+
+function renderChrome(){
+  document.documentElement.lang=LANG_CODES[L];
+  $('#tagline').textContent=t('tagline');
+  $('#setB').setAttribute('aria-label',t('settings'));
+  if(!$('#settings').hidden) renderSettings();
+  const b=$('#banner'); b.hidden=!!db; b.textContent=t('local');
+  $('#mailB').setAttribute('aria-label',t('inbox'));
+  $('#mailB').hidden=!!gate;
+  if(gate){$('#inbox').hidden=true;}
+  renderBadge(); if(!$('#inbox').hidden) renderInbox();
+}
+
+/* ===== 하트 · 답글 · 저장 · 알림 ===== */
+const myKey=()=>uid||'me';
+const HEART_DELAY=60*1000;   // 하트·저장은 1분이 지나야 상대에게 알려져요
+setInterval(()=>{renderBadge(); if(!$('#inbox').hidden) renderInbox();},10000);
+const visibleOthers=()=>others.filter(o=>!hiddenSet.has(o.id));
+function allProfiles(){return [...visibleOthers(), ...(profile?[{...profile,id:myKey(),isMe:true}]:[])];}
+const ripe=at=>at&&Date.now()-at>=HEART_DELAY;
+function theyHeartMe(s){
+  if(s.example) return demoInbox.some(x=>x.from.id===s.id&&x.type==='heart');
+  return ripe(s.hearts&&s.hearts[myKey()]);
+}
+function inboxItems(){
+  const items=[];
+  visibleOthers().forEach(o=>{
+    const h=o.hearts&&o.hearts[myKey()]; if(ripe(h)) items.push({from:o,type:'heart',at:h+HEART_DELAY});
+    const r=o.replies&&o.replies[myKey()]; if(r&&PRESETS[r.q]) items.push({from:o,type:'reply',q:r.q,at:+r.at||0});
+    const sv=o.saves&&o.saves[myKey()]; if(ripe(sv)) items.push({from:o,type:'save',at:sv+HEART_DELAY});
+  });
+  return [...items,...demoInbox.filter(x=>!hiddenSet.has(x.from.id))].sort((a,b)=>b.at-a.at);
+}
+function renderBadge(){
+  const n=profile&&!gate?inboxItems().filter(x=>x.at>seenAt).length:0;
+  const b=$('#badge'); b.hidden=!n; b.textContent=n>99?'99+':n;
+}
+function renderInbox(){
+  const items=profile?inboxItems():[];
+  $('#inbox').innerHTML=`<div class="ih"><span>${t('inbox')}</span><button class="mini" id="inboxClose">${t('close')}</button></div>`+
+    (items.length?`<ul>${items.map(x=>`<li class="${x.at>seenAt?'new':''}" tabindex="0" data-open="${esc(x.from.id)}"><span class="ic">${x.type==='heart'?HEART_SVG:x.type==='save'?SAVE_SVG:REPLY_SVG}</span>
+      <div><div>${esc(t(x.type==='heart'?'heartFrom':x.type==='save'?'saveFrom':'replyFrom',{n:`${x.from.name} (${gl(x.from.grade)})`}))}${x.demo?` <span class="note">· ${t('exNote')}</span>`:''}</div>
+      ${x.type==='reply'?`<q>“${esc(PRESETS[x.q][L])}”</q>`:''}</div></li>`).join('')}</ul>`
+     :`<div class="empty">${t('noInbox')}</div>`);
+  $('#inboxClose').onclick=closeInbox;
+}
+$('#inbox').addEventListener('click',e=>{const li=e.target.closest('[data-open]');if(li){const id=li.dataset.open;closeInbox();openModal(id);}});
+$('#inbox').addEventListener('keydown',e=>{if(e.key==='Enter'){const li=e.target.closest('[data-open]');if(li)li.click();}});
+function openInbox(){renderInbox();$('#inbox').hidden=false;}
+function closeInbox(){
+  if($('#inbox').hidden) return;
+  $('#inbox').hidden=true;
+  seenAt=Date.now(); lsSet('fm_seen',seenAt);
+  if(db&&uid) userCol().doc('inbox').set({seenAt}).catch(()=>{});
+  renderBadge(); if(view==='result'&&!gate) renderResult();
+}
+$('#mailB').onclick=e=>{e.stopPropagation();if($('#inbox').hidden){$('#settings').hidden=true;openInbox();}else closeInbox();};
+document.addEventListener('click',e=>{if(!$('#inbox').hidden&&e.target.isConnected&&!e.target.closest('#inbox')&&!e.target.closest('#mailB'))closeInbox();});
+
+let socialSave=Promise.resolve();
+function saveSocial(){
+  if(!(db&&uid&&profile)) return;
+  const data={hearts:{...(profile.hearts||{})},replies:{...(profile.replies||{})},saves:{...(profile.saves||{})}};
+  socialSave=socialSave.then(()=>db.collection('profiles').doc(uid).update(data)).catch(()=>toast(t('saveFail')));
+}
+// 예시 학생은 연습용으로 1.5초 뒤 하트/답글을 돌려줘요
+function demoBack(s,type){
+  setTimeout(()=>{
+    if(type==='heart'&&!(profile&&profile.hearts&&profile.hearts[s.id])) return;
+    if(demoInbox.some(x=>x.from.id===s.id&&x.type===type)) return;
+    demoInbox.push({from:s,type,q:'match',at:Date.now(),demo:true});
+    renderBadge(); if(!$('#inbox').hidden) renderInbox();
+    if(view==='result'&&!gate) renderResult();
+  },1500);
+}
+function toggleHeart(s){
+  profile.hearts=profile.hearts||{};
+  if(profile.hearts[s.id]) delete profile.hearts[s.id];
+  else { profile.hearts[s.id]=Date.now(); if(s.example) demoBack(s,'heart'); }
+  if(!profile.hearts[s.id]) demoInbox=demoInbox.filter(x=>!(x.from.id===s.id&&x.type==='heart'));
+  saveSocial(); renderResult();
+  if(profile.hearts[s.id]) document.querySelectorAll(`.heartbtn[data-heart="${CSS.escape(s.id)}"]`).forEach(nb=>nb.classList.add('pop'));
+}
+function toggleSave(s){
+  profile.saves=profile.saves||{};
+  if(profile.saves[s.id]) delete profile.saves[s.id];
+  else { profile.saves[s.id]=Date.now(); toast(t('savedToast')); }
+  saveSocial(); renderResult();
+}
+function setReply(s,q){
+  profile.replies=profile.replies||{};
+  if(profile.replies[s.id]&&profile.replies[s.id].q===q) delete profile.replies[s.id];
+  else { profile.replies[s.id]={q,at:Date.now()}; toast(t('sentReply')); if(s.example) demoBack(s,'reply'); }
+  openReply=null; saveSocial(); renderResult();
+}
+function savePrefs(){ if(db&&uid) userCol().doc('prefs').set({hidden:[...hiddenSet]}).catch(()=>toast(t('saveFail'))); }
+function hideStudent(id){ hiddenSet.add(id); savePrefs(); closeModal(); renderResult(); renderBadge(); toast(t('hiddenToast')); }
+function unhideStudent(id){ hiddenSet.delete(id); savePrefs(); renderResult(); renderBadge(); }
+
+/* ===== 설정: 언어 · 배경 색 · 글씨체 · 화면 모드 ===== */
+const LANG_NAMES=['한국어','English','中文','Русский','Español','日本語'];
+const BGS={sky:['#eef2f4',['하늘','Sky','天空','Небо','Cielo','空']],mint:['#e6f3ec',['민트','Mint','薄荷','Мята','Menta','ミント']],peach:['#fbede5',['복숭아','Peach','蜜桃','Персик','Durazno','ピーチ']],lavender:['#eeedf8',['라벤더','Lavender','薰衣草','Лаванда','Lavanda','ラベンダー']],lemon:['#f8f4dc',['레몬','Lemon','柠檬','Лимон','Limón','レモン']],night:['#121a2e',['밤하늘','Night sky','夜空','Ночное небо','Noche','夜空']],forest:['#111c17',['숲','Forest','森林','Лес','Bosque','森']],cocoa:['#1d1613',['코코아','Cocoa','可可','Какао','Cacao','ココア']]};
+const MODES={auto:['자동','Auto','自动','Авто','Auto','自動'],light:['밝게','Light','浅色','Светлый','Claro','ライト'],dark:['어둡게','Dark','深色','Тёмный','Oscuro','ダーク']};
+const FONTS={
+ basic:["'Do Hyeon'",['기본','Default','默认','Обычный','Normal','標準']],
+ round:["'Jua'",['동글동글','Rounded','圆润','Округлый','Redondeada','まるい']],
+ hand:["'Gaegu'",['손글씨','Handwriting','手写','Рукописный','A mano','手書き']],
+ clean:["'Noto Sans KR';font-weight:900",['깔끔','Clean','简洁','Чёткий','Limpia','すっきり']],
+};
+let fontSet=lsGet('fm_font')||'basic'; if(!FONTS[fontSet]) fontSet='basic';
+const hostTheme=document.documentElement.getAttribute('data-theme');
+let bgSet=lsGet('fm_bg')||'sky'; if(!BGS[bgSet]) bgSet='sky';
+let modeSet=lsGet('fm_mode')||'auto'; if(!MODES[modeSet]) modeSet='auto';
+function applyLook(){
+  const r=document.documentElement;
+  if(bgSet==='sky') r.removeAttribute('data-bg'); else r.setAttribute('data-bg',bgSet);
+  if(fontSet==='basic') r.removeAttribute('data-font'); else r.setAttribute('data-font',fontSet);
+  if(modeSet==='auto'){ hostTheme?r.setAttribute('data-theme',hostTheme):r.removeAttribute('data-theme'); }
+  else r.setAttribute('data-theme',modeSet);
+}
+function renderSettings(){
+  $('#settings').innerHTML=`<div class="ih"><span>${t('settings')}</span><button class="mini" id="setClose">${t('close')}</button></div>
+  <div class="sbody">
+    <div><h4>${t('langT')}</h4><div class="opts">${LANG_NAMES.map((n,i)=>`<button data-lang="${i}" class="${i===L?'on':''}">${n}</button>`).join('')}</div></div>
+    <div><h4>${t('bgT')}</h4><div class="swatches">${Object.entries(BGS).map(([k,[c,n]])=>`<button class="swatch ${k===bgSet?'on':''}" data-bg="${k}" aria-pressed="${k===bgSet}"><i style="background-color:${c}"></i>${n[L]}</button>`).join('')}</div></div>
+    <div><h4>${t('fontT')}</h4><div class="fonts">${Object.entries(FONTS).map(([k,[f,n]])=>`<button class="fontopt ${k===fontSet?'on':''}" data-font="${k}" aria-pressed="${k===fontSet}"><b style="font-family:${f}">${['안녕! 반가워','Hello!','你好！','Привет!','¡Hola!','こんにちは'][L]}</b><small>${n[L]}</small></button>`).join('')}</div></div>
+    <div><h4>${t('modeT')}</h4><div class="opts">${Object.entries(MODES).map(([k,n])=>`<button data-mode="${k}" class="${k===modeSet?'on':''}">${n[L]}</button>`).join('')}</div></div>
+  </div>`;
+  $('#setClose').onclick=()=>{$('#settings').hidden=true;};
+  $('#settings').querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{L=+b.dataset.lang;lsSet('fm_lang',L);renderChrome();render();});
+  $('#settings').querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{bgSet=b.dataset.bg;lsSet('fm_bg',bgSet);applyLook();renderSettings();});
+  $('#settings').querySelectorAll('[data-font]').forEach(b=>b.onclick=()=>{fontSet=b.dataset.font;lsSet('fm_font',fontSet);applyLook();renderSettings();});
+  $('#settings').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{modeSet=b.dataset.mode;lsSet('fm_mode',modeSet);applyLook();renderSettings();});
+}
+$('#setB').onclick=e=>{e.stopPropagation();const s=$('#settings');if(s.hidden){if(!$('#inbox').hidden)closeInbox();renderSettings();s.hidden=false;}else s.hidden=true;};
+document.addEventListener('click',e=>{const s=$('#settings');if(!s.hidden&&e.target.isConnected&&!e.target.closest('#settings')&&!e.target.closest('#setB'))s.hidden=true;});
+applyLook();
+
+function render(){
+  if(gate) return renderGate();
+  view==='quiz'?renderQuiz():renderResult();
+}
+
+/* ===== 잠금 비밀번호 ===== */
+// 비밀번호는 원래 글자 대신 PBKDF2로 바꾼 값만, 본인만 열 수 있는 비공개 공간에 저장해요
+const autoKey=()=> 'fm_auto_'+uid;
+const waitKey=()=> 'fm_wait_'+uid;
+const hex=buf=>[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+async function hashPw(pw,salt){
+  const enc=new TextEncoder();
+  const key=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(salt),iterations:150000,hash:'SHA-256'},key,256);
+  return hex(bits);
+}
+function waitLeft(){const w=+(lsGet(waitKey())||0);return Math.max(0,Math.ceil((w-Date.now())/1000));}
+function renderGate(){
+  closeModal();
+  let inner='';
+  if(gate==='set'){
+    inner=`<div class="qhead"><span class="qnum">PW</span><div><h2>${t('setT')}</h2><p class="sub">${t('setSub')}</p></div></div>
+      <form id="gateForm" novalidate>
+        <label class="f">${t('pwL')}<input type="password" id="pw1" autocomplete="new-password" minlength="4" maxlength="40"></label>
+        <label class="f">${t('pw2L')}<input type="password" id="pw2" autocomplete="new-password" maxlength="40"></label>
+        <label class="check"><input type="checkbox" id="auto" checked>${t('autoL')}</label>
+        <p class="err" id="gateErr" role="alert">${esc(gateMsg)}</p>
+        <button class="btn primary" id="gateGo" type="submit" ${gateBusy?'disabled':''}>${gateBusy?t('locking'):t('makeB')}</button>
+      </form>`;
+  }else if(gate==='unlock'){
+    const w=waitLeft();
+    inner=`<div class="qhead"><span class="qnum">PW</span><div><h2>${t('unlockT')}</h2><p class="sub">${t('unlockSub')}</p></div></div>
+      <form id="gateForm" novalidate>
+        <label class="f">${t('pwOne')}<input type="password" id="pw1" autocomplete="current-password" maxlength="40" ${w?'disabled':''}></label>
+        <label class="check"><input type="checkbox" id="auto">${t('autoL')}</label>
+        <p class="err" id="gateErr" role="alert">${esc(w?t('waitPw',{n:w}):gateMsg)}</p>
+        <button class="btn primary" id="gateGo" type="submit" ${gateBusy||w?'disabled':''}>${gateBusy?t('locking'):t('enterB')}</button>
+      </form>
+      <button class="btn link" id="forgotB" type="button">${t('forgot')}</button>`;
+  }else if(gate==='forgot'){
+    inner=`<div class="qhead"><span class="qnum">!</span><div><h2>${t('forgotT')}</h2><p class="sub">${t('forgotN')}</p></div></div>
+      <div class="btnrow" style="justify-content:flex-end"><button class="btn" id="fgCancel">${t('cancel')}</button><button class="btn dangerfill" id="fgYes" ${gateBusy?'disabled':''}>${t('startOver')}</button></div>`;
+  }
+  $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto"><div class="qtop"><b>FriendMatch</b><span>🔒</span></div><div class="qbody">${inner}</div></section>`;
+  const f=$('#gateForm');
+  if(f){ f.onsubmit=e=>{e.preventDefault(); gate==='set'?doSetPw():doUnlock();}; setTimeout(()=>{const p=$('#pw1'); if(p&&!p.disabled) p.focus();},50); }
+  if($('#forgotB')) $('#forgotB').onclick=()=>{gate='forgot';gateMsg='';renderGate();};
+  if($('#fgCancel')) $('#fgCancel').onclick=()=>{gate='unlock';renderGate();};
+  if($('#fgYes')) $('#fgYes').onclick=doStartOver;
+  if(gate==='unlock'&&waitLeft()){clearTimeout(renderGate.t);renderGate.t=setTimeout(()=>{if(gate==='unlock')renderGate();},1000);}
+}
+async function doSetPw(){
+  const a=$('#pw1').value, b=$('#pw2').value, auto=$('#auto').checked;
+  if(a.length<4){gateMsg=t('pwShort');return renderGate();}
+  if(a!==b){gateMsg=t('pwMismatch');return renderGate();}
+  gateBusy=true; gateMsg=''; renderGate();
+  try{
+    const salt=hex(crypto.getRandomValues(new Uint8Array(16)));
+    const hash=await hashPw(a,salt);
+    await userCol().doc('lock').set({salt,hash,createdAt:Date.now()});
+    lockDoc={salt,hash};
+    auto?lsSet(autoKey(),'1'):lsDel(autoKey());
+    gateBusy=false; gate=null; renderChrome(); render(); toast(t('pwSet'));
+  }catch(e){ gateBusy=false; gateMsg=t('saveFail'); renderGate(); }
+}
+async function doUnlock(){
+  if(waitLeft()) return renderGate();
+  const a=$('#pw1').value, auto=$('#auto').checked;
+  gateBusy=true; gateMsg=''; renderGate();
+  let ok=false;
+  try{ ok=(await hashPw(a,lockDoc.salt))===lockDoc.hash; }catch(_){}
+  gateBusy=false;
+  if(ok){
+    wrong=0; lsDel(waitKey());
+    auto?lsSet(autoKey(),'1'):lsDel(autoKey());
+    gate=null; renderChrome(); render();
+  }else{
+    wrong++;
+    if(wrong>=5){ wrong=0; lsSet(waitKey(),Date.now()+30000); gateMsg=''; }
+    else gateMsg=t('wrongPw',{n:5-wrong});
+    renderGate();
+  }
+}
+async function doStartOver(){
+  gateBusy=true; renderGate();
+  try{
+    await Promise.all([
+      db.collection('profiles').doc(uid).delete(),
+      userCol().doc('private').delete(), userCol().doc('lock').delete(),
+      userCol().doc('prefs').delete(), userCol().doc('inbox').delete(),
+    ]);
+  }catch(_){ gateBusy=false; toast(t('saveFail')); return renderGate(); }
+  gateBusy=false; lockDoc=null; profile=null; me=blank(); view='quiz'; step=0;
+  hiddenSet=new Set(); demoInbox=[]; lsDel(autoKey()); lsDel(waitKey());
+  gate='set'; gateMsg=''; renderChrome(); render();
+}
+function lockNow(){ lsDel(autoKey()); gate='unlock'; gateMsg=''; wrong=0; renderChrome(); render(); window.scrollTo({top:0}); }
+
+/* ===== 질문 화면 ===== */
+function renderQuiz(){
+  const s=STEPS[step], isReview=s==='review';
+  let body='';
+  if(s==='basic'){
+    body=`<div class="qhead"><span class="qnum">Q1</span><div><h2>${t('nameQ')}</h2><p class="sub">${t('nameSub')}</p></div></div>
+      <div class="namerow">
+        <label class="f">${t('nameL')}<input type="text" id="nick" maxlength="12" value="${esc(me.name)}" autocomplete="off"></label>
+        <label class="f">${t('gradeL')}<select id="grade"><option value="0">${t('gradeSel')}</option>${Object.keys(GRADES).map(g=>`<option value="${g}"${+g===me.grade?' selected':''}>${gl(g)}</option>`).join('')}</select></label>
+      </div>
+      <div class="fieldrow">
+        <label class="f">${t('genderL')}<select id="gender"><option value="">${t('gradeSel')}</option>${Object.entries(GENDERS).map(([k,v])=>`<option value="${k}"${me.gender===k?' selected':''}>${t(v)}</option>`).join('')}</select></label>
+        <span class="seg" data-pubfor="gender"><button data-pub="1" class="${me.pub.gender?'on':''}">${t('pub')}</button><button data-pub="0" class="${me.pub.gender?'':'on'}">${t('priv')}</button></span>
+      </div>
+      <div class="fieldrow">
+        <label class="f">${t('birthL')}<input type="date" id="birth" value="${esc(me.birth)}" min="2005-01-01" max="2020-12-31"></label>
+        <span class="seg" data-pubfor="birth"><button data-pub="1" class="${me.pub.birth?'on':''}">${t('pub')}</button><button data-pub="0" class="${me.pub.birth?'':'on'}">${t('priv')}</button></span>
+      </div>
+      <p class="note">${t('privNote')} ${t('privacy')}</p>`;
+  }else if(isReview){
+    body=`<div class="qhead"><span class="qnum">✓</span><div><h2>${t('reviewQ')}</h2><p class="sub">${t('reviewSub')}</p></div></div>
+      <div class="review">${STEPS.slice(0,QN).map((st,i)=>{
+        const k=st==='basic'?t('basic'):CAT[st].n[L];
+        const v=st==='basic'?(me.name?[`${esc(me.name)} · ${gl(me.grade)}`,metaParts(me,true)].filter(Boolean).join(' · '):''):me[st].map(x=>esc(lab(st,x))).join(', ');
+        return `<button data-jump="${i}"><span class="k">${k}</span><span class="v ${v?'':'empty'}">${v||t('empty')}</span></button>`}).join('')}</div>
+      ${doneCount()<QN?`<p class="warn">${t('needAll')}</p>`:''}`;
+  }else{
+    const c=CAT[s];
+    body=`<div class="qhead"><span class="qnum">Q${step+1}</span><div><h2>${c.q[L]}</h2><p class="sub">${t('pickSub')}</p></div></div>
+      <div class="chips">${Object.keys(c.o).map(v=>`<button class="chip ${me[s].includes(v)?'on':''}" data-v="${v}" aria-pressed="${me[s].includes(v)}">${esc(lab(s,v))}</button>`).join('')}</div>`;
+  }
+  $('#app').innerHTML=`<section class="quiz lanyard">
+    <div class="qtop"><b>${isReview?t('reviewQ'):t('qOf',{a:step+1,b:QN})}</b><span id="ansCount"></span></div>
+    <div class="segs">${STEPS.slice(0,QN).map((_,i)=>`<i class="${i===step?'cur':''}"></i>`).join('')}</div>
+    <div class="qbody">${body}</div>
+    <div class="qnav">
+      <button class="btn" id="prevB" ${step===0?'disabled':''}>${t('prev')}</button>
+      ${profile?`<button class="btn link" id="backB">${t('backRes')}</button>`:''}<span class="grow"></span>
+      ${isReview?`<button class="btn primary" id="submitB">${t('submit')}</button>`:`<button class="btn primary" id="nextB">${t('next')}</button>`}
+    </div></section>`;
+  $('#prevB').onclick=()=>go(step-1);
+  $('#backB')&&($('#backB').onclick=()=>{view='result';me=JSON.parse(JSON.stringify(profile));renderResult();window.scrollTo({top:0});});
+  $('#nextB')&&($('#nextB').onclick=()=>go(step+1));
+  $('#submitB')&&($('#submitB').onclick=submit);
+  document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>go(+b.dataset.jump));
+  if($('#nick')){$('#nick').oninput=e=>{me.name=e.target.value;updateNav();};$('#grade').onchange=e=>{me.grade=+e.target.value;updateNav();};
+    $('#gender').onchange=e=>{me.gender=e.target.value;};
+    $('#birth').onchange=e=>{me.birth=BIRTH_RE.test(e.target.value)?e.target.value:'';};
+    document.querySelectorAll('[data-pubfor]').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      me.pub[sg.dataset.pubfor]=b.dataset.pub==='1';
+      sg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));}));}
+  document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+    const v=ch.dataset.v,a=me[s],i=a.indexOf(v);
+    if(i<0){ if(v==='none') a.length=0; else { const n=a.indexOf('none'); if(n>=0) a.splice(n,1); } a.push(v); } else a.splice(i,1);
+    document.querySelectorAll('.chip').forEach(c=>{const on=a.includes(c.dataset.v);c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
+    updateNav();});
+  updateNav();
+}
+function updateNav(){
+  const n=$('#nextB'); if(n) n.disabled=!isDone(step);
+  const sb=$('#submitB'); if(sb) sb.disabled=doneCount()<QN;
+  $('#ansCount').textContent=t('answered',{a:doneCount(),b:QN});
+  document.querySelectorAll('.segs i').forEach((s,i)=>s.classList.toggle('done',isDone(i)));
+}
+function go(i){step=Math.max(0,Math.min(STEPS.length-1,i));renderQuiz();window.scrollTo({top:0,behavior:'smooth'});}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!$('#modal').hidden){closeModal();return;}
+  if(gate||view!=='quiz'||e.key!=='Enter'||e.target.tagName==='BUTTON')return;
+  const n=$('#nextB'); if(n&&!n.disabled){e.preventDefault();n.click();}
+});
+
+async function submit(){
+  if(doneCount()<QN) return;
+  me.name=me.name.trim();
+  const p=JSON.parse(JSON.stringify(me));
+  if(db&&uid){
+    $('#submitB').disabled=true;
+    // 공개한 것만 공유 이름표에, 성별·생년월일 원본은 나만 보는 곳에 저장
+    const shared={...p,updatedAt:Date.now()}; delete shared.pub;
+    if(!p.pub.gender) delete shared.gender;
+    if(!p.pub.birth) delete shared.birth;
+    try{
+      await userCol().doc('private').set({gender:p.gender,birth:p.birth,pub:p.pub});
+      await db.collection('profiles').doc(uid).set(shared);
+    }catch(e){ toast(t('saveFail')); $('#submitB').disabled=false; return; }
+  }
+  if(!db){ lsSet('fm_local_profile',JSON.stringify(p)); localProfile=true; }
+  profile=p; view='result'; render(); toast(t('saved')); window.scrollTo({top:0});
+}
+
+/* ===== 추천 계산: 질문마다 겹친 비율의 평균 → 70% 이상만 추천 ===== */
+function match(s){
+  let sum=0;const shared=[];
+  CATS.forEach(c=>{
+    const a=(profile[c.k]||[]).filter(v=>v!=='none'), b=(Array.isArray(s[c.k])?s[c.k]:[]).filter(v=>v!=='none');
+    const common=a.filter(x=>b.includes(x));
+    if(a.length&&b.length) sum+=common.length/Math.min(a.length,b.length);
+    common.forEach(v=>shared.push({k:c.k,v}));
+  });
+  let score=sum/CATS.length + (s.grade===profile.grade?0.05:0);
+  return {pct:Math.min(99,Math.round(20+score*130)),shared};
+}
+const avc=n=>'av'+([...String(n||'')].reduce((a,c)=>a+c.codePointAt(0),0)%6);
+const level=p=>p>=90?t('lv90'):p>=80?t('lv80'):p>=70?t('lv70'):t('lv0');
+const findStudent=id=>[...others,...EXAMPLES].find(x=>x.id===id);
+
+/* 카드 아래 하트 · 답글 · 저장 */
+function socialHTML(s){
+  const all=allProfiles();
+  const hearts=all.filter(x=>x.hearts&&x.hearts[s.id]).length;
+  const mine=!!(profile.hearts&&profile.hearts[s.id]);
+  const reps=all.filter(x=>x.replies&&x.replies[s.id]&&PRESETS[x.replies[s.id].q]).sort((a,b)=>a.replies[s.id].at-b.replies[s.id].at);
+  const myRep=profile.replies&&profile.replies[s.id];
+  const sv=!!(profile.saves&&profile.saves[s.id]);
+  return `<div class="social">
+      <button class="heartbtn ${mine?'on':''}" data-heart="${esc(s.id)}" aria-pressed="${mine}">${HEART_SVG}<span>${hearts}</span></button>
+      <button class="replybtn" data-reply="${esc(s.id)}" aria-expanded="${openReply===s.id}">${REPLY_SVG}<span>${t('replyBtn')} ${reps.length}</span></button>
+      <button class="replybtn savebtn ${sv?'on':''}" data-save="${esc(s.id)}" aria-pressed="${sv}" aria-label="${t('saveL')}" title="${t('saveL')}">${SAVE_SVG}</button>
+    </div>
+    ${openReply===s.id?`<div class="presets">${Object.keys(PRESETS).map(k=>`<button class="${myRep&&myRep.q===k?'on':''}" data-preset="${k}" data-to="${esc(s.id)}">${PRESETS[k][L]}</button>`).join('')}</div>`:''}
+    ${reps.length?`<div class="replies">${reps.map(x=>`<div>${x.isMe?`<b>${t('you')}</b>`:`<button class="namebtn" data-open="${esc(x.id)}">${esc(x.name)}</button>`}${PRESETS[x.replies[s.id].q][L]}</div>`).join('')}</div>`:''}`;
+}
+function cardHTML(s,m,opt={}){
+  const st=m.shared.map(x=>TPL[x.k]?TPL[x.k][L](lab(x.k,x.v)):'').filter(Boolean); if(!st.length) st.push(t('defStarter'));
+  const i=(starterIdx[s.id]||0)%st.length;
+  const both=profile.hearts&&profile.hearts[s.id]&&theyHeartMe(s);
+  return `<article class="card"><span class="hole"></span>
+    <div class="top"><div class="avatar ${avc(s.name)}">${esc([...String(s.name||'?')][0])}</div>
+      <div class="who"><div class="nm"><b>${esc(s.name)}</b><span class="gpill">${gl(s.grade)}</span></div>${metaParts(s)?`<span class="meta">${metaParts(s)}</span>`:''}${both?`<span class="mutual">♥ ${t('mutual')}</span>`:''}${s.example?`<span class="exb">${t('exBadge')}</span>`:''}${opt.code?`<span class="exb">${t('codeBadge')}</span>`:''}</div>
+      <div class="meter"><div class="ring" style="--p:${m.pct}"><span>${m.pct}%</span></div><div class="lv">${level(m.pct)}</div></div></div>
+    <div class="body">
+      <div class="label">${t('shared',{n:m.shared.length})}</div>
+      <div class="shared">${m.shared.map(x=>`<span class="stag">${esc(lab(x.k,x.v))}</span>`).join('')}</div>
+      <div class="label">${t('starter')}</div>
+      <div class="starter"><q>${esc(st[i])}</q>${st.length>1?`<button class="mini" data-next="${esc(s.id)}">${t('another')}</button>`:''}<button class="mini" data-copy>${t('copy')}</button></div>
+      ${opt.code?`<div class="social"><span class="note" style="flex:1">${t('codeNoSocial')}</span><button class="btn danger" style="font-size:12px;padding:4px 10px" data-uncode="${esc(s.id)}">${t('codeRemove')}</button></div>`:socialHTML(s)}
+    </div></article>`;
+}
+
+/* ===== 이름표 보기 창 / 확인 창 ===== */
+function openModal(id){ if(!profile||view!=='result')return; confirmBox=null; modalId=id; renderModal(); }
+function closeModal(){ modalId=null; confirmBox=null; const m=$('#modal'); if(m){m.hidden=true;m.innerHTML='';} }
+function askConfirm(opts){ modalId=null; confirmBox=opts; renderModal(); }
+function renderModal(){
+  const box=$('#modal');
+  if(confirmBox){
+    box.innerHTML=`<div class="mbox" role="dialog" aria-modal="true"><div class="confirm"><h3>${confirmBox.title}</h3><p class="note">${confirmBox.note}</p>
+      <div class="btnrow"><button class="btn" id="cfNo">${t('cancel')}</button><button class="btn dangerfill" id="cfYes">${confirmBox.yes}</button></div></div></div>`;
+    box.hidden=false;
+    $('#cfNo').onclick=closeModal;
+    $('#cfYes').onclick=()=>{const f=confirmBox.onYes;closeModal();f();};
+    $('#cfNo').focus();
+    return;
+  }
+  const s=modalId&&findStudent(modalId);
+  if(!s||hiddenSet.has(s.id)){closeModal();return;}
+  box.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(s.name)}">
+      <div class="mtools"><button class="btn" id="mClose">${t('close')}</button><button class="btn danger" data-hidep="${esc(s.id)}">${t('hideP')}</button></div>
+      ${cardHTML(s,match(s))}</div>`;
+  box.hidden=false;
+  $('#mClose').onclick=closeModal;
+}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+/* ===== 결과 화면 ===== */
+function renderResult(){
+  const p=profile;
+  const got=inboxItems();
+  const gotH=got.filter(x=>x.type==='heart').length, gotR=got.filter(x=>x.type==='reply'), gotS=got.filter(x=>x.type==='save');
+  const mySaved=[...others,...EXAMPLES].filter(x=>p.saves&&p.saves[x.id]&&!hiddenSet.has(x.id));
+  const hiddenList=[...hiddenSet].map(findStudent).filter(Boolean);
+  const myChips=CATS.flatMap(c=>p[c.k].map(v=>`<span>${esc(lab(c.k,v))}</span>`)).join('');
+  const vis=visibleOthers();
+  const pool=[...vis,...(vis.length<3?EXAMPLES.filter(e=>!hiddenSet.has(e.id)):[])];
+  const ranked=pool.map(s=>({s,m:match(s)})).filter(x=>x.m.pct>=70).sort((a,b)=>b.m.pct-a.m.pct);
+  const recHTML = ranked.length ? `<div class="cards">${ranked.map(({s,m})=>cardHTML(s,m)).join('')}</div>`
+    : `<div class="locked"><h3>${t('noneT')}</h3><p class="note">${t('noneN')}</p></div>`;
+  $('#app').innerHTML=`<div class="grid">
+    <div class="col"><section class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
+      <div class="nm"><b>${esc(p.name)}</b><span class="gpill">${gl(p.grade)}</span></div>
+      ${metaParts(p,true)?`<div class="meta">${metaParts(p,true)}</div>`:''}
+      <div class="minichips">${myChips}</div>
+      <div class="recv"><div class="label" style="color:var(--heart)">${t('received',{h:gotH,r:gotR.length})}</div>
+        ${gotR.length?`<div class="replies">${gotR.map(x=>`<div><button class="namebtn" data-open="${esc(x.from.id)}">${esc(x.from.name)}</button>${PRESETS[x.q][L]}</div>`).join('')}</div>`:''}
+        ${gotS.length?`<div class="label" style="color:var(--accent)">${t('savedMe',{n:gotS.length})}</div><div class="savedlist">${gotS.map(x=>`<button class="linkchip" data-open="${esc(x.from.id)}">${esc(x.from.name)}</button>`).join('')}</div>`:''}
+        ${mySaved.length?`<div class="label">${t('mySaved')}</div><div class="savedlist">${mySaved.map(x=>`<button class="linkchip" data-open="${esc(x.id)}">${esc(x.name)}</button>`).join('')}</div>`:''}
+        ${hiddenList.length?`<div class="unhide">${t('hiddenL')} ${hiddenList.map(x=>`<span>${esc(x.name)}</span><button class="mini" data-unhide="${esc(x.id)}">${t('unhide')}</button>`).join(' ')}</div>`:''}</div>
+      <div class="codebox"><div class="label">${t('myCodeT')}</div><code id="myCode">${esc(makeCode(p))}</code>
+        <button class="btn" id="copyCodeB">${t('copyCode')}</button><p class="note">${t('myCodeN')}</p></div>
+      <div class="btnrow"><button class="btn" id="editB">${t('edit')}</button>${db?`<button class="btn" id="lockB">🔒 ${t('lockB')}</button><button class="btn danger" id="removeB">${t('remove')}</button>`:''}</div>
+    </div></section></div>
+    <div class="col">
+      <div><div class="label">${t('participants',{n:vis.length+1})}</div><h2 class="sec">${esc(t('recTitle',{n:p.name}))}</h2></div>
+      ${recHTML}
+      <section class="codesec">
+        <div><div class="label">${t('codeFriendsT')}</div><h2 class="sec">${t('addCodeT')}</h2><p class="note">${t('addCodeN')}</p></div>
+        <form class="addcode" id="codeForm"><input type="text" id="codeIn" placeholder="${esc(t('addCodePh'))}" autocomplete="off" spellcheck="false"><button class="btn primary" type="submit">${t('addB')}</button></form>
+        <p class="err" role="alert">${esc(codeMsg)}</p>
+        ${codeFriends.length?`<div class="cards">${codeFriends.map(f=>({s:f,m:match(f)})).sort((a,b)=>b.m.pct-a.m.pct).map(({s,m})=>cardHTML(s,m,{code:true})).join('')}</div>`:`<p class="note">${t('codeEmpty')}</p>`}
+      </section>
+    </div></div>`;
+  $('#editB').onclick=()=>{view='quiz';step=0;me=JSON.parse(JSON.stringify(profile));renderQuiz();window.scrollTo({top:0});};
+  $('#lockB')&&($('#lockB').onclick=lockNow);
+  $('#copyCodeB').onclick=()=>{
+    const msg=t('shareMsg')+'\n'+makeCode(profile);
+    try{navigator.clipboard.writeText(msg).then(()=>toast(t('copied')),()=>{selectCode();toast(t('copyFail'));});}catch(_){selectCode();toast(t('copyFail'));}
+  };
+  $('#codeForm').onsubmit=e=>{e.preventDefault();addCode($('#codeIn').value);};
+  $('#removeB')&&($('#removeB').onclick=()=>askConfirm({title:t('removeQ'),note:t('removeN'),yes:t('removeYes'),onYes:async()=>{
+    try{await Promise.all([db.collection('profiles').doc(uid).delete(),userCol().doc('private').delete()]);}catch(_){toast(t('saveFail'));return;}
+    profile=null;me=blank();view='quiz';step=0;demoInbox=[];render();renderBadge();toast(t('removed'));}}));
+  if(modalId) renderModal();
+}
+function selectCode(){const el=$('#myCode');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}
+function addCode(text){
+  const f=readCode(text);
+  if(!f){codeMsg=t('badCode');renderResult();return;}
+  if(f.code===makeCode(profile)){codeMsg=t('selfCode');renderResult();return;}
+  const id=codeId(f.name+f.grade), old=codeFriends.findIndex(x=>x.id===id);
+  const entry={...f,id,codeFriend:true};
+  if(old>=0){codeFriends[old]=entry;toast(t('codeUpdated',{n:f.name}));}else{codeFriends.push(entry);toast(t('codeAdded',{n:f.name}));}
+  codeMsg=''; saveCodeFriends(); renderResult();
+  const sec=document.querySelector('.codesec'); if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.addEventListener('click',e=>{
+  if(view!=='result'||gate)return;
+  const b=e.target.closest('button'); if(!b||!b.isConnected)return;
+  if(b.closest('#inbox')||b.closest('#settings'))return;
+  if(b.dataset.uncode){codeFriends=codeFriends.filter(x=>x.id!==b.dataset.uncode);saveCodeFriends();renderResult();return;}
+  if(b.dataset.open){openModal(b.dataset.open);return;}
+  if(b.dataset.hidep){hideStudent(b.dataset.hidep);return;}
+  if(b.dataset.unhide){unhideStudent(b.dataset.unhide);return;}
+  if(b.dataset.heart){const s=findStudent(b.dataset.heart);if(s)toggleHeart(s);return;}
+  if(b.dataset.save){const s=findStudent(b.dataset.save);if(s)toggleSave(s);return;}
+  if(b.dataset.reply){openReply=openReply===b.dataset.reply?null:b.dataset.reply;renderResult();return;}
+  if(b.dataset.preset){const s=findStudent(b.dataset.to);if(s)setReply(s,b.dataset.preset);return;}
+  if(b.dataset.next){starterIdx[b.dataset.next]=(starterIdx[b.dataset.next]||0)+1;renderResult();return;}
+  if(b.hasAttribute('data-copy')){const q=b.parentElement.querySelector('q').textContent;
+    try{navigator.clipboard.writeText(q).then(()=>toast(t('copied')),()=>toast(t('copyFail')));}catch(_){toast(t('copyFail'));}}
+});
+
+/* ===== 공유 저장소 (Claude에 로그인한 사람만) ===== */
+const getDoc=async ref=>{try{const s=await ref.get();return s.exists?s.data():null;}catch(_){return null;}};
+async function connect(){
+  try{
+    const [d,u]=await Promise.all([window.claude?.use('db'),window.claude?.use('user')]);
+    if(!d||!u) return;
+    const id=await u.id(); if(!id) return;
+    db=d; uid=id;
+    if(localProfile){ profile=null; me=blank(); view='quiz'; step=0; localProfile=false; }
+    const [inb,priv,lk,prefs]=await Promise.all(['inbox','private','lock','prefs'].map(k=>getDoc(userCol().doc(k))));
+    if(inb) seenAt=Math.max(seenAt,+inb.seenAt||0);
+    const privateInfo=priv?{gender:GENDERS[priv.gender]?priv.gender:'',birth:BIRTH_RE.test(priv.birth||'')?priv.birth:'',pub:{gender:!!(priv.pub&&priv.pub.gender),birth:!!(priv.pub&&priv.pub.birth)}}:null;
+    if(prefs&&Array.isArray(prefs.hidden)) hiddenSet=new Set(prefs.hidden.map(String));
+    if(lk&&lk.salt&&lk.hash){ lockDoc={salt:lk.salt,hash:lk.hash}; gate=lsGet(autoKey())==='1'?null:'unlock'; }
+    else gate='set';
+    renderChrome(); render();
+    let first=true;
+    db.collection('profiles').onSnapshot(snap=>{
+      others=[];
+      snap.docs.forEach(doc=>{
+        const v=doc.data(); if(!v||typeof v.name!=='string'||!v.name) return;
+        if(doc.id===uid){
+          if(first&&!profile){
+            profile=Object.assign(blank(),JSON.parse(JSON.stringify(v)),privateInfo||{}); delete profile.updatedAt;
+            me=JSON.parse(JSON.stringify(profile)); view='result';
+            if(!gate) render();
+          }
+        }else others.push({...v,name:v.name.slice(0,12),id:doc.id});
+      });
+      first=false; renderBadge(); if(!$('#inbox').hidden) renderInbox();
+      if(view==='result'&&!gate) renderResult();
+    },()=>{});
+  }catch(_){}
+}
+
+try{const lp=cleanProfile(JSON.parse(lsGet('fm_local_profile')||'null'));if(lp){profile=lp;me=JSON.parse(JSON.stringify(lp));view='result';localProfile=true;}}catch(_){}
+renderChrome(); render(); connect();
+
+</script>
+
+</body>
+</html>
