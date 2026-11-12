@@ -266,6 +266,8 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;bo
 .swatch.on{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 [hidden]{display:none!important}
+.bsel{display:grid;grid-template-columns:1.3fr 1.2fr 1fr;gap:6px}
+.bsel select{min-width:0}
 .codebox{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
 .codebox code{font-family:var(--mono);font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;user-select:all;color:var(--ink)}
 .codebox .btn{align-self:flex-start;font-size:13px;padding:6px 11px}
@@ -817,6 +819,31 @@ async function doStartOver(){
 }
 function lockNow(){ lsDel(autoKey()); gate='unlock'; gateMsg=''; wrong=0; renderChrome(); render(); window.scrollTo({top:0}); }
 
+/* 생년월일: 사이트 언어에 맞춰 년·월·일을 따로 고르는 칸 */
+const daysIn=(y,m)=>new Date(y||2012,m,0).getDate();
+function birthParts(){const m=String(me.birth||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?{y:+m[1],m:+m[2],d:+m[3]}:(me._b||{y:0,m:0,d:0});}
+function monthName(m){try{return new Intl.DateTimeFormat(LANG_CODES[L],{month:'long'}).format(new Date(2020,m-1,1));}catch(_){return String(m);}}
+function dayName(d){return [d+'일',String(d),d+'日',String(d),String(d),d+'日'][L];}
+function yearName(y){return [y+'년',String(y),y+'年',String(y),String(y),y+'年'][L];}
+function birthSelects(){
+  const b=birthParts(), ph=[['년','월','일'],['Year','Month','Day'],['年','月','日'],['Год','Месяц','День'],['Año','Mes','Día'],['年','月','日']][L];
+  const ys=[];for(let y=2020;y>=2005;y--)ys.push(y);
+  const nd=daysIn(b.y,b.m||1);
+  return `<span class="bsel">
+    <select id="by" aria-label="${ph[0]}"><option value="0">${ph[0]}</option>${ys.map(y=>`<option value="${y}"${y===b.y?' selected':''}>${yearName(y)}</option>`).join('')}</select>
+    <select id="bm" aria-label="${ph[1]}"><option value="0">${ph[1]}</option>${Array.from({length:12},(_,i)=>i+1).map(m=>`<option value="${m}"${m===b.m?' selected':''}>${esc(monthName(m))}</option>`).join('')}</select>
+    <select id="bd" aria-label="${ph[2]}"><option value="0">${ph[2]}</option>${Array.from({length:nd},(_,i)=>i+1).map(d=>`<option value="${d}"${d===b.d?' selected':''}>${dayName(d)}</option>`).join('')}</select></span>`;
+}
+function onBirthChange(){
+  const y=+$('#by').value,m=+$('#bm').value;let d=+$('#bd').value;
+  const nd=daysIn(y,m||1); if(d>nd) d=nd;
+  // 월을 바꾸면 그 달의 날짜 수에 맞게 일 목록을 다시 만들어요
+  const cur=$('#bd').options.length-1;
+  if(cur!==nd){$('#bd').innerHTML=`<option value="0">${$('#bd').options[0].text}</option>`+Array.from({length:nd},(_,i)=>i+1).map(x=>`<option value="${x}"${x===d?' selected':''}>${dayName(x)}</option>`).join('');}
+  me._b={y,m,d};
+  me.birth=(y&&m&&d)?`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`:'';
+}
+
 /* ===== 질문 화면 ===== */
 function renderQuiz(){
   const s=STEPS[step], isReview=s==='review';
@@ -832,7 +859,7 @@ function renderQuiz(){
         <span class="seg" data-pubfor="gender"><button data-pub="1" class="${me.pub.gender?'on':''}">${t('pub')}</button><button data-pub="0" class="${me.pub.gender?'':'on'}">${t('priv')}</button></span>
       </div>
       <div class="fieldrow">
-        <label class="f">${t('birthL')}<input type="date" id="birth" value="${esc(me.birth)}" min="2005-01-01" max="2020-12-31"></label>
+        <label class="f">${t('birthL')}${birthSelects()}</label>
         <span class="seg" data-pubfor="birth"><button data-pub="1" class="${me.pub.birth?'on':''}">${t('pub')}</button><button data-pub="0" class="${me.pub.birth?'':'on'}">${t('priv')}</button></span>
       </div>
       <p class="note">${t('privNote')} ${t('privacy')}</p>`;
@@ -864,7 +891,7 @@ function renderQuiz(){
   document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>go(+b.dataset.jump));
   if($('#nick')){$('#nick').oninput=e=>{me.name=e.target.value;updateNav();};$('#grade').onchange=e=>{me.grade=+e.target.value;updateNav();};
     $('#gender').onchange=e=>{me.gender=e.target.value;};
-    $('#birth').onchange=e=>{me.birth=BIRTH_RE.test(e.target.value)?e.target.value:'';};
+    ['#by','#bm','#bd'].forEach(id=>$(id).onchange=onBirthChange);
     document.querySelectorAll('[data-pubfor]').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
       me.pub[sg.dataset.pubfor]=b.dataset.pub==='1';
       sg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));}));}
@@ -891,6 +918,7 @@ document.addEventListener('keydown',e=>{
 async function submit(){
   if(doneCount()<QN) return;
   me.name=me.name.trim();
+  delete me._b;
   const p=JSON.parse(JSON.stringify(me));
   if(db&&uid){
     $('#submitB').disabled=true;
