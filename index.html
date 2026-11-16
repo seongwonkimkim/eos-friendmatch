@@ -266,6 +266,42 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;bo
 .swatch.on{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 [hidden]{display:none!important}
+.qbody.still{animation:none}
+.welcome{display:flex;flex-direction:column;gap:28px;max-width:980px;margin:0 auto}
+.whero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:center}
+@media (max-width:760px){.whero{grid-template-columns:minmax(0,1fr)}.wtag{max-width:340px;margin:0 auto;width:100%}}
+.wtext{display:flex;flex-direction:column;gap:14px}
+.wtitle{font-family:var(--display);font-weight:400;font-size:clamp(32px,5.5vw,52px);line-height:1.12;margin:0}
+.wsub{margin:0;color:var(--muted);font-size:16px;line-height:1.65;max-width:52ch}
+.wcta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.btn.big{font-size:17px;padding:13px 26px}
+.wtag .mytag{transform:rotate(2deg)}
+.wsteps{list-style:none;counter-reset:ws;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0;padding:0}
+@media (max-width:760px){.wsteps{grid-template-columns:minmax(0,1fr)}}
+.wsteps li{counter-increment:ws;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.wsteps li::before{content:counter(ws);font-family:var(--mono);font-size:13px;background:var(--accent);color:var(--accent-ink);border-radius:8px;width:26px;height:26px;display:grid;place-items:center}
+.wsteps b{font-size:16px}
+.wsteps span{font-size:14px;color:var(--muted)}
+.wpriv{text-align:center}
+.otherchip{border-style:dashed}
+.otherrow{display:flex;flex-direction:column;gap:6px;max-width:360px}
+.confirm.info{gap:10px}
+.confirm.info .mtools h3{margin:0}
+.infolist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.infolist li{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.infolist li:last-child{border-bottom:none}
+.infolist .k{font-size:12px;color:var(--muted)}
+.infolist .v{font-size:14px;min-width:0;overflow-wrap:anywhere}
+.infolist .v.empty{color:var(--muted)}
+.infolist .fixb{align-self:flex-start;margin-top:2px}
+.introq{margin:0;font-size:14px;color:var(--ink);background:var(--accent-soft);border-radius:10px;padding:8px 12px;word-break:keep-all;overflow-wrap:anywhere}
+.allabout{border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.allabout summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--accent)}
+.allabout[open] summary{margin-bottom:8px}
+.allabout dl{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin:0 0 8px}
+.allabout dt{font-size:12px;color:var(--muted);padding-top:2px;white-space:nowrap}
+.allabout dd{margin:0;display:flex;flex-wrap:wrap;gap:4px}
+.ptag{font-size:12px;border:1px solid var(--line);border-radius:5px;padding:0 6px;color:var(--ink)}
 .bsel{display:grid;grid-template-columns:1.3fr 1.2fr 1fr;gap:6px}
 .bsel select{min-width:0}
 .codebox{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
@@ -422,6 +458,40 @@ hideP:['이 친구 숨기기','Hide this student','隐藏此同学','Скрыт�
 hiddenL:['숨긴 친구:','Hidden:','已隐藏：','Скрыты:','Ocultos:','非表示：'],
 unhide:['다시 보기','Show again','重新显示','Показать','Mostrar','また表示'],
 hiddenToast:['숨겼어요. 이 친구의 이름표와 알림이 더 이상 안 보여요.',"Hidden. You won't see their name tag or notifications.",'已隐藏，不会再看到他的名牌和通知。','Скрыто. Ты больше не увидишь бейдж и уведомления.','Oculto. No verás su gafete ni sus avisos.','非表示にしたよ。名札もお知らせも見えなくなるよ。'],
+/* 웰컴 · 기타 · 내 정보 */
+wEyebrow:['취미 친구 찾기','Find hobby friends','寻找兴趣伙伴','Найди друзей по хобби','Encuentra amigos','趣味友だち探し'],
+wLead:['취미와 특징으로 EOS 친구를 알아가요','Get to know EOS friends through hobbies and traits','通过兴趣和特点认识EOS的朋友','Узнавай друзей в EOS по хобби и характеру','Conoce a tus amigos de EOS por sus aficiones','趣味と特徴でEOSの友だちを知ろう'],
+wSub:['같은 학교에 있어도 서로 뭘 좋아하는지 모를 때가 많아요. 이름표를 만들고, 나랑 비슷한 친구와 나랑 다른 친구를 알아가 보세요.',"Even at the same school, we often don't know what others like. Make your name tag and get to know friends who are like you, and who aren't.",'就算在同一所学校，也常常不知道彼此喜欢什么。做一个名牌，认识和你相似、也和你不同的朋友吧。','Даже в одной школе мы часто не знаем, что нравится другим. Создай бейдж и узнай похожих и непохожих на тебя.','Aunque vayamos a la misma escuela, a menudo no sabemos qué les gusta a los demás. Crea tu gafete y conoce a quien se parece a ti y a quien no.','同じ学校でも、お互いの好きなことを知らないことが多いよね。名札を作って、似ている友だちも違う友だちも知ってみよう。'],
+wStart:['시작하기','Get started','开始','Начать','Empezar','はじめる'],
+wMeta:['질문 {n}개 · 약 3분','{n} questions · about 3 min','{n}个问题 · 约3分钟','{n} вопросов · около 3 мин','{n} preguntas · unos 3 min','質問{n}問・約3分'],
+wSampleIntro:['조용히 그림 그리는 걸 좋아해요','I love drawing quietly','我喜欢安静地画画','Люблю тихо рисовать','Me encanta dibujar tranquilamente','静かに絵を描くのが好き'],
+wS1T:['질문에 답하기','Answer questions','回答问题','Ответь на вопросы','Responde preguntas','質問に答える'],
+wS1N:['취미, 좋아하는 음식, 잘하는 것을 골라요.','Pick your hobbies, favorite food and strengths.','选择你的爱好、喜欢的食物和擅长的事。','Выбери хобби, любимую еду и то, что умеешь.','Elige tus aficiones, comida favorita y talentos.','趣味・好きな食べ物・得意なことを選ぶよ。'],
+wS2T:['친구 이름표 보기','See friends\' name tags','看朋友的名牌','Смотри бейджи друзей','Mira los gafetes','友だちの名札を見る'],
+wS2N:['공통점이 많은 친구와 그 친구의 취미·특징을 알아가요.','Discover friends with lots in common, and what they\'re into.','认识共同点多的朋友和他们的兴趣、特点。','Узнай друзей с общими интересами и их увлечения.','Descubre amigos con mucho en común y sus aficiones.','共通点が多い友だちと、その趣味・特徴を知ろう。'],
+wS3T:['친구 코드 주고받기','Swap friend codes','交换好友码','Обменяйтесь кодами','Intercambia códigos','フレンドコードを交換'],
+wS3N:['짧은 코드를 보내면 서로 얼마나 잘 맞는지 볼 수 있어요.','Send a short code to see how well you match.','发一个短码就能看到你们有多合得来。','Отправь короткий код и узнай, насколько вы похожи.','Envía un código corto para ver cuánto encajan.','短いコードを送ると相性が分かるよ。'],
+wPriv:['연락처나 주소는 받지 않아요. 성별과 생년월일은 비공개로 할 수 있어요.','We never ask for phone numbers or addresses. Gender and birthday can be private.','我们不收集联系方式或地址。性别和生日可以不公开。','Мы не просим телефон или адрес. Пол и дату рождения можно скрыть.','Nunca pedimos teléfono ni dirección. Género y cumpleaños pueden ser privados.','連絡先や住所は聞かないよ。性別と生年月日は非公開にできるよ。'],
+otherChip:['기타 (직접 쓰기)','Other (type it)','其他（自己写）','Другое (своё)','Otro (escríbelo)','その他（自分で書く）'],
+otherPh:['예: 뜨개질','e.g. knitting','例：编织','Напр.: вязание','Ej.: tejer','例：編み物'],
+otherNote:['직접 쓴 답은 번역되지 않고, 친구 코드에도 들어가지 않아요.',"Typed answers aren't translated or included in friend codes.",'自己写的答案不会翻译，也不会放进好友码。','Свои ответы не переводятся и не входят в код.','Lo que escribas no se traduce ni va en el código.','自分で書いた答えは翻訳されず、フレンドコードにも入らないよ。'],
+myInfo:['내 정보','My info','我的信息','Мои данные','Mi información','わたしの情報'],
+myInfoOpen:['내 정보 보기','View my info','查看我的信息','Посмотреть мои данные','Ver mi información','情報を見る'],
+myInfoNone:['아직 이름표가 없어요. 질문에 먼저 답해 주세요.','No name tag yet. Answer the questions first.','还没有名牌，请先回答问题。','Бейджа пока нет. Сначала ответь на вопросы.','Aún no tienes gafete. Responde primero.','まだ名札がないよ。先に質問に答えてね。'],
+infoNote:['항목 아래 고치기를 누르면 그것만 바꿀 수 있어요.','Tap Edit on any item to change just that one.','点击“修改”只改那一项。','Нажми «Изменить», чтобы поменять только этот пункт.','Toca Editar para cambiar solo ese punto.','「直す」を押すとその項目だけ変えられるよ。'],
+fix:['고치기','Edit','修改','Изменить','Editar','直す'],
+editTitle:['내 정보 고치기','Edit my info','修改我的信息','Изменить данные','Editar mi información','情報を直す'],
+saveB:['저장','Save','保存','Сохранить','Guardar','保存'],
+fixed:['고쳤어요','Updated','已更新','Обновлено','Actualizado','直したよ'],
+/* 한 줄 소개 · 알아가기 */
+introQ:['한 줄로 나를 소개해 줘','Introduce yourself in one line','用一句话介绍自己','Расскажи о себе одной фразой','Preséntate en una frase','ひとことで自己紹介して'],
+introSub:['안 적어도 괜찮아요. 건너뛰려면 다음을 누르세요.','Optional. Press Next to skip.','可以不填，按“下一步”跳过。','Можно пропустить — нажми «Далее».','Opcional. Pulsa Siguiente para saltar.','書かなくてもOK。次へで飛ばせるよ。'],
+introPh:['예: 요즘 마크 건축에 빠진 중1이에요!',"e.g. 7th grader who's into Minecraft builds!",'例：最近迷上我的世界建筑的初一学生！','Напр.: семиклассник, который строит в Minecraft!','Ej.: ¡Estoy en 7.º y me encanta construir en Minecraft!','例：最近マイクラ建築にハマってる中1！'],
+introNote:['직접 쓴 글은 번역되지 않고 쓴 그대로 보여요.',"What you write isn't translated; others see it as written.",'自己写的内容不会被翻译，会原样显示。','Твой текст не переводится — другие видят его как есть.','Lo que escribas no se traduce; se ve tal cual.','自分で書いた文は翻訳されず、そのまま表示されるよ。'],
+introK:['한 줄 소개','One-line intro','一句话介绍','О себе','Presentación','ひとこと'],
+skipped:['건너뜀','Skipped','已跳过','Пропущено','Omitido','スキップ'],
+aboutT:['{n}님에 대해 더 알아보기','Get to know {n}','了解更多关于{n}','Узнать больше о {n}','Conoce más a {n}','{n}さんをもっと知る'],
+aboutHint:['노란색은 나랑 같은 것, 하얀색은 나랑 다른 거예요. 다른 것도 물어보면 대화가 더 재밌어져요!',"Yellow = same as you, white = different. Asking about the different ones makes chats more fun!",'黄色是和你一样的，白色是不一样的。问问不一样的，聊天会更有趣！','Жёлтое — как у тебя, белое — другое. Спроси про другое — будет интереснее!','Amarillo = igual que tú, blanco = diferente. ¡Pregunta por lo diferente!','黄色は自分と同じ、白は違うもの。違うことを聞くともっと楽しいよ！'],
 /* 친구 코드 */
 myCodeT:['내 친구 코드','My friend code','我的好友码','Мой код друга','Mi código de amigo','わたしのフレンドコード'],
 myCodeN:['이 코드를 카톡이나 메시지로 보내면, 친구가 나와 얼마나 잘 맞는지 볼 수 있어요. 코드에는 이름·학년·관심사가 들어 있으니 아는 친구에게만 보내 주세요. 답변을 고치면 코드도 바뀌어요.','Send this code by message so a friend can see how well you match. It contains your name, grade and interests, so only send it to people you know. It changes when you edit your answers.','把这个码通过消息发给朋友，朋友就能看到你们有多合得来。码里有你的名字、年级和兴趣，只发给认识的朋友。修改回答后码也会变。','Отправь этот код в сообщении, и друг увидит, насколько вы похожи. В нём имя, класс и интересы — отправляй только знакомым. Код меняется, если изменить ответы.','Envía este código por mensaje y tu amigo verá cuánto encajan. Incluye tu nombre, grado e intereses: envíalo solo a gente que conoces. Cambia si editas tus respuestas.','このコードをメッセージで送ると、友だちが相性を見られるよ。名前・学年・趣味が入っているから知っている人にだけ送ってね。答えを直すとコードも変わるよ。'],
@@ -429,9 +499,9 @@ copyCode:['코드 복사','Copy code','复制码','Скопировать код
 shareMsg:['[EOS HobbyMatch] 내 친구 코드야! HobbyMatch의 "친구 코드 넣기"에 붙여넣어 줘.','[EOS HobbyMatch] Here is my friend code! Paste it into "Add a friend code" in HobbyMatch.','[EOS HobbyMatch] 这是我的好友码！请粘贴到 HobbyMatch 的“输入好友码”。','[EOS HobbyMatch] Мой код друга! Вставь его в «Добавить код друга» в HobbyMatch.','[EOS HobbyMatch] ¡Mi código de amigo! Pégalo en "Añadir código" en HobbyMatch.','[EOS HobbyMatch] わたしのフレンドコードだよ！HobbyMatchの「フレンドコードを入れる」に貼ってね。'],
 addCodeT:['친구 코드 넣기','Add a friend code','输入好友码','Добавить код друга','Añadir código de amigo','フレンドコードを入れる'],
 addCodeN:['친구에게 받은 메시지를 통째로 붙여넣어도 돼요. Claude 계정이 없어도 돼요.','You can paste the whole message. No Claude account needed.','可以直接粘贴整条消息，不需要Claude账号。','Можно вставить всё сообщение целиком. Аккаунт Claude не нужен.','Puedes pegar el mensaje completo. No necesitas cuenta de Claude.','もらったメッセージをそのまま貼ってもOK。Claudeのアカウントはいらないよ。'],
-addCodePh:['FM1-로 시작하는 코드','Code starting with FM1-','以FM1-开头的码','Код, начинающийся с FM1-','Código que empieza por FM1-','FM1-で始まるコード'],
+addCodePh:['HM-로 시작하는 코드','Code starting with HM-','以HM-开头的码','Код, начинающийся с HM-','Código que empieza por HM-','HM-で始まるコード'],
 addB:['추가','Add','添加','Добавить','Añadir','追加'],
-badCode:['코드를 읽을 수 없어요. FM1-부터 끝까지 전부 복사했는지 확인해 주세요.',"Couldn't read that code. Make sure you copied everything from FM1- to the end.",'无法识别这个码，请确认从FM1-开始完整复制。','Не удалось прочитать код. Скопируй всё, начиная с FM1-.','No se pudo leer el código. Copia todo desde FM1- hasta el final.','コードが読めないよ。FM1-から最後まで全部コピーしたか確認してね。'],
+badCode:['코드를 읽을 수 없어요. HM-부터 끝까지 전부 복사했는지 확인해 주세요.',"Couldn't read that code. Make sure you copied everything from HM- to the end.",'无法识别这个码，请确认从HM-开始完整复制。','Не удалось прочитать код. Скопируй всё, начиная с HM-.','No se pudo leer el código. Copia todo desde HM- hasta el final.','コードが読めないよ。HM-から最後まで全部コピーしたか確認してね。'],
 selfCode:['이건 내 코드예요. 친구한테 받은 코드를 넣어 주세요.',"That's your own code. Paste a friend's code.",'这是你自己的码，请输入朋友的码。','Это твой собственный код. Вставь код друга.','Ese es tu propio código. Pega el de un amigo.','それは自分のコードだよ。友だちのコードを入れてね。'],
 codeAdded:['{n}님을 추가했어요','Added {n}','已添加 {n}','{n} добавлен(а)','{n} añadido','{n}さんを追加したよ'],
 codeUpdated:['{n}님 정보를 새 코드로 바꿨어요',"Updated {n}'s info",'已用新码更新 {n} 的信息','Данные {n} обновлены','Datos de {n} actualizados','{n}さんの情報を新しいコードに更新したよ'],
@@ -478,8 +548,8 @@ const GRADES={5:['초5','Grade 5','五年级','5 класс','5.º grado','小5'
 const gl=g=>GRADES[g]?GRADES[g][L]:'';
 
 const CATS=[
- {k:'hobbies',n:['취미','Hobbies','爱好','Хобби','Pasatiempos','趣味'],q:['쉬는 시간에 뭐 하는 걸 좋아해?','What do you like to do for fun?','你空闲时喜欢做什么？','Что ты любишь делать в свободное время?','¿Qué te gusta hacer en tu tiempo libre?','ひまなとき何するのが好き？'],o:{
-  soccer:['축구','Soccer','足球','Футбол','Fútbol','サッカー'],basketball:['농구','Basketball','篮球','Баскетбол','Baloncesto','バスケ'],badminton:['배드민턴','Badminton','羽毛球','Бадминтон','Bádminton','バドミントン'],swim:['수영','Swimming','游泳','Плавание','Natación','水泳'],draw:['그림 그리기','Drawing','画画','Рисование','Dibujar','お絵かき'],bake:['요리·베이킹','Cooking','烹饪','Готовка','Cocinar','料理'],photo:['사진','Photography','摄影','Фотография','Fotografía','写真'],lego:['레고','LEGO','乐高','LEGO','LEGO','レゴ'],dance:['춤','Dancing','跳舞','Танцы','Bailar','ダンス'],read:['독서','Reading','阅读','Чтение','Leer','読書'],pet:['반려동물','Pets','宠物','Питомцы','Mascotas','ペット'],edit:['영상 만들기','Making videos','做视频','Делать видео','Hacer videos','動画づくり']}},
+ {k:'hobbies',n:['취미','Hobbies','爱好','Хобби','Pasatiempos','趣味'],q:['어떤 취미가 있어?','What are your hobbies?','你有什么爱好？','Какие у тебя хобби?','¿Qué aficiones tienes?','どんな趣味がある？'],o:{
+  sports:['운동','Sports & exercise','运动','Спорт','Deporte','運動'],writing:['글쓰기','Writing','写作','Писать','Escribir','文章を書く'],draw:['그림 그리기','Drawing','画画','Рисование','Dibujar','お絵かき'],read:['독서','Reading','阅读','Чтение','Leer','読書'],listen:['음악 듣기','Listening to music','听音乐','Слушать музыку','Escuchar música','音楽を聴く'],instrument:['악기 연주','Playing an instrument','演奏乐器','Игра на инструменте','Tocar un instrumento','楽器演奏'],sing:['노래','Singing','唱歌','Пение','Cantar','歌'],dance:['춤','Dancing','跳舞','Танцы','Bailar','ダンス'],bake:['요리·베이킹','Cooking & baking','烹饪烘焙','Готовка','Cocinar','料理・お菓子作り'],photo:['사진·영상','Photos & videos','拍照和视频','Фото и видео','Fotos y videos','写真・動画'],game:['게임','Gaming','游戏','Игры','Videojuegos','ゲーム'],craft:['만들기·공예','Crafts & building','手工','Рукоделие','Manualidades','工作・クラフト'],code:['코딩','Coding','编程','Программирование','Programar','プログラミング'],walk:['산책·여행','Walks & travel','散步旅行','Прогулки и путешествия','Pasear y viajar','散歩・旅行'],pet:['반려동물','Pets','宠物','Питомцы','Mascotas','ペット'],collect:['수집','Collecting','收藏','Коллекционирование','Coleccionar','コレクション']}},
  {k:'games',n:['게임','Games','游戏','Игры','Juegos','ゲーム'],q:['즐겨 하는 게임은?','Which games do you play?','你常玩什么游戏？','В какие игры ты играешь?','¿A qué juegos juegas?','よく遊ぶゲームは？'],o:{
   mc:['마인크래프트','Minecraft','我的世界','Minecraft','Minecraft','マインクラフト'],roblox:['로블록스','Roblox','Roblox','Roblox','Roblox','ロブロックス'],brawl:['브롤스타즈','Brawl Stars','荒野乱斗','Brawl Stars','Brawl Stars','ブロスタ'],valo:['발로란트','Valorant','无畏契约','Valorant','Valorant','ヴァロラント'],lol:['리그 오브 레전드','League of Legends','英雄联盟','League of Legends','League of Legends','LoL'],poke:['포켓몬','Pokémon','宝可梦','Покемоны','Pokémon','ポケモン'],among:['어몽어스','Among Us','Among Us','Among Us','Among Us','Among Us'],kart:['마리오카트','Mario Kart','马力欧赛车','Mario Kart','Mario Kart','マリオカート'],board:['보드게임','Board games','桌游','Настолки','Juegos de mesa','ボードゲーム'],typing:['타자 게임','Typing games','打字游戏','Игры на печать','Mecanografía','タイピング'],none:['게임 안 해요',"I don't play games",'不玩游戏','Не играю','No juego','ゲームはしない']}},
  {k:'music',n:['음악','Music','音乐','Музыка','Música','音楽'],q:['어떤 음악을 들어?','What music do you listen to?','你听什么音乐？','Какую музыку ты слушаешь?','¿Qué música escuchas?','どんな音楽を聴く？'],o:{
@@ -488,18 +558,34 @@ const CATS=[
   anime:['애니메이션','Anime','动漫','Аниме','Anime','アニメ'],hero:['히어로 영화','Superhero movies','超级英雄电影','Супергерои','Superhéroes','ヒーロー映画'],fantasy:['판타지','Fantasy','奇幻','Фэнтези','Fantasía','ファンタジー'],webtoon:['웹툰','Webtoons','网络漫画','Вебтуны','Webtoons','ウェブトゥーン'],mystery:['추리','Mystery','推理','Детективы','Misterio','推理'],scifi:['SF','Sci-fi','科幻','Фантастика','Ciencia ficción','SF'],comedy:['코미디','Comedy','喜剧','Комедии','Comedia','コメディ'],horror:['공포','Horror','恐怖','Ужасы','Terror','ホラー']}},
  {k:'personality',n:['성격','Personality','性格','Характер','Personalidad','性格'],q:['나는 어떤 성격이야?','How would you describe yourself?','你是什么性格？','Какой у тебя характер?','¿Cómo eres?','自分はどんな性格？'],o:{
   calm:['차분함','Calm','沉稳','Спокойный','Tranquilo','おだやか'],active:['활발함','Energetic','活泼','Энергичный','Enérgico','元気'],playful:['장난기 많음','Playful','爱开玩笑','Шутник','Bromista','いたずら好き'],serious:['진지함','Serious','认真','Серьёзный','Serio','まじめ'],kind:['배려심 많음','Kind','体贴','Заботливый','Amable','やさしい'],curious:['호기심 많음','Curious','好奇心强','Любопытный','Curioso','好奇心旺盛'],shy:['낯가림 있음','A bit shy','有点害羞','Стеснительный','Algo tímido','人見知り'],funny:['웃긴 편','Funny','搞笑','Смешной','Divertido','おもしろい']}},
+{k:'food',n:['좋아하는 음식','Favorite food','喜欢的食物','Любимая еда','Comida favorita','好きな食べ物'],q:['제일 좋아하는 음식은?','What food do you love?','你最喜欢吃什么？','Какую еду ты любишь?','¿Qué comida te encanta?','いちばん好きな食べ物は？'],o:{
+  chicken:['치킨','Fried chicken','炸鸡','Жареная курица','Pollo frito','チキン'],pizza:['피자','Pizza','披萨','Пицца','Pizza','ピザ'],tteok:['떡볶이','Tteokbokki','炒年糕','Токпокки','Tteokbokki','トッポッキ'],ramen:['라면','Ramen','拉面','Рамён','Ramen','ラーメン'],sushi:['초밥','Sushi','寿司','Суши','Sushi','寿司'],meat:['고기','Grilled meat','烤肉','Мясо','Carne','焼肉'],malatang:['마라탕','Malatang','麻辣烫','Малатан','Malatang','マーラータン'],burger:['햄버거','Burgers','汉堡','Бургеры','Hamburguesas','ハンバーガー'],dessert:['디저트·빵','Desserts & bread','甜点和面包','Десерты и выпечка','Postres y pan','スイーツ・パン'],fruit:['과일','Fruit','水果','Фрукты','Fruta','果物']}},
+ {k:'skill',n:['잘하는 것','What I\'m good at','擅长的事','В чём я хорош(а)','Lo que se me da bien','得意なこと'],q:['내가 잘하는 건?','What are you good at?','你擅长什么？','В чём ты хорош(а)?','¿Qué se te da bien?','自分が得意なことは？'],o:{
+  sports:['운동','Sports','运动','Спорт','Deportes','運動'],art:['그림·디자인','Art & design','画画和设计','Рисование и дизайн','Arte y diseño','絵・デザイン'],sing:['노래','Singing','唱歌','Пение','Cantar','歌'],instrument:['악기','Playing music','乐器','Музыкальные инструменты','Instrumentos','楽器'],computer:['컴퓨터·코딩','Computers & coding','电脑和编程','Компьютеры и код','Informática','パソコン・プログラミング'],writing:['글쓰기','Writing','写作','Писать','Escribir','文章'],cooking:['요리','Cooking','做饭','Готовить','Cocinar','料理'],gaming:['게임','Gaming','打游戏','Игры','Videojuegos','ゲーム'],math:['수학','Math','数学','Математика','Matemáticas','数学'],speaking:['말하기·발표','Speaking','演讲','Выступать','Hablar en público','話すこと・発表'],making:['만들기','Making things','动手做东西','Мастерить','Manualidades','ものづくり'],language:['외국어','Languages','外语','Языки','Idiomas','外国語'],listen:['이야기 들어 주기','Listening to friends','倾听','Слушать друзей','Escuchar','話を聞くこと'],funny:['웃기기','Making people laugh','逗人笑','Смешить','Hacer reír','笑わせること']}},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.k,c]));
-const lab=(k,v)=>CAT[k]&&CAT[k].o[v]?CAT[k].o[v][L]:String(v);
+const INTRO_MAX=30;
+const lab=(k,v)=>{v=String(v);if(v.startsWith('c:'))return v.slice(2);return CAT[k]&&CAT[k].o[v]?CAT[k].o[v][L]:v;};
+const OTHER_MAX=15;
+// "기타"로 직접 쓴 답 (남이 준 값도 길이·형식을 검사)
+function otherOf(p,k){const o=p&&p.other;const v=o&&typeof o==='object'&&typeof o[k]==='string'?o[k].trim():'';return [...v].slice(0,OTHER_MAX).join('');}
+// 고른 것 + 직접 쓴 것 (직접 쓴 건 'c:글자'로 표시)
+function allVals(p,k){const a=(Array.isArray(p[k])?p[k]:[]).filter(v=>CAT[k].o[v]&&v!=='none');const o=otherOf(p,k);if(o)a.push('c:'+o);return a;}
+const normV=v=>v.startsWith('c:')?'c:'+v.slice(2).toLowerCase().replace(/\s+/g,''):v;
 
 const TPL={
  hobbies:[v=>`${v} 좋아한다며! 다음에 같이 할래?`,v=>`You like ${v} too! Want to do it together sometime?`,v=>`你也喜欢${v}！下次一起吗？`,v=>`Тебе тоже нравится «${v}»! Давай как-нибудь вместе?`,v=>`¡También te gusta ${v}! ¿Lo hacemos juntos?`,v=>`${v}好きなんだ！今度一緒にやらない？`],
  games:[v=>`${v} 해? 요즘 뭐 하고 있어?`,v=>`You play ${v}? What are you up to in it lately?`,v=>`你玩${v}吗？最近在玩什么？`,v=>`Ты играешь в «${v}»? Что сейчас проходишь?`,v=>`¿Juegas ${v}? ¿Qué haces últimamente?`,v=>`${v}やってる？最近どう？`],
  music:[v=>`${v} 좋아하는구나! 요즘 제일 많이 듣는 곡이 뭐야?`,v=>`You like ${v}! What song are you playing on repeat?`,v=>`你喜欢${v}！最近单曲循环的是哪首？`,v=>`Тебе нравится «${v}»! Какую песню слушаешь на повторе?`,v=>`¡Te gusta ${v}! ¿Qué canción escuchas en bucle?`,v=>`${v}好きなんだ！最近ずっと聴いてる曲は？`],
  media:[v=>`${v} 좋아해? 제일 재밌었던 거 하나만 추천해 줘!`,v=>`You're into ${v}? Recommend me your favorite!`,v=>`你喜欢${v}？推荐一部你最爱的吧！`,v=>`Тебе нравится «${v}»? Посоветуй любимое!`,v=>`¿Te gusta ${v}? ¡Recomiéndame tu favorito!`,v=>`${v}好き？いちばんのおすすめ教えて！`],
+ food:[v=>`${v} 좋아해? 학교 근처에 맛있는 데 알아?`,v=>`You like ${v}? Know a good place near school?`,v=>`你喜欢${v}？学校附近有好吃的店吗？`,v=>`Любишь «${v}»? Знаешь хорошее место рядом со школой?`,v=>`¿Te gusta ${v}? ¿Conoces un buen sitio cerca del cole?`,v=>`${v}好き？学校の近くでおいしい店知ってる？`],
+ skill:[v=>`${v} 잘한다며! 나도 좀 알려 줄 수 있어?`,v=>`I heard you're good at ${v}! Could you show me a bit?`,v=>`听说你擅长${v}！能教教我吗？`,v=>`Говорят, у тебя хорошо получается «${v}»! Покажешь?`,v=>`¡Dicen que se te da bien ${v}! ¿Me enseñas?`,v=>`${v}が得意なんだね！ちょっと教えてくれる？`],
  personality:[()=>`우리 성격 비슷한 것 같아. 쉬는 시간에 보통 뭐 해?`,()=>`I think we're alike. What do you usually do at break?`,()=>`感觉我们性格挺像的，课间你一般做什么？`,()=>`Кажется, мы похожи. Что ты делаешь на перемене?`,()=>`Creo que nos parecemos. ¿Qué haces en el recreo?`,()=>`性格似てる気がする！休み時間は何してる？`],
 };
 
+/* 예전 취미 선택지를 새 분류로 옮겨요 (저장된 답·예전 코드도 그대로 쓰이게) */
+const HOBBY_OLD={soccer:'sports',basketball:'sports',badminton:'sports',swim:'sports',edit:'photo',lego:'craft'};
+function migrateHobbies(arr){return (Array.isArray(arr)?arr:[]).map(v=>HOBBY_OLD[v]||v).filter((v,i,a)=>typeof v==='string'&&CAT.hobbies.o[v]&&a.indexOf(v)===i);}
 /* 예시 학생 (실제 학생 아님) */
 const EXAMPLES=[
  {id:'ex1',name:'하늘',grade:7,hobbies:['draw','lego','badminton'],games:['mc','roblox'],music:['ost'],media:['webtoon','anime'],personality:['calm','shy']},
@@ -508,38 +594,78 @@ const EXAMPLES=[
  {id:'ex4',name:'도현',grade:9,hobbies:['edit'],games:['valo','lol','typing'],music:['band'],media:['scifi','mystery'],personality:['serious','calm']},
  {id:'ex5',name:'지아',grade:6,hobbies:['bake','pet','dance'],games:['roblox','kart'],music:['kpop','pop'],media:['webtoon','comedy'],personality:['active','kind']},
  {id:'ex6',name:'시우',grade:7,hobbies:['edit','soccer'],games:['typing','brawl','mc'],music:['kpop','ost'],media:['webtoon','anime'],personality:['playful','curious']},
-].map(e=>({...e,example:true}));
+].map(e=>({...e,hobbies:migrateHobbies(e.hobbies),example:true,...({
+ ex1:{intro:'조용히 마크 건축하는 걸 좋아해요',food:['tteok','dessert'],skill:['art','making']},
+ ex2:{intro:'점심시간엔 무조건 농구 코트!',food:['chicken','burger','meat'],skill:['sports','funny']},
+ ex3:{intro:'AI로 그림 만드는 게 요즘 취미',food:['sushi','fruit'],skill:['art','computer']},
+ ex4:{intro:'발로란트 같이 할 사람 구해요',food:['ramen','pizza'],skill:['gaming','computer','math']},
+ ex5:{intro:'강아지 두 마리 키워요',food:['dessert','tteok'],skill:['cooking','listen']},
+ ex6:{intro:'타자 300타가 목표예요',food:['chicken','malatang'],skill:['computer','gaming']},
+}[e.id]||{})}));
 
 /* ===== 친구 코드: 서버 없이 답변을 문자로 주고받기 ===== */
-const CODE_KEYS={hobbies:'h',games:'g',music:'m',media:'v',personality:'p'};
+const CODE_KEYS={hobbies:'h',games:'g',music:'m',media:'v',personality:'p',food:'f',skill:'s'};
 function cleanProfile(o){
   // 남이 준 값은 정해진 것만 받아요
   if(!o||typeof o!=='object') return null;
   const name=typeof o.name==='string'?o.name.trim().slice(0,12):'';
   const grade=GRADES[o.grade]?+o.grade:0;
   if(!name||!grade) return null;
-  const p=blank(); p.name=name; p.grade=grade;
+  const p=blank(); p.name=name; p.grade=grade; p.intro=typeof o.intro==='string'?o.intro.trim().slice(0,INTRO_MAX):'';
   p.gender=GENDERS[o.gender]?o.gender:''; p.birth=BIRTH_RE.test(String(o.birth||''))?o.birth:'';
   p.pub={gender:!!(o.pub&&o.pub.gender),birth:!!(o.pub&&o.pub.birth)};
   CATS.forEach(c=>{p[c.k]=(Array.isArray(o[c.k])?o[c.k]:[]).filter(v=>typeof v==='string'&&c.o[v]).filter((v,i,a)=>a.indexOf(v)===i);});
+  p.hobbies=migrateHobbies(o.hobbies);
+  p.other={}; CATS.forEach(c=>{const t0=otherOf(o,c.k); if(t0) p.other[c.k]=t0;});
   return p;
 }
 const b64e=str=>{const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
 const b64d=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const bin=atob(s);return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));};
+// 짧은 코드: 고른 항목을 0/1 비트로 꾹꾹 눌러 담고, 뒤에 이름만 붙여요 (HM-로 시작, 약 30글자)
+// 새 선택지는 꼭 각 질문의 "맨 뒤"에 추가해야 예전 코드가 그대로 읽혀요
+const u8b64=u8=>{let bin='';u8.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
+const b64u8=s0=>{s0=s0.replace(/-/g,'+').replace(/_/g,'/');while(s0.length%4)s0+='=';return Uint8Array.from(atob(s0),c=>c.charCodeAt(0));};
+const G_CODE={'':0,m:1,f:2,x:3}, G_BACK=['','m','f','x'];
 function makeCode(p){
-  const o={n:p.name,r:p.grade};
-  CATS.forEach(c=>{const keys=Object.keys(c.o);let m=0;p[c.k].forEach(v=>{const i=keys.indexOf(v);if(i>=0)m|=1<<i;});o[CODE_KEYS[c.k]]=m.toString(36);});
-  if(p.pub&&p.pub.gender&&GENDERS[p.gender]) o.x=p.gender;
-  if(p.pub&&p.pub.birth&&BIRTH_RE.test(p.birth)) o.b=p.birth;
-  return 'FM1-'+b64e(JSON.stringify(o));
+  const bits=[]; const w=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>i)&1);};
+  w(1,3); w(Math.max(0,Math.min(15,(+p.grade||0)-4)),4);
+  w(p.pub&&p.pub.gender?(G_CODE[p.gender]||0):0,2);
+  const bm=p.pub&&p.pub.birth&&String(p.birth||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(bm&&+bm[1]>=2000&&+bm[1]<2032){w(1,1);w(+bm[1]-2000,5);w(+bm[2],4);w(+bm[3],5);}else w(0,1);
+  CATS.forEach(c=>{const set=new Set(p[c.k]||[]);Object.keys(c.o).forEach(k=>w(set.has(k)?1:0,1));});
+  while(bits.length%8)bits.push(0);
+  const head=[];for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];head.push(b);}
+  const nm=new TextEncoder().encode([...String(p.name||'')].slice(0,12).join(''));
+  return 'HM-'+u8b64(Uint8Array.from([...head,...nm]));
 }
+const FM1_HOBBIES=['soccer','basketball','badminton','swim','draw','bake','photo','lego','dance','read','pet','edit'];
 function readCode(text){
-  const m=String(text||'').replace(/\s+/g,'').match(/FM1-([A-Za-z0-9_-]{8,600})/);
+  const clean=String(text||'').replace(/\s+/g,'');
+  let m=clean.match(/HM-([A-Za-z0-9_-]{6,200})/);
+  if(m){
+    let u8; try{u8=b64u8(m[1]);}catch(_){return null;}
+    let pos=0; const total=u8.length*8;
+    const r=n=>{let v=0;for(let i=0;i<n;i++){if(pos>=total)throw 0;v=(v<<1)|((u8[pos>>3]>>(7-(pos&7)))&1);pos++;}return v;};
+    const raw={};
+    try{
+      if(r(3)!==1) return null;
+      raw.grade=r(4)+4; raw.gender=G_BACK[r(2)];
+      if(r(1)){const y=2000+r(5),mo=r(4),d=r(5);raw.birth=`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+      CATS.forEach(c=>{raw[c.k]=Object.keys(c.o).filter(()=>r(1));});
+    }catch(_){return null;}
+    const start=Math.ceil(pos/8);
+    try{raw.name=new TextDecoder('utf-8',{fatal:true}).decode(u8.slice(start));}catch(_){return null;}
+    raw.pub={gender:!!raw.gender,birth:!!raw.birth};
+    const p=cleanProfile(raw); if(!p) return null;
+    p.code='HM-'+m[1]; return p;
+  }
+  // 예전 FM1- 코드도 계속 읽어요
+  m=clean.match(/FM1-([A-Za-z0-9_-]{8,600})/);
   if(!m) return null;
   let o; try{o=JSON.parse(b64d(m[1]));}catch(_){return null;}
   if(!o||typeof o!=='object') return null;
-  const raw={name:o.n,grade:o.r,gender:o.x,birth:o.b};
-  CATS.forEach(c=>{const keys=Object.keys(c.o);const mask=parseInt(String(o[CODE_KEYS[c.k]]||'0'),36)||0;raw[c.k]=keys.filter((_,i)=>mask&(1<<i));});
+  const raw={name:o.n,grade:o.r,gender:o.x,birth:o.b,intro:o.i};
+  CATS.forEach(c=>{const keys=c.k==='hobbies'?FM1_HOBBIES:Object.keys(c.o);const mask=parseInt(String(o[CODE_KEYS[c.k]]||'0'),36)||0;raw[c.k]=keys.filter((_,i)=>mask&(1<<i));});
   const p=cleanProfile(raw); if(!p) return null;
   p.code='FM1-'+m[1];
   return p;
@@ -557,22 +683,24 @@ function metaParts(p,mine){
   const bt=bornText(p.birth); if(bt) out.push(esc(bt)+(mine&&!(p.pub&&p.pub.birth)?`<span class="priv">${t('priv')}</span>`:''));
   return out.join(' · ');
 }
-const blank=()=>Object.assign({name:'',grade:0,gender:'',birth:'',pub:{gender:false,birth:false}},Object.fromEntries(CATS.map(c=>[c.k,[]])));
-let me=blank(), profile=null, view='quiz', step=0, others=[], starterIdx={};
+const blank=()=>Object.assign({name:'',grade:0,intro:'',other:{},gender:'',birth:'',pub:{gender:false,birth:false}},Object.fromEntries(CATS.map(c=>[c.k,[]])));
+let me=blank(), profile=null, view='welcome', showOther=false, editOne=false, infoOpen=false, step=0, others=[], starterIdx={};
 let db=null, uid=null;
 let seenAt=0, demoInbox=[], openReply=null;
 let hiddenSet=new Set(), modalId=null, confirmBox=null;
 let gate=null, lockDoc=null, wrong=0, gateMsg='', gateBusy=false;
 let codeFriends=[], codeMsg='', localProfile=false;
 try{seenAt=+(localStorage.getItem('fm_seen')||0);}catch(_){}
-const STEPS=['basic',...CATS.map(c=>c.k),'review'];
+const STEPS=['basic','intro',...CATS.map(c=>c.k),'review'];
 const QN=STEPS.length-1;
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(m){const el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2200)}
-function isDone(i){const s=STEPS[i];if(s==='basic')return !!(me.name.trim()&&me.grade);if(s==='review')return false;return me[s].length>0;}
+function isDone(i){const s=STEPS[i];if(s==='basic')return !!(me.name.trim()&&me.grade);if(s==='intro')return !!String(me.intro||'').trim();if(s==='review')return false;return (me[s]||[]).length>0||!!otherOf(me,s);}
 const doneCount=()=>STEPS.slice(0,QN).filter((_,i)=>isDone(i)).length;
+// 한 줄 소개는 안 적어도 돼요 → 제출할 때는 나머지만 확인
+const missingCount=()=>STEPS.slice(0,QN).filter((st,i)=>st!=='intro'&&!isDone(i)).length;
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(_){return null}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
 const lsDel=k=>{try{localStorage.removeItem(k)}catch(_){}};
@@ -706,12 +834,14 @@ function applyLook(){
 function renderSettings(){
   $('#settings').innerHTML=`<div class="ih"><span>${t('settings')}</span><button class="mini" id="setClose">${t('close')}</button></div>
   <div class="sbody">
+    <div><h4>${t('myInfo')}</h4>${profile&&!gate?`<button class="btn" id="infoB" style="width:100%">👤 ${t('myInfoOpen')}</button>`:`<p class="note">${t('myInfoNone')}</p>`}</div>
     <div><h4>${t('langT')}</h4><div class="opts">${LANG_NAMES.map((n,i)=>`<button data-lang="${i}" class="${i===L?'on':''}">${n}</button>`).join('')}</div></div>
     <div><h4>${t('bgT')}</h4><div class="swatches">${Object.entries(BGS).map(([k,[c,n]])=>`<button class="swatch ${k===bgSet?'on':''}" data-bg="${k}" aria-pressed="${k===bgSet}"><i style="background-color:${c}"></i>${n[L]}</button>`).join('')}</div></div>
     <div><h4>${t('fontT')}</h4><div class="fonts">${Object.entries(FONTS).map(([k,[f,n]])=>`<button class="fontopt ${k===fontSet?'on':''}" data-font="${k}" aria-pressed="${k===fontSet}"><b style="font-family:${f}">${['안녕! 반가워','Hello!','你好！','Привет!','¡Hola!','こんにちは'][L]}</b><small>${n[L]}</small></button>`).join('')}</div></div>
     <div><h4>${t('modeT')}</h4><div class="opts">${Object.entries(MODES).map(([k,n])=>`<button data-mode="${k}" class="${k===modeSet?'on':''}">${n[L]}</button>`).join('')}</div></div>
   </div>`;
   $('#setClose').onclick=()=>{$('#settings').hidden=true;};
+  if($('#infoB')) $('#infoB').onclick=()=>{$('#settings').hidden=true;openInfo();};
   $('#settings').querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{L=+b.dataset.lang;lsSet('fm_lang',L);renderChrome();render();});
   $('#settings').querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{bgSet=b.dataset.bg;lsSet('fm_bg',bgSet);applyLook();renderSettings();});
   $('#settings').querySelectorAll('[data-font]').forEach(b=>b.onclick=()=>{fontSet=b.dataset.font;lsSet('fm_font',fontSet);applyLook();renderSettings();});
@@ -723,6 +853,7 @@ applyLook();
 
 function render(){
   if(gate) return renderGate();
+  if(view==='welcome') return renderWelcome();
   view==='quiz'?renderQuiz():renderResult();
 }
 
@@ -813,7 +944,7 @@ async function doStartOver(){
       userCol().doc('prefs').delete(), userCol().doc('inbox').delete(),
     ]);
   }catch(_){ gateBusy=false; toast(t('saveFail')); return renderGate(); }
-  gateBusy=false; lockDoc=null; profile=null; me=blank(); view='quiz'; step=0;
+  gateBusy=false; lockDoc=null; profile=null; me=blank(); view='welcome'; step=0;
   hiddenSet=new Set(); demoInbox=[]; lsDel(autoKey()); lsDel(waitKey());
   gate='set'; gateMsg=''; renderChrome(); render();
 }
@@ -844,9 +975,39 @@ function onBirthChange(){
   me.birth=(y&&m&&d)?`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`:'';
 }
 
+/* ===== 웰컴 페이지 ===== */
+function renderWelcome(){
+  $('#app').innerHTML=`<section class="welcome">
+    <div class="whero">
+      <div class="wtext">
+        <p class="label">EOS · ${t('wEyebrow')}</p>
+        <h2 class="wtitle">${t('wLead')}</h2>
+        <p class="wsub">${t('wSub')}</p>
+        <div class="wcta"><button class="btn primary big" id="startB">${t('wStart')} →</button><span class="note">${t('wMeta',{n:QN})}</span></div>
+      </div>
+      <div class="wtag" aria-hidden="true">
+        <div class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
+          <div class="nm"><b>${['하늘','Sky','小天','Ника','Cielo','そら'][L]}</b><span class="gpill">${gl(7)}</span></div>
+          <p class="introq">“${t('wSampleIntro')}”</p>
+          <div class="minichips">${[['hobbies','draw'],['hobbies','writing'],['games','mc'],['food','tteok'],['skill','listen']].map(([k,v])=>`<span>${esc(lab(k,v))}</span>`).join('')}</div>
+        </div></div>
+      </div>
+    </div>
+    <ol class="wsteps">
+      <li><b>${t('wS1T')}</b><span>${t('wS1N')}</span></li>
+      <li><b>${t('wS2T')}</b><span>${t('wS2N')}</span></li>
+      <li><b>${t('wS3T')}</b><span>${t('wS3N')}</span></li>
+    </ol>
+    <p class="note wpriv">🔒 ${t('wPriv')}</p>
+  </section>`;
+  $('#startB').onclick=()=>{view='quiz';step=0;render();window.scrollTo({top:0});};
+}
+
 /* ===== 질문 화면 ===== */
 function renderQuiz(){
   const s=STEPS[step], isReview=s==='review';
+  // 같은 질문을 다시 그릴 때는 넘어가는 효과를 다시 안 보여 줘요
+  const sameStep=renderQuiz.last===step&&$('#app .quiz')!==null; renderQuiz.last=step;
   let body='';
   if(s==='basic'){
     body=`<div class="qhead"><span class="qnum">Q1</span><div><h2>${t('nameQ')}</h2><p class="sub">${t('nameSub')}</p></div></div>
@@ -863,28 +1024,43 @@ function renderQuiz(){
         <span class="seg" data-pubfor="birth"><button data-pub="1" class="${me.pub.birth?'on':''}">${t('pub')}</button><button data-pub="0" class="${me.pub.birth?'':'on'}">${t('priv')}</button></span>
       </div>
       <p class="note">${t('privNote')} ${t('privacy')}</p>`;
+  }else if(s==='intro'){
+    body=`<div class="qhead"><span class="qnum">Q2</span><div><h2>${t('introQ')}</h2><p class="sub">${t('introSub')}</p></div></div>
+      <input type="text" id="introIn" maxlength="${INTRO_MAX}" value="${esc(me.intro||'')}" placeholder="${esc(t('introPh'))}" autocomplete="off">
+      <p class="note"><span id="introCount">${String(me.intro||'').length}</span> / ${INTRO_MAX} · ${t('introNote')}</p>`;
   }else if(isReview){
     body=`<div class="qhead"><span class="qnum">✓</span><div><h2>${t('reviewQ')}</h2><p class="sub">${t('reviewSub')}</p></div></div>
       <div class="review">${STEPS.slice(0,QN).map((st,i)=>{
-        const k=st==='basic'?t('basic'):CAT[st].n[L];
-        const v=st==='basic'?(me.name?[`${esc(me.name)} · ${gl(me.grade)}`,metaParts(me,true)].filter(Boolean).join(' · '):''):me[st].map(x=>esc(lab(st,x))).join(', ');
+        const k=st==='basic'?t('basic'):st==='intro'?t('introK'):CAT[st].n[L];
+        if(st==='intro') return `<button data-jump="${i}"><span class="k">${t('introK')}</span><span class="v ${me.intro?'':'empty'}">${me.intro?esc(me.intro):t('skipped')}</span></button>`;
+        const v=st==='basic'?(me.name?[`${esc(me.name)} · ${gl(me.grade)}`,metaParts(me,true)].filter(Boolean).join(' · '):''):allVals(me,st).map(x=>esc(lab(st,x))).join(', ');
         return `<button data-jump="${i}"><span class="k">${k}</span><span class="v ${v?'':'empty'}">${v||t('empty')}</span></button>`}).join('')}</div>
-      ${doneCount()<QN?`<p class="warn">${t('needAll')}</p>`:''}`;
+      ${missingCount()>0?`<p class="warn">${t('needAll')}</p>`:''}`;
   }else{
     const c=CAT[s];
     body=`<div class="qhead"><span class="qnum">Q${step+1}</span><div><h2>${c.q[L]}</h2><p class="sub">${t('pickSub')}</p></div></div>
-      <div class="chips">${Object.keys(c.o).map(v=>`<button class="chip ${me[s].includes(v)?'on':''}" data-v="${v}" aria-pressed="${me[s].includes(v)}">${esc(lab(s,v))}</button>`).join('')}</div>`;
+      <div class="chips">${Object.keys(c.o).map(v=>`<button class="chip ${me[s].includes(v)?'on':''}" data-v="${v}" aria-pressed="${me[s].includes(v)}">${esc(lab(s,v))}</button>`).join('')}<button class="chip otherchip ${otherOf(me,s)||showOther?'on':''}" id="otherChip" aria-pressed="${!!(otherOf(me,s)||showOther)}">✎ ${t('otherChip')}</button></div>
+      <div class="otherrow" ${otherOf(me,s)||showOther?'':'hidden'}><input type="text" id="otherIn" maxlength="${OTHER_MAX}" value="${esc(otherOf(me,s))}" placeholder="${esc(t('otherPh'))}" autocomplete="off"><p class="note">${t('otherNote')}</p></div>`;
   }
   $('#app').innerHTML=`<section class="quiz lanyard">
-    <div class="qtop"><b>${isReview?t('reviewQ'):t('qOf',{a:step+1,b:QN})}</b><span id="ansCount"></span></div>
+    <div class="qtop"><b>${editOne?'✎ '+t('editTitle'):isReview?t('reviewQ'):t('qOf',{a:step+1,b:QN})}</b><span id="ansCount"></span></div>
     <div class="segs">${STEPS.slice(0,QN).map((_,i)=>`<i class="${i===step?'cur':''}"></i>`).join('')}</div>
-    <div class="qbody">${body}</div>
+    <div class="qbody${sameStep?' still':''}">${body}</div>
     <div class="qnav">
-      <button class="btn" id="prevB" ${step===0?'disabled':''}>${t('prev')}</button>
+      ${editOne?`<button class="btn" id="cancelEditB">${t('cancel')}</button><span class="grow"></span><button class="btn primary" id="saveEditB">${t('saveB')}</button></div></section>`:''}
+      ${editOne?'':`<button class="btn" id="prevB" ${step===0?'disabled':''}>${t('prev')}</button>
       ${profile?`<button class="btn link" id="backB">${t('backRes')}</button>`:''}<span class="grow"></span>
       ${isReview?`<button class="btn primary" id="submitB">${t('submit')}</button>`:`<button class="btn primary" id="nextB">${t('next')}</button>`}
-    </div></section>`;
-  $('#prevB').onclick=()=>go(step-1);
+    </div></section>`}`;
+  if(editOne){
+    $('#cancelEditB').onclick=()=>{editOne=false;showOther=false;me=JSON.parse(JSON.stringify(profile));view='result';render();openInfo();};
+    $('#saveEditB').onclick=async()=>{
+      const b=$('#saveEditB'); b.disabled=true; me.name=me.name.trim(); delete me._b;
+      const ok=await persist(JSON.parse(JSON.stringify(me)));
+      if(!ok){b.disabled=false;return;}
+      editOne=false; showOther=false; view='result'; render(); toast(t('fixed')); openInfo();
+    };
+  }else $('#prevB').onclick=()=>go(step-1);
   $('#backB')&&($('#backB').onclick=()=>{view='result';me=JSON.parse(JSON.stringify(profile));renderResult();window.scrollTo({top:0});});
   $('#nextB')&&($('#nextB').onclick=()=>go(step+1));
   $('#submitB')&&($('#submitB').onclick=submit);
@@ -895,33 +1071,38 @@ function renderQuiz(){
     document.querySelectorAll('[data-pubfor]').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
       me.pub[sg.dataset.pubfor]=b.dataset.pub==='1';
       sg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));}));}
+  if($('#otherIn')) $('#otherIn').oninput=e=>{me.other=me.other||{};me.other[s]=e.target.value.slice(0,OTHER_MAX);updateNav();};
+  if($('#introIn')) $('#introIn').oninput=e=>{me.intro=e.target.value.slice(0,INTRO_MAX);$('#introCount').textContent=me.intro.length;updateNav();};
   document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+    if(ch.id==='otherChip'){
+      if(otherOf(me,s)||showOther){showOther=false;if(me.other)delete me.other[s];}
+      else{showOther=true;const nn=me[s].indexOf('none');if(nn>=0)me[s].splice(nn,1);}
+      renderQuiz(); if(showOther&&$('#otherIn'))$('#otherIn').focus(); return;
+    }
     const v=ch.dataset.v,a=me[s],i=a.indexOf(v);
-    if(i<0){ if(v==='none') a.length=0; else { const n=a.indexOf('none'); if(n>=0) a.splice(n,1); } a.push(v); } else a.splice(i,1);
-    document.querySelectorAll('.chip').forEach(c=>{const on=a.includes(c.dataset.v);c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
+    if(i<0){ if(v==='none'){ a.length=0; if(me.other)delete me.other[s]; showOther=false; } else { const n=a.indexOf('none'); if(n>=0) a.splice(n,1); } a.push(v); } else a.splice(i,1);
+    if(v==='none'&&a.includes('none')){renderQuiz();return;}
+    document.querySelectorAll('.chip:not(#otherChip)').forEach(c=>{const on=a.includes(c.dataset.v);c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});
     updateNav();});
   updateNav();
 }
 function updateNav(){
-  const n=$('#nextB'); if(n) n.disabled=!isDone(step);
-  const sb=$('#submitB'); if(sb) sb.disabled=doneCount()<QN;
+  const n=$('#nextB'); if(n) n.disabled=STEPS[step]!=='intro'&&!isDone(step);
+  const se=$('#saveEditB'); if(se) se.disabled=STEPS[step]!=='intro'&&!isDone(step);
+  const sb=$('#submitB'); if(sb) sb.disabled=missingCount()>0;
   $('#ansCount').textContent=t('answered',{a:doneCount(),b:QN});
   document.querySelectorAll('.segs i').forEach((s,i)=>s.classList.toggle('done',isDone(i)));
 }
-function go(i){step=Math.max(0,Math.min(STEPS.length-1,i));renderQuiz();window.scrollTo({top:0,behavior:'smooth'});}
+function go(i){showOther=false;step=Math.max(0,Math.min(STEPS.length-1,i));renderQuiz();window.scrollTo({top:0,behavior:'smooth'});}
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!$('#modal').hidden){closeModal();return;}
   if(gate||view!=='quiz'||e.key!=='Enter'||e.target.tagName==='BUTTON')return;
+  if(editOne){const se=$('#saveEditB');if(se&&!se.disabled){e.preventDefault();se.click();}return;}
   const n=$('#nextB'); if(n&&!n.disabled){e.preventDefault();n.click();}
 });
 
-async function submit(){
-  if(doneCount()<QN) return;
-  me.name=me.name.trim();
-  delete me._b;
-  const p=JSON.parse(JSON.stringify(me));
+async function persist(p){
   if(db&&uid){
-    $('#submitB').disabled=true;
     // 공개한 것만 공유 이름표에, 성별·생년월일 원본은 나만 보는 곳에 저장
     const shared={...p,updatedAt:Date.now()}; delete shared.pub;
     if(!p.pub.gender) delete shared.gender;
@@ -929,19 +1110,28 @@ async function submit(){
     try{
       await userCol().doc('private').set({gender:p.gender,birth:p.birth,pub:p.pub});
       await db.collection('profiles').doc(uid).set(shared);
-    }catch(e){ toast(t('saveFail')); $('#submitB').disabled=false; return; }
+    }catch(e){ toast(t('saveFail')); return false; }
   }
   if(!db){ lsSet('fm_local_profile',JSON.stringify(p)); localProfile=true; }
-  profile=p; view='result'; render(); toast(t('saved')); window.scrollTo({top:0});
+  profile=p; return true;
+}
+async function submit(){
+  if(missingCount()>0) return;
+  me.name=me.name.trim();
+  delete me._b;
+  $('#submitB').disabled=true;
+  const ok=await persist(JSON.parse(JSON.stringify(me)));
+  if(!ok){ $('#submitB').disabled=false; return; }
+  view='result'; render(); toast(t('saved')); window.scrollTo({top:0});
 }
 
 /* ===== 추천 계산: 질문마다 겹친 비율의 평균 → 70% 이상만 추천 ===== */
 function match(s){
   let sum=0;const shared=[];
   CATS.forEach(c=>{
-    const a=(profile[c.k]||[]).filter(v=>v!=='none'), b=(Array.isArray(s[c.k])?s[c.k]:[]).filter(v=>v!=='none');
-    const common=a.filter(x=>b.includes(x));
-    if(a.length&&b.length) sum+=common.length/Math.min(a.length,b.length);
+    const a=allVals(profile,c.k), bn=allVals(s,c.k).map(normV);
+    const common=a.filter(x=>bn.includes(normV(x)));
+    if(a.length&&bn.length) sum+=common.length/Math.min(a.length,bn.length);
     common.forEach(v=>shared.push({k:c.k,v}));
   });
   let score=sum/CATS.length + (s.grade===profile.grade?0.05:0);
@@ -976,8 +1166,13 @@ function cardHTML(s,m,opt={}){
       <div class="who"><div class="nm"><b>${esc(s.name)}</b><span class="gpill">${gl(s.grade)}</span></div>${metaParts(s)?`<span class="meta">${metaParts(s)}</span>`:''}${both?`<span class="mutual">♥ ${t('mutual')}</span>`:''}${s.example?`<span class="exb">${t('exBadge')}</span>`:''}${opt.code?`<span class="exb">${t('codeBadge')}</span>`:''}</div>
       <div class="meter"><div class="ring" style="--p:${m.pct}"><span>${m.pct}%</span></div><div class="lv">${level(m.pct)}</div></div></div>
     <div class="body">
+      ${typeof s.intro==='string'&&s.intro.trim()?`<p class="introq">“${esc(s.intro.trim().slice(0,INTRO_MAX))}”</p>`:''}
       <div class="label">${t('shared',{n:m.shared.length})}</div>
       <div class="shared">${m.shared.map(x=>`<span class="stag">${esc(lab(x.k,x.v))}</span>`).join('')}</div>
+      <details class="allabout"><summary>${esc(t('aboutT',{n:s.name}))}</summary>
+        <dl>${CATS.map(c=>{const vals=allVals(s,c.k);if(!vals.length)return '';const mine=allVals(profile,c.k).map(normV);
+          return `<dt>${c.n[L]}</dt><dd>${vals.map(v=>`<span class="${mine.includes(normV(v))?'stag':'ptag'}">${esc(lab(c.k,v))}</span>`).join('')}</dd>`;}).join('')}</dl>
+        <p class="note">${t('aboutHint')}</p></details>
       <div class="label">${t('starter')}</div>
       <div class="starter"><q>${esc(st[i])}</q>${st.length>1?`<button class="mini" data-next="${esc(s.id)}">${t('another')}</button>`:''}<button class="mini" data-copy>${t('copy')}</button></div>
       ${opt.code?`<div class="social"><span class="note" style="flex:1">${t('codeNoSocial')}</span><button class="btn danger" style="font-size:12px;padding:4px 10px" data-uncode="${esc(s.id)}">${t('codeRemove')}</button></div>`:socialHTML(s)}
@@ -986,10 +1181,29 @@ function cardHTML(s,m,opt={}){
 
 /* ===== 이름표 보기 창 / 확인 창 ===== */
 function openModal(id){ if(!profile||view!=='result')return; confirmBox=null; modalId=id; renderModal(); }
-function closeModal(){ modalId=null; confirmBox=null; const m=$('#modal'); if(m){m.hidden=true;m.innerHTML='';} }
+function closeModal(){ modalId=null; confirmBox=null; infoOpen=false; const m=$('#modal'); if(m){m.hidden=true;m.innerHTML='';} }
 function askConfirm(opts){ modalId=null; confirmBox=opts; renderModal(); }
+function openInfo(){ if(!profile)return; if(view!=='result'){view='result';editOne=false;me=JSON.parse(JSON.stringify(profile));render();} modalId=null; confirmBox=null; infoOpen=true; renderModal(); }
+function stepValue(p,st){
+  if(st==='basic') return [`${esc(p.name)} · ${gl(p.grade)}`,metaParts(p,true)].filter(Boolean).join(' · ');
+  if(st==='intro') return p.intro&&p.intro.trim()?esc(p.intro.trim()):'';
+  return allVals(p,st).map(x=>esc(lab(st,x))).join(', ');
+}
 function renderModal(){
   const box=$('#modal');
+  if(infoOpen&&profile){
+    box.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${t('myInfo')}"><div class="confirm info">
+      <div class="mtools"><h3>👤 ${t('myInfo')}</h3><button class="btn" id="infoClose">${t('close')}</button></div>
+      <p class="note">${t('infoNote')}</p>
+      <ul class="infolist">${STEPS.slice(0,QN).map((st,i)=>{const v=stepValue(profile,st);
+        const k=st==='basic'?t('basic'):st==='intro'?t('introK'):CAT[st].n[L];
+        return `<li><span class="k">${k}</span><span class="v ${v?'':'empty'}">${v||(st==='intro'?t('skipped'):t('empty'))}</span><button class="mini fixb" data-editstep="${i}">✎ ${t('fix')}</button></li>`;}).join('')}</ul>
+    </div></div>`;
+    box.hidden=false;
+    $('#infoClose').onclick=closeModal;
+    box.querySelectorAll('[data-editstep]').forEach(b=>b.onclick=()=>{const i=+b.dataset.editstep;closeModal();me=JSON.parse(JSON.stringify(profile));if(!me.other)me.other={};step=i;editOne=true;showOther=false;view='quiz';renderQuiz();window.scrollTo({top:0});});
+    return;
+  }
   if(confirmBox){
     box.innerHTML=`<div class="mbox" role="dialog" aria-modal="true"><div class="confirm"><h3>${confirmBox.title}</h3><p class="note">${confirmBox.note}</p>
       <div class="btnrow"><button class="btn" id="cfNo">${t('cancel')}</button><button class="btn dangerfill" id="cfYes">${confirmBox.yes}</button></div></div></div>`;
@@ -1016,7 +1230,7 @@ function renderResult(){
   const gotH=got.filter(x=>x.type==='heart').length, gotR=got.filter(x=>x.type==='reply'), gotS=got.filter(x=>x.type==='save');
   const mySaved=[...others,...EXAMPLES].filter(x=>p.saves&&p.saves[x.id]&&!hiddenSet.has(x.id));
   const hiddenList=[...hiddenSet].map(findStudent).filter(Boolean);
-  const myChips=CATS.flatMap(c=>p[c.k].map(v=>`<span>${esc(lab(c.k,v))}</span>`)).join('');
+  const myChips=CATS.flatMap(c=>allVals(p,c.k).map(v=>`<span>${esc(lab(c.k,v))}</span>`)).join('');
   const vis=visibleOthers();
   const pool=[...vis,...(vis.length<3?EXAMPLES.filter(e=>!hiddenSet.has(e.id)):[])];
   const ranked=pool.map(s=>({s,m:match(s)})).filter(x=>x.m.pct>=70).sort((a,b)=>b.m.pct-a.m.pct);
@@ -1025,6 +1239,7 @@ function renderResult(){
   $('#app').innerHTML=`<div class="grid">
     <div class="col"><section class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
       <div class="nm"><b>${esc(p.name)}</b><span class="gpill">${gl(p.grade)}</span></div>
+      ${p.intro&&p.intro.trim()?`<p class="introq">“${esc(p.intro.trim())}”</p>`:''}
       ${metaParts(p,true)?`<div class="meta">${metaParts(p,true)}</div>`:''}
       <div class="minichips">${myChips}</div>
       <div class="recv"><div class="label" style="color:var(--heart)">${t('received',{h:gotH,r:gotR.length})}</div>
@@ -1049,13 +1264,13 @@ function renderResult(){
   $('#editB').onclick=()=>{view='quiz';step=0;me=JSON.parse(JSON.stringify(profile));renderQuiz();window.scrollTo({top:0});};
   $('#lockB')&&($('#lockB').onclick=lockNow);
   $('#copyCodeB').onclick=()=>{
-    const msg=t('shareMsg')+'\n'+makeCode(profile);
+    const msg=makeCode(profile); // 코드만 복사
     try{navigator.clipboard.writeText(msg).then(()=>toast(t('copied')),()=>{selectCode();toast(t('copyFail'));});}catch(_){selectCode();toast(t('copyFail'));}
   };
   $('#codeForm').onsubmit=e=>{e.preventDefault();addCode($('#codeIn').value);};
   $('#removeB')&&($('#removeB').onclick=()=>askConfirm({title:t('removeQ'),note:t('removeN'),yes:t('removeYes'),onYes:async()=>{
     try{await Promise.all([db.collection('profiles').doc(uid).delete(),userCol().doc('private').delete()]);}catch(_){toast(t('saveFail'));return;}
-    profile=null;me=blank();view='quiz';step=0;demoInbox=[];render();renderBadge();toast(t('removed'));}}));
+    profile=null;me=blank();view='welcome';step=0;demoInbox=[];render();renderBadge();toast(t('removed'));}}));
   if(modalId) renderModal();
 }
 function selectCode(){const el=$('#myCode');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}
@@ -1094,7 +1309,7 @@ async function connect(){
     if(!d||!u) return;
     const id=await u.id(); if(!id) return;
     db=d; uid=id;
-    if(localProfile){ profile=null; me=blank(); view='quiz'; step=0; localProfile=false; }
+    if(localProfile){ profile=null; me=blank(); view='welcome'; step=0; localProfile=false; }
     const [inb,priv,lk,prefs]=await Promise.all(['inbox','private','lock','prefs'].map(k=>getDoc(userCol().doc(k))));
     if(inb) seenAt=Math.max(seenAt,+inb.seenAt||0);
     const privateInfo=priv?{gender:GENDERS[priv.gender]?priv.gender:'',birth:BIRTH_RE.test(priv.birth||'')?priv.birth:'',pub:{gender:!!(priv.pub&&priv.pub.gender),birth:!!(priv.pub&&priv.pub.birth)}}:null;
@@ -1109,11 +1324,11 @@ async function connect(){
         const v=doc.data(); if(!v||typeof v.name!=='string'||!v.name) return;
         if(doc.id===uid){
           if(first&&!profile){
-            profile=Object.assign(blank(),JSON.parse(JSON.stringify(v)),privateInfo||{}); delete profile.updatedAt;
+            profile=Object.assign(blank(),JSON.parse(JSON.stringify(v)),privateInfo||{}); delete profile.updatedAt; profile.hobbies=migrateHobbies(profile.hobbies);
             me=JSON.parse(JSON.stringify(profile)); view='result';
             if(!gate) render();
           }
-        }else others.push({...v,name:v.name.slice(0,12),id:doc.id});
+        }else others.push({...v,name:v.name.slice(0,12),hobbies:migrateHobbies(v.hobbies),id:doc.id});
       });
       first=false; renderBadge(); if(!$('#inbox').hidden) renderInbox();
       if(view==='result'&&!gate) renderResult();
