@@ -266,6 +266,21 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;bo
 .swatch.on{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 [hidden]{display:none!important}
+.mbox.vbox{width:min(880px,100%)}
+.vbox video{width:100%;aspect-ratio:16/9;border-radius:12px;background:#0d1a24;display:block}
+.wvideo{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.wvideo h3{font-family:var(--display);font-weight:400;font-size:26px;margin:4px 0 0}
+.wvideo video{width:100%;max-width:100%;aspect-ratio:16/9;border-radius:12px;background:#0d1a24;display:block}
+@media (max-width:520px){
+  header{flex-wrap:nowrap;align-items:center;gap:10px}
+  .brand{gap:10px;min-width:0}
+  .brand>div{min-width:0}
+  .logo{width:40px;height:40px}
+  .brand h1{font-size:25px;white-space:nowrap}
+  .brand p{font-size:12px;margin-top:4px}
+  .hright{gap:6px;flex:none}
+  .mailbtn{width:38px;height:38px}
+}
 .qbody.still{animation:none}
 .welcome{display:flex;flex-direction:column;gap:28px;max-width:980px;margin:0 auto}
 .whero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:center}
@@ -378,7 +393,7 @@ let L=0;
 try{const s=localStorage.getItem('fm_lang');if(s!==null&&+s>=0&&+s<6)L=+s;}catch(_){}
 
 const T={
-tagline:['관심사로 찾는 EOS 친구 추천','Find EOS friends through shared interests','通过共同兴趣找到EOS朋友','Найди друзей в EOS по общим интересам','Encuentra amigos de EOS por intereses comunes','共通の趣味でEOSの友だちを見つけよう'],
+tagline:['취미와 특징으로 EOS 친구 알아가기','Get to know EOS friends by hobbies and traits','通过兴趣和特点认识EOS朋友','Узнай друзей EOS по хобби и характеру','Conoce a amigos de EOS por sus aficiones','趣味と特徴でEOSの友だちを知ろう'],
 qOf:['질문 {a} / {b}','Question {a} of {b}','第 {a} / {b} 题','Вопрос {a} из {b}','Pregunta {a} de {b}','質問 {a} / {b}'],
 answered:['{b}개 중 {a}개 답함','{a} of {b} answered','已回答 {a} / {b}','Отвечено {a} из {b}','{a} de {b} respondidas','{b}問中 {a}問回答'],
 next:['다음','Next','下一步','Далее','Siguiente','次へ'],
@@ -458,6 +473,15 @@ hideP:['이 친구 숨기기','Hide this student','隐藏此同学','Скрыт�
 hiddenL:['숨긴 친구:','Hidden:','已隐藏：','Скрыты:','Ocultos:','非表示：'],
 unhide:['다시 보기','Show again','重新显示','Показать','Mostrar','また表示'],
 hiddenToast:['숨겼어요. 이 친구의 이름표와 알림이 더 이상 안 보여요.',"Hidden. You won't see their name tag or notifications.",'已隐藏，不会再看到他的名牌和通知。','Скрыто. Ты больше не увидишь бейдж и уведомления.','Oculto. No verás su gafete ni sus avisos.','非表示にしたよ。名札もお知らせも見えなくなるよ。'],
+noOneT:['아직 이름표를 올린 친구가 없어요','No one has posted a name tag yet','还没有同学发布名牌','Пока никто не выложил бейдж','Todavía nadie ha publicado su gafete','まだ名札を出した人はいないよ'],
+noOneNdb:['친구들이 들어와서 이름표를 만들면 여기에 나와요. 이 사이트 주소를 친구들에게 알려 주세요!','When friends join and make their name tags, they will show up here. Share this site with them!','朋友们来做名牌后会显示在这里。把网址分享给朋友吧！','Когда друзья создадут бейджи, они появятся здесь. Поделись ссылкой!','Cuando tus amigos creen su gafete, aparecerán aquí. ¡Comparte el sitio!','友だちが名札を作るとここに出るよ。サイトを教えてあげて！'],
+noOneN:['내 친구 코드를 친구에게 보내고, 친구에게 받은 코드를 아래 "친구 코드 넣기"에 넣으면 아래에서 서로 비교할 수 있어요.','Send your friend code to friends, and paste the codes you get below in "Add a friend code" to compare.','把你的好友码发给朋友，再把收到的码填到下面的“输入好友码”里就能比较。','Отправь свой код другу, а полученный код вставь ниже в «Добавить код друга».','Envía tu código a tus amigos y pega abajo los que recibas para compararte.','自分のコードを友だちに送って、もらったコードを下の「フレンドコードを入れる」に入れてね。'],
+helpT:['도움말','Help','帮助','Помощь','Ayuda','ヘルプ'],
+vErr:['영상을 불러오지 못했어요. 잠시 뒤에 다시 열어 주세요.',"Couldn't load the video. Try again in a moment.",'视频加载失败，请稍后再试。','Не удалось загрузить видео. Попробуй позже.','No se pudo cargar el video. Inténtalo más tarde.','動画を読み込めなかったよ。少しあとでもう一度開いてね。'],
+wVideoB:['사용법 영상','How-to video','使用说明视频','Видео-инструкция','Video tutorial','使い方動画'],
+wVideoK:['1분 사용법','1-minute guide','1分钟指南','Инструкция за 1 минуту','Guía de 1 minuto','1分ガイド'],
+wVideoT:['영상으로 먼저 보고 시작해요','Watch how it works first','先看看视频再开始','Сначала посмотри, как это работает','Mira cómo funciona primero','まず動画で見てみよう'],
+wVideoN:['영상 자막은 한국어예요.','Captions in this video are in Korean.','视频字幕是韩语。','Субтитры в видео на корейском.','Los subtítulos están en coreano.','動画の字幕は韓国語だよ。'],
 /* 웰컴 · 기타 · 내 정보 */
 wEyebrow:['취미 친구 찾기','Find hobby friends','寻找兴趣伙伴','Найди друзей по хобби','Encuentra amigos','趣味友だち探し'],
 wLead:['취미와 특징으로 EOS 친구를 알아가요','Get to know EOS friends through hobbies and traits','通过兴趣和特点认识EOS的朋友','Узнавай друзей в EOS по хобби и характеру','Conoce a tus amigos de EOS por sus aficiones','趣味と特徴でEOSの友だちを知ろう'],
@@ -498,7 +522,7 @@ myCodeN:['이 코드를 카톡이나 메시지로 보내면, 친구가 나와 �
 copyCode:['코드 복사','Copy code','复制码','Скопировать код','Copiar código','コードをコピー'],
 shareMsg:['[EOS HobbyMatch] 내 친구 코드야! HobbyMatch의 "친구 코드 넣기"에 붙여넣어 줘.','[EOS HobbyMatch] Here is my friend code! Paste it into "Add a friend code" in HobbyMatch.','[EOS HobbyMatch] 这是我的好友码！请粘贴到 HobbyMatch 的“输入好友码”。','[EOS HobbyMatch] Мой код друга! Вставь его в «Добавить код друга» в HobbyMatch.','[EOS HobbyMatch] ¡Mi código de amigo! Pégalo en "Añadir código" en HobbyMatch.','[EOS HobbyMatch] わたしのフレンドコードだよ！HobbyMatchの「フレンドコードを入れる」に貼ってね。'],
 addCodeT:['친구 코드 넣기','Add a friend code','输入好友码','Добавить код друга','Añadir código de amigo','フレンドコードを入れる'],
-addCodeN:['친구에게 받은 메시지를 통째로 붙여넣어도 돼요. Claude 계정이 없어도 돼요.','You can paste the whole message. No Claude account needed.','可以直接粘贴整条消息，不需要Claude账号。','Можно вставить всё сообщение целиком. Аккаунт Claude не нужен.','Puedes pegar el mensaje completo. No necesitas cuenta de Claude.','もらったメッセージをそのまま貼ってもOK。Claudeのアカウントはいらないよ。'],
+addCodeN:['친구에게 받은 코드를 붙여넣으세요. 메시지를 통째로 붙여넣어도 코드만 찾아서 읽어요.','Paste the code your friend sent. Pasting the whole message works too.','粘贴朋友发来的码，直接粘贴整条消息也可以。','Вставь код друга. Можно вставить всё сообщение целиком.','Pega el código de tu amigo. También puedes pegar el mensaje entero.','友だちからもらったコードを貼ってね。メッセージごと貼ってもOK。'],
 addCodePh:['HM-로 시작하는 코드','Code starting with HM-','以HM-开头的码','Код, начинающийся с HM-','Código que empieza por HM-','HM-で始まるコード'],
 addB:['추가','Add','添加','Добавить','Añadir','追加'],
 badCode:['코드를 읽을 수 없어요. HM-부터 끝까지 전부 복사했는지 확인해 주세요.',"Couldn't read that code. Make sure you copied everything from HM- to the end.",'无法识别这个码，请确认从HM-开始完整复制。','Не удалось прочитать код. Скопируй всё, начиная с HM-.','No se pudo leer el código. Copia todo desde HM- hasta el final.','コードが読めないよ。HM-から最後まで全部コピーしたか確認してね。'],
@@ -586,22 +610,8 @@ const TPL={
 /* 예전 취미 선택지를 새 분류로 옮겨요 (저장된 답·예전 코드도 그대로 쓰이게) */
 const HOBBY_OLD={soccer:'sports',basketball:'sports',badminton:'sports',swim:'sports',edit:'photo',lego:'craft'};
 function migrateHobbies(arr){return (Array.isArray(arr)?arr:[]).map(v=>HOBBY_OLD[v]||v).filter((v,i,a)=>typeof v==='string'&&CAT.hobbies.o[v]&&a.indexOf(v)===i);}
-/* 예시 학생 (실제 학생 아님) */
-const EXAMPLES=[
- {id:'ex1',name:'하늘',grade:7,hobbies:['draw','lego','badminton'],games:['mc','roblox'],music:['ost'],media:['webtoon','anime'],personality:['calm','shy']},
- {id:'ex2',name:'준서',grade:8,hobbies:['basketball','soccer','dance'],games:['brawl','among'],music:['hiphop','kpop'],media:['hero','comedy'],personality:['active','playful','funny']},
- {id:'ex3',name:'서윤',grade:7,hobbies:['draw','photo','swim'],games:['poke','board'],music:['jpop','play'],media:['fantasy','anime'],personality:['curious','kind']},
- {id:'ex4',name:'도현',grade:9,hobbies:['edit'],games:['valo','lol','typing'],music:['band'],media:['scifi','mystery'],personality:['serious','calm']},
- {id:'ex5',name:'지아',grade:6,hobbies:['bake','pet','dance'],games:['roblox','kart'],music:['kpop','pop'],media:['webtoon','comedy'],personality:['active','kind']},
- {id:'ex6',name:'시우',grade:7,hobbies:['edit','soccer'],games:['typing','brawl','mc'],music:['kpop','ost'],media:['webtoon','anime'],personality:['playful','curious']},
-].map(e=>({...e,hobbies:migrateHobbies(e.hobbies),example:true,...({
- ex1:{intro:'조용히 마크 건축하는 걸 좋아해요',food:['tteok','dessert'],skill:['art','making']},
- ex2:{intro:'점심시간엔 무조건 농구 코트!',food:['chicken','burger','meat'],skill:['sports','funny']},
- ex3:{intro:'AI로 그림 만드는 게 요즘 취미',food:['sushi','fruit'],skill:['art','computer']},
- ex4:{intro:'발로란트 같이 할 사람 구해요',food:['ramen','pizza'],skill:['gaming','computer','math']},
- ex5:{intro:'강아지 두 마리 키워요',food:['dessert','tteok'],skill:['cooking','listen']},
- ex6:{intro:'타자 300타가 목표예요',food:['chicken','malatang'],skill:['computer','gaming']},
-}[e.id]||{})}));
+/* 예시 학생은 없어요: 실제로 이름표를 올린 사람만 보여요 */
+const EXAMPLES=[];
 
 /* ===== 친구 코드: 서버 없이 답변을 문자로 주고받기 ===== */
 const CODE_KEYS={hobbies:'h',games:'g',music:'m',media:'v',personality:'p',food:'f',skill:'s'};
@@ -684,6 +694,7 @@ function metaParts(p,mine){
   return out.join(' · ');
 }
 const blank=()=>Object.assign({name:'',grade:0,intro:'',other:{},gender:'',birth:'',pub:{gender:false,birth:false}},Object.fromEntries(CATS.map(c=>[c.k,[]])));
+let videoOpen=false;
 let me=blank(), profile=null, view='welcome', showOther=false, editOne=false, infoOpen=false, step=0, others=[], starterIdx={};
 let db=null, uid=null;
 let seenAt=0, demoInbox=[], openReply=null;
@@ -717,7 +728,7 @@ function renderChrome(){
   $('#tagline').textContent=t('tagline');
   $('#setB').setAttribute('aria-label',t('settings'));
   if(!$('#settings').hidden) renderSettings();
-  const b=$('#banner'); b.hidden=!!db; b.textContent=t('local');
+  const b=$('#banner'); b.hidden=!!db||view==='welcome'||!!gate; b.textContent=t('local');
   $('#mailB').setAttribute('aria-label',t('inbox'));
   $('#mailB').hidden=!!gate;
   if(gate){$('#inbox').hidden=true;}
@@ -835,12 +846,14 @@ function renderSettings(){
   $('#settings').innerHTML=`<div class="ih"><span>${t('settings')}</span><button class="mini" id="setClose">${t('close')}</button></div>
   <div class="sbody">
     <div><h4>${t('myInfo')}</h4>${profile&&!gate?`<button class="btn" id="infoB" style="width:100%">👤 ${t('myInfoOpen')}</button>`:`<p class="note">${t('myInfoNone')}</p>`}</div>
+    <div><h4>${t('helpT')}</h4><button class="btn" id="vidB" style="width:100%">▶ ${t('wVideoB')}</button></div>
     <div><h4>${t('langT')}</h4><div class="opts">${LANG_NAMES.map((n,i)=>`<button data-lang="${i}" class="${i===L?'on':''}">${n}</button>`).join('')}</div></div>
     <div><h4>${t('bgT')}</h4><div class="swatches">${Object.entries(BGS).map(([k,[c,n]])=>`<button class="swatch ${k===bgSet?'on':''}" data-bg="${k}" aria-pressed="${k===bgSet}"><i style="background-color:${c}"></i>${n[L]}</button>`).join('')}</div></div>
     <div><h4>${t('fontT')}</h4><div class="fonts">${Object.entries(FONTS).map(([k,[f,n]])=>`<button class="fontopt ${k===fontSet?'on':''}" data-font="${k}" aria-pressed="${k===fontSet}"><b style="font-family:${f}">${['안녕! 반가워','Hello!','你好！','Привет!','¡Hola!','こんにちは'][L]}</b><small>${n[L]}</small></button>`).join('')}</div></div>
     <div><h4>${t('modeT')}</h4><div class="opts">${Object.entries(MODES).map(([k,n])=>`<button data-mode="${k}" class="${k===modeSet?'on':''}">${n[L]}</button>`).join('')}</div></div>
   </div>`;
   $('#setClose').onclick=()=>{$('#settings').hidden=true;};
+  $('#vidB').onclick=()=>{$('#settings').hidden=true;openVideo();};
   if($('#infoB')) $('#infoB').onclick=()=>{$('#settings').hidden=true;openInfo();};
   $('#settings').querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{L=+b.dataset.lang;lsSet('fm_lang',L);renderChrome();render();});
   $('#settings').querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{bgSet=b.dataset.bg;lsSet('fm_bg',bgSet);applyLook();renderSettings();});
@@ -852,6 +865,7 @@ document.addEventListener('click',e=>{const s=$('#settings');if(!s.hidden&&e.tar
 applyLook();
 
 function render(){
+  $('#banner').hidden=!!db||view==='welcome'||!!gate;
   if(gate) return renderGate();
   if(view==='welcome') return renderWelcome();
   view==='quiz'?renderQuiz():renderResult();
@@ -983,7 +997,7 @@ function renderWelcome(){
         <p class="label">EOS · ${t('wEyebrow')}</p>
         <h2 class="wtitle">${t('wLead')}</h2>
         <p class="wsub">${t('wSub')}</p>
-        <div class="wcta"><button class="btn primary big" id="startB">${t('wStart')} →</button><span class="note">${t('wMeta',{n:QN})}</span></div>
+        <div class="wcta"><button class="btn primary big" id="startB">${t('wStart')} →</button><button class="btn" id="howB">▶ ${t('wVideoB')}</button><span class="note">${t('wMeta',{n:QN})}</span></div>
       </div>
       <div class="wtag" aria-hidden="true">
         <div class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
@@ -998,8 +1012,16 @@ function renderWelcome(){
       <li><b>${t('wS2T')}</b><span>${t('wS2N')}</span></li>
       <li><b>${t('wS3T')}</b><span>${t('wS3N')}</span></li>
     </ol>
+    <section class="wvideo" id="wvideo">
+      <div><p class="label">${t('wVideoK')}</p><h3>${t('wVideoT')}</h3>${L!==0?`<p class="note">${t('wVideoN')}</p>`:''}</div>
+      <video id="tutVideo" src="tutorial.mp4" poster="tutorial-poster.jpg" controls playsinline preload="metadata"></video>
+    </section>
     <p class="note wpriv">🔒 ${t('wPriv')}</p>
   </section>`;
+  // 영상 파일이 없으면 (아직 안 올렸을 때) 영상 칸을 숨겨요
+  const vid=$('#tutVideo'); const hideVid=()=>{['#wvideo','#howB'].forEach(id=>{const e=$(id);if(e)e.hidden=true;});};
+  vid.addEventListener('error',hideVid);
+  $('#howB').onclick=()=>{$('#wvideo').scrollIntoView({behavior:'smooth',block:'center'});const pr=vid.play();if(pr&&pr.catch)pr.catch(()=>{});};
   $('#startB').onclick=()=>{view='quiz';step=0;render();window.scrollTo({top:0});};
 }
 
@@ -1181,8 +1203,9 @@ function cardHTML(s,m,opt={}){
 
 /* ===== 이름표 보기 창 / 확인 창 ===== */
 function openModal(id){ if(!profile||view!=='result')return; confirmBox=null; modalId=id; renderModal(); }
-function closeModal(){ modalId=null; confirmBox=null; infoOpen=false; const m=$('#modal'); if(m){m.hidden=true;m.innerHTML='';} }
+function closeModal(){ modalId=null; confirmBox=null; infoOpen=false; videoOpen=false; const m=$('#modal'); if(m){m.hidden=true;m.innerHTML='';} }
 function askConfirm(opts){ modalId=null; confirmBox=opts; renderModal(); }
+function openVideo(){ modalId=null; confirmBox=null; infoOpen=false; videoOpen=true; renderModal(); }
 function openInfo(){ if(!profile)return; if(view!=='result'){view='result';editOne=false;me=JSON.parse(JSON.stringify(profile));render();} modalId=null; confirmBox=null; infoOpen=true; renderModal(); }
 function stepValue(p,st){
   if(st==='basic') return [`${esc(p.name)} · ${gl(p.grade)}`,metaParts(p,true)].filter(Boolean).join(' · ');
@@ -1191,6 +1214,17 @@ function stepValue(p,st){
 }
 function renderModal(){
   const box=$('#modal');
+  if(videoOpen){
+    box.innerHTML=`<div class="mbox vbox" role="dialog" aria-modal="true" aria-label="${t('wVideoB')}"><div class="confirm">
+      <div class="mtools"><h3>▶ ${t('wVideoK')}</h3><button class="btn" id="vClose">${t('close')}</button></div>
+      ${L!==0?`<p class="note">${t('wVideoN')}</p>`:''}
+      <video id="mVideo" src="tutorial.mp4" poster="tutorial-poster.jpg" controls playsinline autoplay></video>
+      <p class="note" id="vErr" hidden>${t('vErr')}</p></div></div>`;
+    box.hidden=false;
+    $('#vClose').onclick=closeModal;
+    $('#mVideo').addEventListener('error',()=>{const v=$('#mVideo'),e=$('#vErr');if(v)v.hidden=true;if(e)e.hidden=false;});
+    return;
+  }
   if(infoOpen&&profile){
     box.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${t('myInfo')}"><div class="confirm info">
       <div class="mtools"><h3>👤 ${t('myInfo')}</h3><button class="btn" id="infoClose">${t('close')}</button></div>
@@ -1232,9 +1266,10 @@ function renderResult(){
   const hiddenList=[...hiddenSet].map(findStudent).filter(Boolean);
   const myChips=CATS.flatMap(c=>allVals(p,c.k).map(v=>`<span>${esc(lab(c.k,v))}</span>`)).join('');
   const vis=visibleOthers();
-  const pool=[...vis,...(vis.length<3?EXAMPLES.filter(e=>!hiddenSet.has(e.id)):[])];
+  const pool=vis;
   const ranked=pool.map(s=>({s,m:match(s)})).filter(x=>x.m.pct>=70).sort((a,b)=>b.m.pct-a.m.pct);
   const recHTML = ranked.length ? `<div class="cards">${ranked.map(({s,m})=>cardHTML(s,m)).join('')}</div>`
+    : !pool.length ? `<div class="locked"><h3>${t('noOneT')}</h3><p class="note">${db?t('noOneNdb'):t('noOneN')}</p></div>`
     : `<div class="locked"><h3>${t('noneT')}</h3><p class="note">${t('noneN')}</p></div>`;
   $('#app').innerHTML=`<div class="grid">
     <div class="col"><section class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
@@ -1252,7 +1287,7 @@ function renderResult(){
       <div class="btnrow"><button class="btn" id="editB">${t('edit')}</button>${db?`<button class="btn" id="lockB">🔒 ${t('lockB')}</button><button class="btn danger" id="removeB">${t('remove')}</button>`:''}</div>
     </div></section></div>
     <div class="col">
-      <div><div class="label">${t('participants',{n:vis.length+1})}</div><h2 class="sec">${esc(t('recTitle',{n:p.name}))}</h2></div>
+      <div>${db?`<div class="label">${t('participants',{n:vis.length+1})}</div>`:''}<h2 class="sec">${esc(t('recTitle',{n:p.name}))}</h2></div>
       ${recHTML}
       <section class="codesec">
         <div><div class="label">${t('codeFriendsT')}</div><h2 class="sec">${t('addCodeT')}</h2><p class="note">${t('addCodeN')}</p></div>
