@@ -36,7 +36,7 @@ header{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;justify-co
 .langsel{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
 .label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .note{font-size:13px;color:var(--muted);margin:0}
-input[type=text],input[type=date],input[type=password],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+input[type=text],input[type=date],input[type=password],input[type=email],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .banner{background:var(--accent-soft);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:16px}
 
@@ -266,6 +266,17 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;bo
 .swatch.on{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 [hidden]{display:none!important}
+.classlock{max-width:520px}
+.classlock .qbody{animation:none}
+.periods{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.periods li{display:flex;gap:10px;align-items:center;padding:7px 12px;border-bottom:1px solid var(--line);font-size:14px}
+.periods li:last-child{border-bottom:none}
+.periods li .tm{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.periods li.now{background:var(--accent-soft);font-weight:700}
+.periods li.now .tm{color:var(--ink)}
+.periods li b{font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:1px 8px}
+.unlockrow{display:flex;gap:8px;align-items:end}
+.unlockrow .f{flex:1}
 .mbox.vbox{width:min(880px,100%)}
 .vbox video{width:100%;aspect-ratio:16/9;border-radius:12px;background:#0d1a24;display:block}
 .wvideo{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
@@ -385,6 +396,7 @@ h1,h2,h3,.sub,.note,.starter q,.confirm p{word-break:keep-all;overflow-wrap:anyw
 </div>
 <div class="modal" id="modal" hidden></div>
 <div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 /* 언어: 0 한국어 · 1 English · 2 中文 · 3 Русский · 4 Español · 5 日本語 */
@@ -476,6 +488,41 @@ hiddenToast:['숨겼어요. 이 친구의 이름표와 알림이 더 이상 안 
 noOneT:['아직 이름표를 올린 친구가 없어요','No one has posted a name tag yet','还没有同学发布名牌','Пока никто не выложил бейдж','Todavía nadie ha publicado su gafete','まだ名札を出した人はいないよ'],
 noOneNdb:['친구들이 들어와서 이름표를 만들면 여기에 나와요. 이 사이트 주소를 친구들에게 알려 주세요!','When friends join and make their name tags, they will show up here. Share this site with them!','朋友们来做名牌后会显示在这里。把网址分享给朋友吧！','Когда друзья создадут бейджи, они появятся здесь. Поделись ссылкой!','Cuando tus amigos creen su gafete, aparecerán aquí. ¡Comparte el sitio!','友だちが名札を作るとここに出るよ。サイトを教えてあげて！'],
 noOneN:['내 친구 코드를 친구에게 보내고, 친구에게 받은 코드를 아래 "친구 코드 넣기"에 넣으면 아래에서 서로 비교할 수 있어요.','Send your friend code to friends, and paste the codes you get below in "Add a friend code" to compare.','把你的好友码发给朋友，再把收到的码填到下面的“输入好友码”里就能比较。','Отправь свой код другу, а полученный код вставь ниже в «Добавить код друга».','Envía tu código a tus amigos y pega abajo los que recibas para compararte.','自分のコードを友だちに送って、もらったコードを下の「フレンドコードを入れる」に入れてね。'],
+lockTop:['수업 시간','Class time','上课时间','Урок','Hora de clase','授業中'],
+lockT:['지금은 수업 시간이에요','It\'s class time right now','现在是上课时间','Сейчас идёт урок','Ahora es hora de clase','今は授業中だよ'],
+lockN:['지금은 {p} 시간이에요. {t}에 다시 열려요. 쉬는 시간에 만나요!',"It's {p} now. Opens again at {t}. See you at break!",'现在是{p}。{t}重新开放，课间见！','Сейчас {p}. Откроется в {t}. Увидимся на перемене!','Ahora es {p}. Se abre de nuevo a las {t}. ¡Nos vemos en el recreo!','今は{p}だよ。{t}にまた開くよ。休み時間に会おう！'],
+lockOpen:['쉬는 시간, 점심시간, 오후 4시 이후, 주말에는 열려 있어요.','Open during breaks, lunch, after 4 PM and on weekends.','课间、午饭时间、下午4点以后和周末开放。','Открыто на переменах, в обед, после 16:00 и в выходные.','Abierto en recreos, almuerzo, después de las 16:00 y fines de semana.','休み時間・お昼・午後4時以降・週末は開いてるよ。'],
+lockNow:['지금','Now','现在','Сейчас','Ahora','今'],
+unlockAsk:['선생님이 허락했어요','My teacher said it\'s OK','老师允许了','Учитель разрешил','Mi profesor lo permite','先生がいいって言った'],
+unlockL:['선생님께 받은 허락 코드','Unlock code from your teacher','老师给的解锁码','Код от учителя','Código del profesor','先生からもらったコード'],
+unlockB:['열기','Unlock','解锁','Открыть','Abrir','開く'],
+unlockBad:['코드가 맞지 않아요. 선생님께 다시 확인해 주세요.','That code is not right. Check with your teacher.','解锁码不对，请再问问老师。','Код неверный. Уточни у учителя.','El código no es correcto. Pregunta a tu profesor.','コードが違うよ。先生にもう一度聞いてね。'],
+unlocked:['{t}까지 열었어요','Unlocked until {t}','已解锁到{t}','Открыто до {t}','Abierto hasta las {t}','{t}まで開いたよ'],
+acctT:['계정','Account','账号','Аккаунт','Cuenta','アカウント'],
+loginB:['로그인','Log in','登录','Войти','Entrar','ログイン'],
+signupB:['가입하기','Sign up','注册','Регистрация','Registrarse','登録する'],
+authT:['로그인하고 친구들 만나기','Log in to meet friends','登录认识朋友','Войди, чтобы найти друзей','Entra para conocer amigos','ログインして友だちに会おう'],
+authSignT:['처음이면 가입해요','New here? Sign up','第一次？注册吧','Впервые? Зарегистрируйся','¿Eres nuevo? Regístrate','はじめてなら登録しよう'],
+authN:['로그인하면 내 이름표가 학교 친구들에게 보이고, 친구들 이름표도 볼 수 있어요.','When you log in, your name tag is shared with school friends and you can see theirs.','登录后，你的名牌会分享给同学，也能看到他们的名牌。','После входа твой бейдж увидят одноклассники, а ты увидишь их бейджи.','Al entrar, tu gafete se comparte con tus compañeros y verás los suyos.','ログインすると名札が学校の友だちに見えて、友だちの名札も見られるよ。'],
+emailL:['이메일','Email','邮箱','Эл. почта','Correo','メール'],
+pwSix:['비밀번호 (6글자 이상)','Password (6+ characters)','密码（至少6位）','Пароль (от 6 символов)','Contraseña (6+ caracteres)','パスワード（6文字以上）'],
+noLogin:['로그인 없이 쓰기','Use without logging in','不登录直接用','Без входа','Usar sin cuenta','ログインせずに使う'],
+toSignup:['처음이에요 → 가입하기','First time? → Sign up','第一次 → 注册','Впервые → Регистрация','Primera vez → Registrarse','はじめて → 登録'],
+toLogin:['이미 가입했어요 → 로그인','Already have an account → Log in','已有账号 → 登录','Уже есть аккаунт → Войти','Ya tengo cuenta → Entrar','登録済み → ログイン'],
+authWait:['잠시만요…','One moment…','请稍等…','Секунду…','Un momento…','ちょっと待ってね…'],
+errEmail:['이메일을 바르게 적어 주세요.','Please enter a valid email.','请输入正确的邮箱。','Введи правильный адрес.','Escribe un correo válido.','メールを正しく入れてね。'],
+errPw6:['비밀번호는 6글자 이상이어야 해요.','Password must be at least 6 characters.','密码至少6位。','Пароль — минимум 6 символов.','La contraseña necesita 6+ caracteres.','パスワードは6文字以上だよ。'],
+errCred:['이메일이나 비밀번호가 맞지 않아요.','Wrong email or password.','邮箱或密码不对。','Неверная почта или пароль.','Correo o contraseña incorrectos.','メールかパスワードが違うよ。'],
+errExists:['이미 가입한 이메일이에요. 로그인해 주세요.','That email is already registered. Please log in.','这个邮箱已注册，请登录。','Эта почта уже зарегистрирована. Войди.','Ese correo ya existe. Entra.','このメールは登録済みだよ。ログインしてね。'],
+errRate:['지금 사람이 많아요. 1분 뒤에 다시 해 주세요.','Too many tries right now. Try again in a minute.','现在人太多，请1分钟后再试。','Слишком много попыток. Попробуй через минуту.','Demasiados intentos. Prueba en un minuto.','今混んでるよ。1分後にもう一度してね。'],
+errAuth:['로그인하지 못했어요: {e}','Could not log in: {e}','登录失败：{e}','Не удалось войти: {e}','No se pudo entrar: {e}','ログインできなかったよ：{e}'],
+checkMail:['메일함에서 확인 링크를 누른 뒤 로그인해 주세요.','Click the link in your email, then log in.','请先点击邮件里的确认链接再登录。','Нажми ссылку в письме, затем войди.','Abre el enlace del correo y luego entra.','メールの確認リンクを押してからログインしてね。'],
+loggedAs:['{e} 로 로그인했어요','Logged in as {e}','已登录：{e}','Вход: {e}','Sesión: {e}','{e} でログイン中'],
+logoutB:['로그아웃','Log out','退出登录','Выйти','Salir','ログアウト'],
+loginSee:['로그인하고 친구들 이름표 보기','Log in to see friends\' name tags','登录查看同学名牌','Войди, чтобы видеть бейджи друзей','Entra para ver los gafetes','ログインして友だちの名札を見る'],
+uploaded:['이 기기에 있던 내 이름표를 올렸어요!','Your name tag from this device is now shared!','已上传这台设备上的名牌！','Бейдж с этого устройства загружен!','¡Tu gafete de este dispositivo se compartió!','この端末の名札をアップしたよ！'],
+welcomeIn:['반가워요! 로그인했어요.','Welcome! You are logged in.','欢迎！已登录。','Привет! Ты вошёл.','¡Hola! Has entrado.','ようこそ！ログインしたよ。'],
+localSb:['지금은 로그인하지 않아서 답변이 이 기기에만 저장돼요. 로그인하면 학교 친구들 이름표가 보여요.','You are not logged in, so answers stay on this device. Log in to see school friends.','未登录，回答只保存在这台设备上。登录后能看到同学的名牌。','Ты не вошёл, ответы только на этом устройстве. Войди, чтобы видеть друзей.','No has entrado; tus respuestas se quedan aquí. Entra para ver a tus compañeros.','ログインしていないので答えはこの端末だけ。ログインすると友だちが見えるよ。'],
 helpT:['도움말','Help','帮助','Помощь','Ayuda','ヘルプ'],
 vErr:['영상을 불러오지 못했어요. 잠시 뒤에 다시 열어 주세요.',"Couldn't load the video. Try again in a moment.",'视频加载失败，请稍后再试。','Не удалось загрузить видео. Попробуй позже.','No se pudo cargar el video. Inténtalo más tarde.','動画を読み込めなかったよ。少しあとでもう一度開いてね。'],
 wVideoB:['사용법 영상','How-to video','使用说明视频','Видео-инструкция','Video tutorial','使い方動画'],
@@ -728,9 +775,9 @@ function renderChrome(){
   $('#tagline').textContent=t('tagline');
   $('#setB').setAttribute('aria-label',t('settings'));
   if(!$('#settings').hidden) renderSettings();
-  const b=$('#banner'); b.hidden=!!db||view==='welcome'||!!gate; b.textContent=t('local');
+  const b=$('#banner'); b.hidden=!!db||view==='welcome'||!!gate||authOpen; b.textContent=sb?t('localSb'):t('local');
   $('#mailB').setAttribute('aria-label',t('inbox'));
-  $('#mailB').hidden=!!gate;
+  $('#mailB').hidden=!!gate||!!classNow();
   if(gate){$('#inbox').hidden=true;}
   renderBadge(); if(!$('#inbox').hidden) renderInbox();
 }
@@ -846,6 +893,7 @@ function renderSettings(){
   $('#settings').innerHTML=`<div class="ih"><span>${t('settings')}</span><button class="mini" id="setClose">${t('close')}</button></div>
   <div class="sbody">
     <div><h4>${t('myInfo')}</h4>${profile&&!gate?`<button class="btn" id="infoB" style="width:100%">👤 ${t('myInfoOpen')}</button>`:`<p class="note">${t('myInfoNone')}</p>`}</div>
+    ${sb?`<div><h4>${t('acctT')}</h4>${db?`<p class="note">${esc(t('loggedAs',{e:sbEmail}))}</p><button class="btn" id="logoutB" style="width:100%">${t('logoutB')}</button>`:`<button class="btn primary" id="loginSB" style="width:100%">🔑 ${t('loginB')}</button>`}</div>`:''}
     <div><h4>${t('helpT')}</h4><button class="btn" id="vidB" style="width:100%">▶ ${t('wVideoB')}</button></div>
     <div><h4>${t('langT')}</h4><div class="opts">${LANG_NAMES.map((n,i)=>`<button data-lang="${i}" class="${i===L?'on':''}">${n}</button>`).join('')}</div></div>
     <div><h4>${t('bgT')}</h4><div class="swatches">${Object.entries(BGS).map(([k,[c,n]])=>`<button class="swatch ${k===bgSet?'on':''}" data-bg="${k}" aria-pressed="${k===bgSet}"><i style="background-color:${c}"></i>${n[L]}</button>`).join('')}</div></div>
@@ -854,6 +902,8 @@ function renderSettings(){
   </div>`;
   $('#setClose').onclick=()=>{$('#settings').hidden=true;};
   $('#vidB').onclick=()=>{$('#settings').hidden=true;openVideo();};
+  if($('#logoutB')) $('#logoutB').onclick=logoutSb;
+  if($('#loginSB')) $('#loginSB').onclick=()=>openAuth('login');
   if($('#infoB')) $('#infoB').onclick=()=>{$('#settings').hidden=true;openInfo();};
   $('#settings').querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{L=+b.dataset.lang;lsSet('fm_lang',L);renderChrome();render();});
   $('#settings').querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{bgSet=b.dataset.bg;lsSet('fm_bg',bgSet);applyLook();renderSettings();});
@@ -865,7 +915,11 @@ document.addEventListener('click',e=>{const s=$('#settings');if(!s.hidden&&e.tar
 applyLook();
 
 function render(){
-  $('#banner').hidden=!!db||view==='welcome'||!!gate;
+  const cl=classNow();
+  $('#banner').hidden=!!db||view==='welcome'||!!gate||!!cl||authOpen;
+  $('#mailB').hidden=!!gate||!!cl;
+  if(cl) return renderClassLock(cl);
+  if(authOpen&&!db) return renderAuth();
   if(gate) return renderGate();
   if(view==='welcome') return renderWelcome();
   view==='quiz'?renderQuiz():renderResult();
@@ -989,6 +1043,63 @@ function onBirthChange(){
   me.birth=(y&&m&&d)?`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`:'';
 }
 
+/* ===== 수업 시간 잠금 (한국 시간 기준, 월~금) ===== */
+// 쉬는 시간·점심시간·오후 4시 이후·주말에는 열려 있어요
+const PERIODS=[[0,'08:25','08:40'],[1,'08:40','09:25'],[2,'09:30','10:15'],[3,'10:25','11:10'],[4,'11:15','12:00'],[5,'13:00','13:55'],[6,'14:05','15:00'],[7,'15:10','16:00']];
+const toMin=h=>{const [a,b]=h.split(':');return +a*60+ +b;};
+// 선생님 허락 코드: 원래 글자 대신 바꾼 값만 들어 있어요
+const UNLOCK_HASH='dc6f8a14463da520d18a988a7e71be35f5495e46dfd43568631e26273e210277', UNLOCK_SALT='eos-class-unlock';
+function seoulClock(){
+  try{
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    const g=k=>(parts.find(x=>x.type===k)||{}).value;
+    return {dow:g('weekday'),min:(+g('hour')%24)*60+ +g('minute')};
+  }catch(_){const d=new Date(Date.now()+9*3600e3);return {dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getUTCDay()],min:d.getUTCHours()*60+d.getUTCMinutes()};}
+}
+function periodName(i){return [i===0?'아침 조회':`${i}교시`,i===0?'House meeting':`Period ${i}`,i===0?'早会':`第${i}节`,i===0?'Утреннее собрание':`${i}-й урок`,i===0?'Reunión matinal':`Clase ${i}`,i===0?'朝の会':`${i}時間目`][L];}
+// 지금 수업 중이면 {i, end(이어지는 수업까지 합친 끝 시간)} 아니면 null
+function classNow(){
+  const {dow,min}=seoulClock();
+  if(dow==='Sat'||dow==='Sun') return null;
+  const k=PERIODS.findIndex(([,a,b])=>min>=toMin(a)&&min<toMin(b));
+  if(k<0) return null;
+  let end=toMin(PERIODS[k][2]);
+  for(let j=k+1;j<PERIODS.length&&toMin(PERIODS[j][1])===end;j++) end=toMin(PERIODS[j][2]);
+  const until=+(lsGet('fm_unlock_until')||0);
+  if(Date.now()<until) return null;
+  return {i:PERIODS[k][0],k,end};
+}
+const hhmm=m=>`${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`;
+let unlockOpen=false, unlockMsg='', unlockBusy=false;
+function renderClassLock(cl){
+  closeModal(); $('#inbox').hidden=true;
+  const {min}=seoulClock();
+  $('#app').innerHTML=`<section class="quiz lanyard classlock" style="margin-inline:auto"><div class="qtop"><b>📚 ${t('lockTop')}</b><span>${hhmm(min)}</span></div>
+    <div class="qbody">
+      <div class="qhead"><span class="qnum">${cl.i===0?'AM':cl.i}</span><div><h2>${t('lockT')}</h2><p class="sub">${esc(t('lockN',{p:periodName(cl.i),t:hhmm(cl.end)}))}</p></div></div>
+      <ol class="periods">${PERIODS.map(([i,a,b],k)=>`<li class="${k===cl.k?'now':''}"><span>${periodName(i)}</span><span class="tm">${a} – ${b}</span>${k===cl.k?`<b>${t('lockNow')}</b>`:''}</li>`).join('')}</ol>
+      <p class="note">${t('lockOpen')}</p>
+      ${unlockOpen?`<form id="unlockForm" class="unlockrow" novalidate><label class="f">${t('unlockL')}<input type="password" id="unlockIn" autocomplete="off" maxlength="20"></label><button class="btn primary" type="submit" ${unlockBusy?'disabled':''}>${t('unlockB')}</button></form><p class="err" role="alert">${esc(unlockMsg)}</p>`
+        :`<button class="btn" id="unlockOpenB">🔑 ${t('unlockAsk')}</button>`}
+    </div></section>`;
+  if($('#unlockOpenB')) $('#unlockOpenB').onclick=()=>{unlockOpen=true;unlockMsg='';render();setTimeout(()=>{const i=$('#unlockIn');if(i)i.focus();},30);};
+  if($('#unlockForm')) $('#unlockForm').onsubmit=async e=>{
+    e.preventDefault(); const code=$('#unlockIn').value.trim().toUpperCase(); if(!code) return;
+    unlockBusy=true; render();
+    let ok=false; try{ ok=(await hashPw(code,UNLOCK_SALT))===UNLOCK_HASH; }catch(_){}
+    unlockBusy=false;
+    if(ok){
+      // 이번 수업이 끝날 때까지만 열어요
+      const {min:m}=seoulClock(); const c=classNow();
+      const until=Date.now()+Math.max(1,(c?c.end:m+1)-m)*60e3;
+      lsSet('fm_unlock_until',String(until)); unlockOpen=false; unlockMsg=''; lastClass=null;
+      renderChrome(); render(); toast(t('unlocked',{t:hhmm(c?c.end:m)}));
+    }else{ unlockMsg=t('unlockBad'); render(); }
+  };
+}
+let lastClass=JSON.stringify(classNow());
+setInterval(()=>{const c=JSON.stringify(classNow());if(c!==lastClass){lastClass=c;unlockOpen=false;renderChrome();render();}else if(c!=='null'&&!unlockOpen){render();}},20000);
+
 /* ===== 웰컴 페이지 ===== */
 function renderWelcome(){
   $('#app').innerHTML=`<section class="welcome">
@@ -997,7 +1108,7 @@ function renderWelcome(){
         <p class="label">EOS · ${t('wEyebrow')}</p>
         <h2 class="wtitle">${t('wLead')}</h2>
         <p class="wsub">${t('wSub')}</p>
-        <div class="wcta"><button class="btn primary big" id="startB">${t('wStart')} →</button><button class="btn" id="howB">▶ ${t('wVideoB')}</button><span class="note">${t('wMeta',{n:QN})}</span></div>
+        <div class="wcta"><button class="btn primary big" id="startB">${t('wStart')} →</button><button class="btn" id="howB">▶ ${t('wVideoB')}</button>${sb&&!db?`<button class="btn" id="loginWB">🔑 ${t('loginB')}</button>`:''}<span class="note">${t('wMeta',{n:QN})}</span></div>
       </div>
       <div class="wtag" aria-hidden="true">
         <div class="mytag lanyard"><div class="band"><span>${t('myTag')}</span><small>EOS</small></div><div class="inner">
@@ -1023,6 +1134,7 @@ function renderWelcome(){
   vid.addEventListener('error',hideVid);
   $('#howB').onclick=()=>{$('#wvideo').scrollIntoView({behavior:'smooth',block:'center'});const pr=vid.play();if(pr&&pr.catch)pr.catch(()=>{});};
   $('#startB').onclick=()=>{view='quiz';step=0;render();window.scrollTo({top:0});};
+  if($('#loginWB')) $('#loginWB').onclick=()=>openAuth('login');
 }
 
 /* ===== 질문 화면 ===== */
@@ -1284,7 +1396,7 @@ function renderResult(){
         ${hiddenList.length?`<div class="unhide">${t('hiddenL')} ${hiddenList.map(x=>`<span>${esc(x.name)}</span><button class="mini" data-unhide="${esc(x.id)}">${t('unhide')}</button>`).join(' ')}</div>`:''}</div>
       <div class="codebox"><div class="label">${t('myCodeT')}</div><code id="myCode">${esc(makeCode(p))}</code>
         <button class="btn" id="copyCodeB">${t('copyCode')}</button><p class="note">${t('myCodeN')}</p></div>
-      <div class="btnrow"><button class="btn" id="editB">${t('edit')}</button>${db?`<button class="btn" id="lockB">🔒 ${t('lockB')}</button><button class="btn danger" id="removeB">${t('remove')}</button>`:''}</div>
+      <div class="btnrow"><button class="btn" id="editB">${t('edit')}</button>${db?`${lockDoc?`<button class="btn" id="lockB">🔒 ${t('lockB')}</button>`:''}<button class="btn danger" id="removeB">${t('remove')}</button>`:(sb?`<button class="btn primary" id="loginRB">🔑 ${t('loginSee')}</button>`:'')}</div>
     </div></section></div>
     <div class="col">
       <div>${db?`<div class="label">${t('participants',{n:vis.length+1})}</div>`:''}<h2 class="sec">${esc(t('recTitle',{n:p.name}))}</h2></div>
@@ -1298,6 +1410,7 @@ function renderResult(){
     </div></div>`;
   $('#editB').onclick=()=>{view='quiz';step=0;me=JSON.parse(JSON.stringify(profile));renderQuiz();window.scrollTo({top:0});};
   $('#lockB')&&($('#lockB').onclick=lockNow);
+  $('#loginRB')&&($('#loginRB').onclick=()=>openAuth('signup'));
   $('#copyCodeB').onclick=()=>{
     const msg=makeCode(profile); // 코드만 복사
     try{navigator.clipboard.writeText(msg).then(()=>toast(t('copied')),()=>{selectCode();toast(t('copyFail'));});}catch(_){selectCode();toast(t('copyFail'));}
@@ -1336,20 +1449,125 @@ document.addEventListener('click',e=>{
     try{navigator.clipboard.writeText(q).then(()=>toast(t('copied')),()=>toast(t('copyFail')));}catch(_){toast(t('copyFail'));}}
 });
 
+/* ===== Supabase (학교 친구들과 이름표 공유) ===== */
+const SB_URL='https://mavatdnzpopcvbrokkth.supabase.co', SB_KEY='sb_publishable_d0YGqrF7xP4K3YukEPn-0A_goGoRWRD';
+let sb=null, sbEmail='', authOpen=false, authMode='login', authMsg='', authBusy=false;
+function sbErr(e){ if(e) throw e; }
+function makeSbDb(){
+  const now=()=>new Date().toISOString();
+  const wrap=v=>({exists:!!v,data:()=>v});
+  function docRef(path,id){
+    if(path==='profiles') return {
+      async get(){const r=await sb.from('profiles').select('data').eq('id',id).maybeSingle();sbErr(r.error);return wrap(r.data&&r.data.data);},
+      async set(v){sbErr((await sb.from('profiles').upsert({id,data:v,updated_at:now()})).error);},
+      async update(v){const cur=(await this.get()).data()||{};sbErr((await sb.from('profiles').update({data:{...cur,...v},updated_at:now()}).eq('id',id)).error);},
+      async delete(){sbErr((await sb.from('profiles').delete().eq('id',id)).error);},
+    };
+    const owner=path.split('/')[2];
+    return {
+      async get(){const r=await sb.from('user_docs').select('data').eq('user_id',owner).eq('key',id).maybeSingle();sbErr(r.error);return wrap(r.data&&r.data.data);},
+      async set(v){ if(id==='lock') return; sbErr((await sb.from('user_docs').upsert({user_id:owner,key:id,data:v,updated_at:now()})).error);},
+      async update(v){const cur=(await this.get()).data()||{};await this.set({...cur,...v});},
+      async delete(){sbErr((await sb.from('user_docs').delete().eq('user_id',owner).eq('key',id)).error);},
+    };
+  }
+  return {collection(path){return {
+    doc:id=>docRef(path,id),
+    onSnapshot(cb,onErr){
+      let tm=null;
+      const load=async()=>{const r=await sb.from('profiles').select('id,data');if(r.error){onErr&&onErr(r.error);return;}cb({docs:r.data.map(x=>({id:x.id,data:()=>x.data}))});};
+      load();
+      sb.channel('profiles-live').on('postgres_changes',{event:'*',schema:'public',table:'profiles'},()=>{clearTimeout(tm);tm=setTimeout(load,400);}).subscribe();
+      setInterval(load,60000);
+    }
+  };}};
+}
+function initSb(){
+  if(db||sb||!window.supabase||!window.supabase.createClient) return null;
+  try{ sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}}); }catch(_){ sb=null; }
+  return sb;
+}
+async function connectSb(){
+  if(!initSb()) return;
+  try{
+    const {data}=await sb.auth.getSession();
+    if(data&&data.session) await startDb(makeSbDb(),data.session.user.id,{noLock:true,email:data.session.user.email});
+    else { renderChrome(); render(); }
+  }catch(_){ renderChrome(); render(); }
+}
+function authErrText(e){
+  const m=String((e&&e.message)||e||'');
+  if(/invalid login credentials/i.test(m)) return t('errCred');
+  if(/already (registered|exists)/i.test(m)) return t('errExists');
+  if(/rate limit|too many/i.test(m)) return t('errRate');
+  if(/email not confirmed/i.test(m)) return t('checkMail');
+  return t('errAuth',{e:m.slice(0,80)});
+}
+function openAuth(mode){ authOpen=true; authMode=mode||'login'; authMsg=''; $('#settings').hidden=true; closeModal(); render(); window.scrollTo({top:0}); }
+function renderAuth(){
+  const sign=authMode==='signup';
+  $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto"><div class="qtop"><b>HobbyMatch</b><span>🔑</span></div><div class="qbody">
+    <div class="qhead"><span class="qnum">ID</span><div><h2>${sign?t('authSignT'):t('authT')}</h2><p class="sub">${t('authN')}</p></div></div>
+    <form id="authForm" novalidate>
+      <label class="f">${t('emailL')}<input type="email" id="authEmail" autocomplete="email" maxlength="80" value="${esc(renderAuth.email||'')}"></label>
+      <label class="f">${t('pwSix')}<input type="password" id="authPw" autocomplete="${sign?'new-password':'current-password'}" maxlength="72"></label>
+      <p class="err" role="alert">${esc(authMsg)}</p>
+      <button class="btn primary" type="submit" ${authBusy?'disabled':''}>${authBusy?t('authWait'):(sign?t('signupB'):t('loginB'))}</button>
+    </form>
+    <button class="btn link" id="authSwap" type="button">${sign?t('toLogin'):t('toSignup')}</button>
+    <button class="btn link" id="authSkip" type="button">${t('noLogin')}</button>
+  </div></section>`;
+  $('#authSwap').onclick=()=>{renderAuth.email=$('#authEmail').value;authMode=sign?'login':'signup';authMsg='';renderAuth();};
+  $('#authSkip').onclick=()=>{authOpen=false;authMsg='';render();};
+  $('#authForm').onsubmit=async e=>{
+    e.preventDefault();
+    const email=$('#authEmail').value.trim(), pw=$('#authPw').value;
+    renderAuth.email=email;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){authMsg=t('errEmail');return renderAuth();}
+    if(pw.length<6){authMsg=t('errPw6');return renderAuth();}
+    if(!initSb()&&!sb){authMsg=t('errAuth',{e:'offline'});return renderAuth();}
+    authBusy=true; authMsg=''; renderAuth();
+    try{
+      const r=sign?await sb.auth.signUp({email,password:pw}):await sb.auth.signInWithPassword({email,password:pw});
+      if(r.error) throw r.error;
+      if(sign&&r.data&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0) throw new Error('already registered');
+      const ses=r.data&&r.data.session;
+      if(!ses){ authBusy=false; authMode='login'; authMsg=t('checkMail'); return renderAuth(); }
+      authBusy=false; authOpen=false; renderAuth.email='';
+      await startDb(makeSbDb(),ses.user.id,{noLock:true,email:ses.user.email});
+      toast(t('welcomeIn'));
+    }catch(err){ authBusy=false; authMsg=authErrText(err); renderAuth(); }
+  };
+  setTimeout(()=>{const i=$(renderAuth.email?'#authPw':'#authEmail');if(i)i.focus();},50);
+}
+async function logoutSb(){
+  try{ await sb.auth.signOut(); }catch(_){}
+  location.reload();
+}
+
 /* ===== 공유 저장소 (Claude에 로그인한 사람만) ===== */
 const getDoc=async ref=>{try{const s=await ref.get();return s.exists?s.data():null;}catch(_){return null;}};
 async function connect(){
   try{
     const [d,u]=await Promise.all([window.claude?.use('db'),window.claude?.use('user')]);
-    if(!d||!u) return;
-    const id=await u.id(); if(!id) return;
-    db=d; uid=id;
-    if(localProfile){ profile=null; me=blank(); view='welcome'; step=0; localProfile=false; }
+    if(!d||!u) return connectSb();
+    const id=await u.id(); if(!id) return connectSb();
+    await startDb(d,id,{});
+  }catch(_){}
+  if(!db) connectSb();
+}
+async function startDb(d,id,opts){
+  try{
+    db=d; uid=id; sbEmail=opts.email||'';
+    // 로그인하기 전에 이 기기에서 만든 이름표가 있으면, 서버에 없을 때 올려 줘요
+    let pending=null;
+    if(localProfile){ pending=profile; profile=null; me=blank(); view='welcome'; step=0; localProfile=false; }
     const [inb,priv,lk,prefs]=await Promise.all(['inbox','private','lock','prefs'].map(k=>getDoc(userCol().doc(k))));
     if(inb) seenAt=Math.max(seenAt,+inb.seenAt||0);
     const privateInfo=priv?{gender:GENDERS[priv.gender]?priv.gender:'',birth:BIRTH_RE.test(priv.birth||'')?priv.birth:'',pub:{gender:!!(priv.pub&&priv.pub.gender),birth:!!(priv.pub&&priv.pub.birth)}}:null;
     if(prefs&&Array.isArray(prefs.hidden)) hiddenSet=new Set(prefs.hidden.map(String));
-    if(lk&&lk.salt&&lk.hash){ lockDoc={salt:lk.salt,hash:lk.hash}; gate=lsGet(autoKey())==='1'?null:'unlock'; }
+    if(opts.noLock) gate=null;
+    else if(lk&&lk.salt&&lk.hash){ lockDoc={salt:lk.salt,hash:lk.hash}; gate=lsGet(autoKey())==='1'?null:'unlock'; }
     else gate='set';
     renderChrome(); render();
     let first=true;
@@ -1365,6 +1583,10 @@ async function connect(){
           }
         }else others.push({...v,name:v.name.slice(0,12),hobbies:migrateHobbies(v.hobbies),id:doc.id});
       });
+      if(first&&!profile&&pending){
+        const p=pending; pending=null;
+        persist(p).then(ok=>{ if(ok){ me=JSON.parse(JSON.stringify(p)); view='result'; toast(t('uploaded')); if(!gate) render(); } });
+      }
       first=false; renderBadge(); if(!$('#inbox').hidden) renderInbox();
       if(view==='result'&&!gate) renderResult();
     },()=>{});
