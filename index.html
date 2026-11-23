@@ -80,6 +80,22 @@ h2.sec{font-family:var(--display);font-weight:400;font-size:26px;margin:0}
 .gpill{font-size:12px;font-weight:700;background:var(--ink);color:var(--bg);border-radius:6px;padding:2px 8px;white-space:nowrap}
 .minichips{display:flex;flex-wrap:wrap;gap:4px}
 .minichips span{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:1px 8px}
+.catgroups{margin:0;display:flex;flex-direction:column;gap:7px}
+.catgroups .cg{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:start}
+.catgroups dt{font-size:12px;font-weight:700;color:var(--muted);padding-top:3px;line-height:1.3}
+.catgroups dd{margin:0}
+.rolepick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rolepick button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 10px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.rolepick button:hover{border-color:var(--accent)}
+.rolepick b{font-size:30px;line-height:1}
+.rolepick span{font-weight:700}
+.rolepick small{font-size:12px;color:var(--muted)}
+.tlist{border-top:1px dashed var(--line);padding-top:12px}
+.tlist ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.tlist li{font-size:13px;border:1px solid var(--line);border-radius:99px;padding:2px 10px;background:var(--bg)}
+.tcode{font-family:var(--mono);font-size:34px;letter-spacing:.12em;font-weight:700;text-align:center;padding:14px;border:2px dashed var(--accent);border-radius:12px;background:var(--accent-soft)}
+.tstu{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.tstu li{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:3px 9px}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap}
 .btnrow .btn{font-size:13px;padding:6px 11px}
 .btn.danger{color:var(--bad)}
@@ -396,7 +412,6 @@ h1,h2,h3,.sub,.note,.starter q,.confirm p{word-break:keep-all;overflow-wrap:anyw
 </div>
 <div class="modal" id="modal" hidden></div>
 <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 /* 언어: 0 한국어 · 1 English · 2 中文 · 3 Русский · 4 Español · 5 日本語 */
@@ -498,6 +513,30 @@ unlockL:['선생님께 받은 허락 코드','Unlock code from your teacher','�
 unlockB:['열기','Unlock','解锁','Открыть','Abrir','開く'],
 unlockBad:['코드가 맞지 않아요. 선생님께 다시 확인해 주세요.','That code is not right. Check with your teacher.','解锁码不对，请再问问老师。','Код неверный. Уточни у учителя.','El código no es correcto. Pregunta a tu profesor.','コードが違うよ。先生にもう一度聞いてね。'],
 unlocked:['{t}까지 열었어요','Unlocked until {t}','已解锁到{t}','Открыто до {t}','Abierto hasta las {t}','{t}まで開いたよ'],
+roleQ:['누구신가요?','Who are you?','您是？','Кто ты?','¿Quién eres?','どなたですか？'],
+roleN:['학생인지 선생님인지 골라 주세요.','Choose student or teacher.','请选择学生或老师。','Выбери: ученик или учитель.','Elige estudiante o profesor.','生徒か先生か選んでね。'],
+roleStu:['학생이에요','I\'m a student','我是学生','Я ученик','Soy estudiante','生徒です'],
+roleStuN:['친구들과 이름표 나누기','Share name tags','和同学分享名牌','Обмен бейджами','Compartir gafetes','名札を見せ合う'],
+roleTea:['선생님이에요','I\'m a teacher','我是老师','Я учитель','Soy profesor','先生です'],
+roleTeaN:['선생님 코드가 필요해요','Needs a teacher code','需要教师码','Нужен код учителя','Necesita código','先生コードが必要'],
+tListT:['우리 학교 선생님','Teachers on HobbyMatch','已加入的老师','Учителя','Profesores','参加している先生'],
+tListNone:['아직 가입한 선생님이 없어요.','No teachers have joined yet.','还没有老师加入。','Пока нет учителей.','Aún no hay profesores.','まだ先生はいないよ。'],
+tAuthT:['선생님 로그인','Teacher login','教师登录','Вход для учителя','Acceso profesor','先生ログイン'],
+tSignT:['선생님 가입','Teacher sign-up','教师注册','Регистрация учителя','Registro profesor','先生の登録'],
+tAuthN:['선생님은 학생 화면 잠금 없이 들어오고, 수업 중 허락 코드를 볼 수 있어요.','Teachers skip the class lock and can see the class unlock code.','老师不受上课锁定，并能看到解锁码。','Учителя не блокируются и видят код разблокировки.','Los profesores no tienen bloqueo y ven el código de desbloqueo.','先生は授業ロックなしで入れて、許可コードを見られます。'],
+tNameL:['선생님 이름 (예: 김민지 선생님)','Your name (e.g. Ms. Kim)','姓名（例：金老师）','Имя (напр. г-жа Ким)','Nombre (ej. Sra. Kim)','名前（例：キム先生）'],
+tCodeL:['선생님 코드','Teacher code','教师码','Код учителя','Código de profesor','先生コード'],
+tCodeBad:['선생님 코드가 맞지 않아요.','That teacher code is not right.','教师码不对。','Неверный код учителя.','Código de profesor incorrecto.','先生コードが違います。'],
+tNameNeed:['선생님 이름을 적어 주세요.','Please enter your name.','请填写姓名。','Введите имя.','Escribe tu nombre.','名前を入れてください。'],
+tNotT:['이 계정은 선생님으로 등록되지 않았어요. 선생님 가입으로 다시 해 주세요.','This account is not registered as a teacher. Use teacher sign-up.','此账号不是教师账号，请用教师注册。','Аккаунт не учительский. Зарегистрируйтесь как учитель.','Esta cuenta no es de profesor. Regístrate como profesor.','このアカウントは先生登録されていません。'],
+tHomeT:['{n} 화면','{n} · Teacher view','{n} · 教师页面','{n} · Учитель','{n} · Profesor','{n} の先生画面'],
+tUnlockT:['수업 중 허락 코드','Class unlock code','上课解锁码','Код разблокировки','Código de desbloqueo','授業中の許可コード'],
+tUnlockN:['학생이 잠금 화면에서 "선생님이 허락했어요"를 누르고 이 코드를 넣으면, 그 수업이 끝날 때까지 열려요. 학생에게 직접 알려 주세요.','A student taps "My teacher said it\'s OK" on the lock screen and enters this code to open until the class ends. Tell it in person.','学生在锁定页点“老师允许了”并输入此码，可开到本节课结束。请当面告知。','Ученик нажимает «Учитель разрешил» и вводит код — до конца урока. Скажите лично.','El estudiante pulsa "Mi profesor lo permite" e introduce el código hasta fin de clase.','生徒がロック画面で「先生がいいって言った」を押してこのコードを入れると、その授業の終わりまで開きます。'],
+tNowT:['지금','Now','现在','Сейчас','Ahora','今'],
+tNowFree:['지금은 수업 시간이 아니라 학생들도 들어올 수 있어요.','Not class time, so students can use it now.','现在不是上课时间，学生可以使用。','Сейчас не урок, ученики могут заходить.','No es hora de clase; los estudiantes pueden entrar.','今は授業中じゃないので生徒も使えます。'],
+tNowClass:['지금은 {p} ({t}까지) — 학생 화면은 잠겨 있어요.','Now: {p} (until {t}) — student screens are locked.','现在是{p}（到{t}）——学生页面已锁定。','Сейчас {p} (до {t}) — у учеников блокировка.','Ahora: {p} (hasta {t}) — bloqueado para estudiantes.','今は{p}（{t}まで）— 生徒の画面はロック中。'],
+tStuT:['이름표를 올린 학생 {n}명','{n} students posted name tags','{n}名学生发布了名牌','Бейджи: {n} учеников','{n} estudiantes con gafete','名札を出した生徒 {n}人'],
+tStuNone:['아직 없어요.','None yet.','还没有。','Пока нет.','Aún no.','まだいません。'],
 acctT:['계정','Account','账号','Аккаунт','Cuenta','アカウント'],
 loginB:['로그인','Log in','登录','Войти','Entrar','ログイン'],
 signupB:['가입하기','Sign up','注册','Регистрация','Registrarse','登録する'],
@@ -742,6 +781,7 @@ function metaParts(p,mine){
 }
 const blank=()=>Object.assign({name:'',grade:0,intro:'',other:{},gender:'',birth:'',pub:{gender:false,birth:false}},Object.fromEntries(CATS.map(c=>[c.k,[]])));
 let videoOpen=false;
+let teacher=null;
 let me=blank(), profile=null, view='welcome', showOther=false, editOne=false, infoOpen=false, step=0, others=[], starterIdx={};
 let db=null, uid=null;
 let seenAt=0, demoInbox=[], openReply=null;
@@ -777,7 +817,7 @@ function renderChrome(){
   if(!$('#settings').hidden) renderSettings();
   const b=$('#banner'); b.hidden=!!db||view==='welcome'||!!gate||authOpen; b.textContent=sb?t('localSb'):t('local');
   $('#mailB').setAttribute('aria-label',t('inbox'));
-  $('#mailB').hidden=!!gate||!!classNow();
+  $('#mailB').hidden=!!gate||!!classNow()||!!teacher;
   if(gate){$('#inbox').hidden=true;}
   renderBadge(); if(!$('#inbox').hidden) renderInbox();
 }
@@ -917,9 +957,10 @@ applyLook();
 function render(){
   const cl=classNow();
   $('#banner').hidden=!!db||view==='welcome'||!!gate||!!cl||authOpen;
-  $('#mailB').hidden=!!gate||!!cl;
+  $('#mailB').hidden=!!gate||!!cl||!!teacher;
   if(cl) return renderClassLock(cl);
   if(authOpen&&!db) return renderAuth();
+  if(teacher) return renderTeacher();
   if(gate) return renderGate();
   if(view==='welcome') return renderWelcome();
   view==='quiz'?renderQuiz():renderResult();
@@ -1066,7 +1107,7 @@ function classNow(){
   let end=toMin(PERIODS[k][2]);
   for(let j=k+1;j<PERIODS.length&&toMin(PERIODS[j][1])===end;j++) end=toMin(PERIODS[j][2]);
   const until=+(lsGet('fm_unlock_until')||0);
-  if(Date.now()<until) return null;
+  if(Date.now()<until||teacher) return null;
   return {i:PERIODS[k][0],k,end};
 }
 const hhmm=m=>`${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`;
@@ -1098,7 +1139,7 @@ function renderClassLock(cl){
   };
 }
 let lastClass=JSON.stringify(classNow());
-setInterval(()=>{const c=JSON.stringify(classNow());if(c!==lastClass){lastClass=c;unlockOpen=false;renderChrome();render();}else if(c!=='null'&&!unlockOpen){render();}},20000);
+setInterval(()=>{if(teacher&&view==='teacher'&&$('#modal').hidden){render();return;}const c=JSON.stringify(classNow());if(c!==lastClass){lastClass=c;unlockOpen=false;renderChrome();render();}else if(c!=='null'&&!unlockOpen){render();}},20000);
 
 /* ===== 웰컴 페이지 ===== */
 function renderWelcome(){
@@ -1376,7 +1417,7 @@ function renderResult(){
   const gotH=got.filter(x=>x.type==='heart').length, gotR=got.filter(x=>x.type==='reply'), gotS=got.filter(x=>x.type==='save');
   const mySaved=[...others,...EXAMPLES].filter(x=>p.saves&&p.saves[x.id]&&!hiddenSet.has(x.id));
   const hiddenList=[...hiddenSet].map(findStudent).filter(Boolean);
-  const myChips=CATS.flatMap(c=>allVals(p,c.k).map(v=>`<span>${esc(lab(c.k,v))}</span>`)).join('');
+  const myChips=CATS.map(c=>{const vs=allVals(p,c.k);return vs.length?`<div class="cg"><dt>${c.n[L]}</dt><dd class="minichips">${vs.map(v=>`<span>${esc(lab(c.k,v))}</span>`).join('')}</dd></div>`:'';}).join('');
   const vis=visibleOthers();
   const pool=vis;
   const ranked=pool.map(s=>({s,m:match(s)})).filter(x=>x.m.pct>=70).sort((a,b)=>b.m.pct-a.m.pct);
@@ -1388,7 +1429,7 @@ function renderResult(){
       <div class="nm"><b>${esc(p.name)}</b><span class="gpill">${gl(p.grade)}</span></div>
       ${p.intro&&p.intro.trim()?`<p class="introq">“${esc(p.intro.trim())}”</p>`:''}
       ${metaParts(p,true)?`<div class="meta">${metaParts(p,true)}</div>`:''}
-      <div class="minichips">${myChips}</div>
+      <dl class="catgroups">${myChips}</dl>
       <div class="recv"><div class="label" style="color:var(--heart)">${t('received',{h:gotH,r:gotR.length})}</div>
         ${gotR.length?`<div class="replies">${gotR.map(x=>`<div><button class="namebtn" data-open="${esc(x.from.id)}">${esc(x.from.name)}</button>${PRESETS[x.q][L]}</div>`).join('')}</div>`:''}
         ${gotS.length?`<div class="label" style="color:var(--accent)">${t('savedMe',{n:gotS.length})}</div><div class="savedlist">${gotS.map(x=>`<button class="linkchip" data-open="${esc(x.from.id)}">${esc(x.from.name)}</button>`).join('')}</div>`:''}
@@ -1451,7 +1492,7 @@ document.addEventListener('click',e=>{
 
 /* ===== Supabase (학교 친구들과 이름표 공유) ===== */
 const SB_URL='https://mavatdnzpopcvbrokkth.supabase.co', SB_KEY='sb_publishable_d0YGqrF7xP4K3YukEPn-0A_goGoRWRD';
-let sb=null, sbEmail='', authOpen=false, authMode='login', authMsg='', authBusy=false;
+let sb=null, sbEmail='', authOpen=false, authMode='login', authMsg='', authBusy=false, authRole=null, teacherList=null, tUnlock='';
 function sbErr(e){ if(e) throw e; }
 function makeSbDb(){
   const now=()=>new Date().toISOString();
@@ -1482,12 +1523,20 @@ function makeSbDb(){
     }
   };}};
 }
+// 서버 도구는 화면을 막지 않게 뒤에서 불러와요 (느리면 6초 뒤 그냥 로그인 없이 써요)
+let sbLib=null;
+function loadSbLib(){
+  if(window.supabase&&window.supabase.createClient) return Promise.resolve(true);
+  if(!sbLib) sbLib=new Promise(res=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';sc.async=true;sc.onload=()=>res(true);sc.onerror=()=>{sbLib=null;res(false);};document.head.appendChild(sc);setTimeout(()=>res(false),6000);});
+  return sbLib;
+}
 function initSb(){
   if(db||sb||!window.supabase||!window.supabase.createClient) return null;
   try{ sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}}); }catch(_){ sb=null; }
   return sb;
 }
 async function connectSb(){
+  await loadSbLib();
   if(!initSb()) return;
   try{
     const {data}=await sb.auth.getSession();
@@ -1503,42 +1552,93 @@ function authErrText(e){
   if(/email not confirmed/i.test(m)) return t('checkMail');
   return t('errAuth',{e:m.slice(0,80)});
 }
-function openAuth(mode){ authOpen=true; authMode=mode||'login'; authMsg=''; $('#settings').hidden=true; closeModal(); render(); window.scrollTo({top:0}); }
-function renderAuth(){
-  const sign=authMode==='signup';
+function openAuth(mode){ authOpen=true; authRole=null; authMode=mode||'login'; authMsg=''; $('#settings').hidden=true; closeModal(); loadTeachers(); render(); window.scrollTo({top:0}); }
+async function loadTeachers(){
+  await loadSbLib();
+  if(!initSb()&&!sb) return;
+  try{const r=await sb.from('teachers').select('name').order('created_at');if(!r.error){teacherList=r.data.map(x=>String(x.name||'').slice(0,30));if(authOpen&&!authRole&&!db)renderAuth();}}catch(_){}
+}
+function teacherListHTML(){
+  return `<div class="tlist"><div class="label">${t('tListT')}${teacherList?` · ${teacherList.length}`:''}</div>${teacherList&&teacherList.length?`<ul>${teacherList.map(n=>`<li>🧑‍🏫 ${esc(n)}</li>`).join('')}</ul>`:`<p class="note">${teacherList?t('tListNone'):t('authWait')}</p>`}</div>`;
+}
+function renderRolePick(){
   $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto"><div class="qtop"><b>HobbyMatch</b><span>🔑</span></div><div class="qbody">
-    <div class="qhead"><span class="qnum">ID</span><div><h2>${sign?t('authSignT'):t('authT')}</h2><p class="sub">${t('authN')}</p></div></div>
+    <div class="qhead"><span class="qnum">?</span><div><h2>${t('roleQ')}</h2><p class="sub">${t('roleN')}</p></div></div>
+    <div class="rolepick">
+      <button id="roleS" type="button"><b>🎒</b><span>${t('roleStu')}</span><small>${t('roleStuN')}</small></button>
+      <button id="roleT" type="button"><b>🧑‍🏫</b><span>${t('roleTea')}</span><small>${t('roleTeaN')}</small></button>
+    </div>
+    ${teacherListHTML()}
+    <button class="btn link" id="authSkip" type="button">${t('noLogin')}</button>
+  </div></section>`;
+  $('#roleS').onclick=()=>{authRole='student';authMsg='';renderAuth();};
+  $('#roleT').onclick=()=>{authRole='teacher';authMode='login';authMsg='';renderAuth();};
+  $('#authSkip').onclick=()=>{authOpen=false;authMsg='';render();};
+}
+function renderAuth(){
+  if(!authRole) return renderRolePick();
+  const sign=authMode==='signup', tea=authRole==='teacher';
+  $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto"><div class="qtop"><b>HobbyMatch</b><span>🔑</span></div><div class="qbody">
+    <div class="qhead"><span class="qnum">${tea?'T':'ID'}</span><div><h2>${tea?(sign?t('tSignT'):t('tAuthT')):(sign?t('authSignT'):t('authT'))}</h2><p class="sub">${tea?t('tAuthN'):t('authN')}</p></div></div>
     <form id="authForm" novalidate>
+      ${tea&&sign?`<label class="f">${t('tNameL')}<input type="text" id="tName" maxlength="30" autocomplete="name" value="${esc(renderAuth.tname||'')}"></label>
+      <label class="f">${t('tCodeL')}<input type="password" id="tCode" maxlength="20" autocomplete="off"></label>`:''}
       <label class="f">${t('emailL')}<input type="email" id="authEmail" autocomplete="email" maxlength="80" value="${esc(renderAuth.email||'')}"></label>
       <label class="f">${t('pwSix')}<input type="password" id="authPw" autocomplete="${sign?'new-password':'current-password'}" maxlength="72"></label>
       <p class="err" role="alert">${esc(authMsg)}</p>
       <button class="btn primary" type="submit" ${authBusy?'disabled':''}>${authBusy?t('authWait'):(sign?t('signupB'):t('loginB'))}</button>
     </form>
     <button class="btn link" id="authSwap" type="button">${sign?t('toLogin'):t('toSignup')}</button>
-    <button class="btn link" id="authSkip" type="button">${t('noLogin')}</button>
+    <button class="btn link" id="authBack" type="button">← ${t('roleQ')}</button>
   </div></section>`;
-  $('#authSwap').onclick=()=>{renderAuth.email=$('#authEmail').value;authMode=sign?'login':'signup';authMsg='';renderAuth();};
-  $('#authSkip').onclick=()=>{authOpen=false;authMsg='';render();};
+  $('#authBack').onclick=()=>{authRole=null;authMsg='';renderAuth();};
+  $('#authSwap').onclick=()=>{renderAuth.email=$('#authEmail').value;if($('#tName'))renderAuth.tname=$('#tName').value;authMode=sign?'login':'signup';authMsg='';renderAuth();};
   $('#authForm').onsubmit=async e=>{
     e.preventDefault();
     const email=$('#authEmail').value.trim(), pw=$('#authPw').value;
     renderAuth.email=email;
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){authMsg=t('errEmail');return renderAuth();}
     if(pw.length<6){authMsg=t('errPw6');return renderAuth();}
+    await loadSbLib();
     if(!initSb()&&!sb){authMsg=t('errAuth',{e:'offline'});return renderAuth();}
+    const tname=tea&&sign?$('#tName').value.trim():'', tcode=tea&&sign?$('#tCode').value.trim().toUpperCase():'';
+    renderAuth.tname=tname;
+    if(tea&&sign&&!tname){authMsg=t('tNameNeed');return renderAuth();}
     authBusy=true; authMsg=''; renderAuth();
     try{
+      // 선생님 가입: 계정을 만들기 전에 코드부터 서버에서 확인해요
+      if(tea&&sign){const c=await sb.rpc('check_teacher_code',{code:tcode});if(c.error)throw c.error;if(!c.data){authBusy=false;authMsg=t('tCodeBad');return renderAuth();}}
       const r=sign?await sb.auth.signUp({email,password:pw}):await sb.auth.signInWithPassword({email,password:pw});
       if(r.error) throw r.error;
       if(sign&&r.data&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0) throw new Error('already registered');
       const ses=r.data&&r.data.session;
       if(!ses){ authBusy=false; authMode='login'; authMsg=t('checkMail'); return renderAuth(); }
-      authBusy=false; authOpen=false; renderAuth.email='';
+      if(tea&&sign){const r2=await sb.rpc('become_teacher',{code:tcode,tname});if(r2.error||!r2.data){await sb.auth.signOut();authBusy=false;authMsg=t('tCodeBad');return renderAuth();}}
+      if(tea&&!sign){const r3=await sb.from('teachers').select('name').eq('user_id',ses.user.id).maybeSingle();if(!r3.data){await sb.auth.signOut();authBusy=false;authMode='signup';authMsg=t('tNotT');return renderAuth();}}
+      authBusy=false; authOpen=false; renderAuth.email=''; renderAuth.tname='';
       await startDb(makeSbDb(),ses.user.id,{noLock:true,email:ses.user.email});
       toast(t('welcomeIn'));
     }catch(err){ authBusy=false; authMsg=authErrText(err); renderAuth(); }
   };
   setTimeout(()=>{const i=$(renderAuth.email?'#authPw':'#authEmail');if(i)i.focus();},50);
+}
+function periodNow(){
+  const {dow,min}=seoulClock(); if(dow==='Sat'||dow==='Sun') return null;
+  const k=PERIODS.findIndex(([,a,b])=>min>=toMin(a)&&min<toMin(b)); if(k<0) return null;
+  return {i:PERIODS[k][0],end:toMin(PERIODS[k][2])};
+}
+function renderTeacher(){
+  closeModal(); $('#inbox').hidden=true;
+  const pn=periodNow();
+  const stu=others.filter(o=>o&&o.name).sort((a,b)=>(a.grade-b.grade)||a.name.localeCompare(b.name));
+  $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto;max-width:560px"><div class="qtop"><b>🧑‍🏫 ${esc(t('tHomeT',{n:teacher.name}))}</b><span>${hhmm(seoulClock().min)}</span></div><div class="qbody">
+    <div><div class="label">${t('tUnlockT')}</div><div class="tcode">${esc(tUnlock||'······')}</div><p class="note">${t('tUnlockN')}</p></div>
+    <div><div class="label">${t('tNowT')}</div><p class="note">${pn?esc(t('tNowClass',{p:periodName(pn.i),t:hhmm(pn.end)})):t('tNowFree')}</p></div>
+    <div><div class="label">${t('tStuT',{n:stu.length})}</div>${stu.length?`<ul class="tstu">${stu.map(o=>`<li>${esc(o.name)} <span class="note">${gl(o.grade)}</span></li>`).join('')}</ul>`:`<p class="note">${t('tStuNone')}</p>`}</div>
+    ${teacherListHTML()}
+    <div class="btnrow"><button class="btn" id="tLogout">${t('logoutB')}</button></div>
+  </div></section>`;
+  $('#tLogout').onclick=logoutSb;
 }
 async function logoutSb(){
   try{ await sb.auth.signOut(); }catch(_){}
@@ -1559,6 +1659,14 @@ async function connect(){
 async function startDb(d,id,opts){
   try{
     db=d; uid=id; sbEmail=opts.email||'';
+    if(sb&&opts.noLock){
+      try{const r=await sb.from('teachers').select('name').eq('user_id',id).maybeSingle();if(r.data){teacher={name:r.data.name};}}catch(_){}
+      if(teacher){
+        localProfile=false; profile=null; view='teacher'; gate=null;
+        sb.rpc('teacher_unlock_code').then(r=>{tUnlock=(r&&r.data)||'';if(view==='teacher')render();});
+        loadTeachers();
+      }
+    }
     // 로그인하기 전에 이 기기에서 만든 이름표가 있으면, 서버에 없을 때 올려 줘요
     let pending=null;
     if(localProfile){ pending=profile; profile=null; me=blank(); view='welcome'; step=0; localProfile=false; }
@@ -1576,19 +1684,20 @@ async function startDb(d,id,opts){
       snap.docs.forEach(doc=>{
         const v=doc.data(); if(!v||typeof v.name!=='string'||!v.name) return;
         if(doc.id===uid){
-          if(first&&!profile){
+          if(first&&!profile&&!teacher){
             profile=Object.assign(blank(),JSON.parse(JSON.stringify(v)),privateInfo||{}); delete profile.updatedAt; profile.hobbies=migrateHobbies(profile.hobbies);
             me=JSON.parse(JSON.stringify(profile)); view='result';
             if(!gate) render();
           }
         }else others.push({...v,name:v.name.slice(0,12),hobbies:migrateHobbies(v.hobbies),id:doc.id});
       });
-      if(first&&!profile&&pending){
+      if(first&&!profile&&pending&&!teacher){
         const p=pending; pending=null;
         persist(p).then(ok=>{ if(ok){ me=JSON.parse(JSON.stringify(p)); view='result'; toast(t('uploaded')); if(!gate) render(); } });
       }
       first=false; renderBadge(); if(!$('#inbox').hidden) renderInbox();
       if(view==='result'&&!gate) renderResult();
+      if(view==='teacher') render();
     },()=>{});
   }catch(_){}
 }
