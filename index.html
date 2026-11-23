@@ -91,6 +91,20 @@ h2.sec{font-family:var(--display);font-weight:400;font-size:26px;margin:0}
 .rolepick span{font-weight:700}
 .rolepick small{font-size:12px;color:var(--muted)}
 .tlist{border-top:1px dashed var(--line);padding-top:12px}
+.reqbox{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.reqbox select{width:100%}
+.reqst{margin:0;padding:8px 10px;border-radius:8px;font-size:14px;background:var(--accent-soft)}
+.reqst.no{background:transparent;border:1px solid var(--line)}
+#reqPop{position:fixed;top:112px;right:16px;z-index:80;display:flex;flex-direction:column;gap:10px;width:min(360px,calc(100vw - 32px))}
+#reqPop .rp{background:var(--paper);color:var(--ink);border:2px solid var(--accent);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);animation:rpIn .25s ease-out}
+#reqPop .rp p{margin:0 0 8px;font-weight:700}
+#reqPop .rp small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
+#reqPop .rp .btnrow{margin:0;display:flex;gap:8px}
+#reqPop .rp .btn{flex:1}
+@keyframes rpIn{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+.treq{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.treq li{display:flex;justify-content:space-between;gap:8px;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+.treq li b.ok{color:#2e7d4f}.treq li b.no{color:#b3261e}
 .tlist ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .tlist li{font-size:13px;border:1px solid var(--line);border-radius:99px;padding:2px 10px;background:var(--bg)}
 .tcode{font-family:var(--mono);font-size:34px;letter-spacing:.12em;font-weight:700;text-align:center;padding:14px;border:2px dashed var(--accent);border-radius:12px;background:var(--accent-soft)}
@@ -537,6 +551,27 @@ tNowFree:['지금은 수업 시간이 아니라 학생들도 들어올 수 있�
 tNowClass:['지금은 {p} ({t}까지) — 학생 화면은 잠겨 있어요.','Now: {p} (until {t}) — student screens are locked.','现在是{p}（到{t}）——学生页面已锁定。','Сейчас {p} (до {t}) — у учеников блокировка.','Ahora: {p} (hasta {t}) — bloqueado para estudiantes.','今は{p}（{t}まで）— 生徒の画面はロック中。'],
 tStuT:['이름표를 올린 학생 {n}명','{n} students posted name tags','{n}名学生发布了名牌','Бейджи: {n} учеников','{n} estudiantes con gafete','名札を出した生徒 {n}人'],
 tStuNone:['아직 없어요.','None yet.','还没有。','Пока нет.','Aún no.','まだいません。'],
+reqT:['수업이 일찍 끝났나요?','Did your class end early?','课提前结束了吗？','Урок закончился раньше?','¿Terminó antes tu clase?','授業が早く終わった？'],
+reqN:['선생님께 "열어 주세요"를 보내고, 허락받으면 이번 수업이 끝날 때까지 열려요.','Ask a teacher. If they say yes, it opens until this class ends.','向老师发送请求，同意后可开到本节课结束。','Попроси учителя. Если разрешит — откроется до конца урока.','Pide a un profesor. Si acepta, se abre hasta que acabe esta clase.','先生にお願いを送って、OKならこの授業の終わりまで開くよ。'],
+reqLogin:['로그인하고 요청 보내기','Log in to send a request','登录后发送请求','Войди, чтобы отправить','Entra para enviar','ログインしてお願いを送る'],
+reqPick:['어느 선생님께 보낼까요?','Which teacher?','发给哪位老师？','Какому учителю?','¿A qué profesor?','どの先生に送る？'],
+reqSend:['🙋 열어 주세요 보내기','🙋 Send request','🙋 发送请求','🙋 Отправить','🙋 Enviar','🙋 お願いを送る'],
+reqWait:['{n}께 보냈어요. 허락을 기다리는 중이에요…','Sent to {n}. Waiting for an answer…','已发给{n}，等待回复…','Отправлено: {n}. Ждём ответа…','Enviado a {n}. Esperando…','{n}に送ったよ。返事を待ってるよ…'],
+reqOther:['다른 선생님께 보내기','Send to another teacher','发给其他老师','Другому учителю','Enviar a otro profesor','ほかの先生に送る'],
+reqNo:['{n}께서 거절하셨어요.','{n} said no.','{n}拒绝了。','{n}: отказ.','{n} dijo que no.','{n}がことわりました。'],
+reqOk:['{n}께서 허락하셨어요! {t}까지 열려요.','{n} said yes! Open until {t}.','{n}同意了！开放到{t}。','{n} разрешил(а)! До {t}.','¡{n} aceptó! Abierto hasta las {t}.','{n}がOKしたよ！{t}まで開くよ。'],
+reqMany:['오늘은 요청을 너무 많이 보냈어요.','Too many requests today.','今天请求太多了。','Слишком много запросов сегодня.','Demasiadas solicitudes hoy.','今日はお願いが多すぎるよ。'],
+reqErr:['보내지 못했어요: {e}','Could not send: {e}','发送失败：{e}','Не отправлено: {e}','No se pudo enviar: {e}','送れなかったよ：{e}'],
+popT:['{n} 학생이 열어 달라고 했어요','{n} asked to open the site','{n}请求开放','{n} просит открыть','{n} pide abrir','{n}さんが開けてほしいって'],
+popAllow:['✅ 허락','✅ Allow','✅ 同意','✅ Разрешить','✅ Permitir','✅ OK'],
+popDeny:['❌ 거절','❌ Decline','❌ 拒绝','❌ Отказать','❌ Rechazar','❌ ことわる'],
+popDone:['{n} 학생을 허락했어요.','Allowed {n}.','已同意{n}。','{n}: разрешено.','{n} permitido.','{n}さんをOKしたよ。'],
+popDenied:['{n} 학생 요청을 거절했어요.','Declined {n}.','已拒绝{n}。','{n}: отказано.','{n} rechazado.','{n}さんをことわったよ。'],
+tReqT:['오늘 받은 요청','Requests today','今天的请求','Запросы сегодня','Solicitudes de hoy','今日のお願い'],
+tReqNone:['아직 받은 요청이 없어요.','No requests yet.','还没有请求。','Пока нет запросов.','Aún no hay solicitudes.','まだお願いはないよ。'],
+stWait:['기다리는 중','Waiting','等待中','Ждёт','Esperando','待ち'],
+stOk:['허락함','Allowed','已同意','Разрешено','Permitido','OK'],
+stNo:['거절함','Declined','已拒绝','Отказано','Rechazado','ことわった'],
 acctT:['계정','Account','账号','Аккаунт','Cuenta','アカウント'],
 loginB:['로그인','Log in','登录','Войти','Entrar','ログイン'],
 signupB:['가입하기','Sign up','注册','Регистрация','Registrarse','登録する'],
@@ -958,8 +993,8 @@ function render(){
   const cl=classNow();
   $('#banner').hidden=!!db||view==='welcome'||!!gate||!!cl||authOpen;
   $('#mailB').hidden=!!gate||!!cl||!!teacher;
-  if(cl) return renderClassLock(cl);
   if(authOpen&&!db) return renderAuth();
+  if(cl) return renderClassLock(cl);
   if(teacher) return renderTeacher();
   if(gate) return renderGate();
   if(view==='welcome') return renderWelcome();
@@ -1099,6 +1134,18 @@ function seoulClock(){
 }
 function periodName(i){return [i===0?'아침 조회':`${i}교시`,i===0?'House meeting':`Period ${i}`,i===0?'早会':`第${i}节`,i===0?'Утреннее собрание':`${i}-й урок`,i===0?'Reunión matinal':`Clase ${i}`,i===0?'朝の会':`${i}時間目`][L];}
 // 지금 수업 중이면 {i, end(이어지는 수업까지 합친 끝 시간)} 아니면 null
+function seoulDate(d){
+  return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(d||new Date());
+}
+// 어떤 시각(분)이 속한 수업 묶음이 끝나는 시각. 쉬는 시간이면 바로 다음 수업 묶음.
+function blockEndAt(min){
+  let k=PERIODS.findIndex(([,a,b])=>min>=toMin(a)&&min<toMin(b));
+  if(k<0) k=PERIODS.findIndex(([,a])=>toMin(a)>min);
+  if(k<0) return null;
+  let end=toMin(PERIODS[k][2]);
+  for(let j=k+1;j<PERIODS.length&&toMin(PERIODS[j][1])===end;j++) end=toMin(PERIODS[j][2]);
+  return end;
+}
 function classNow(){
   const {dow,min}=seoulClock();
   if(dow==='Sat'||dow==='Sun') return null;
@@ -1112,6 +1159,110 @@ function classNow(){
 }
 const hhmm=m=>`${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`;
 let unlockOpen=false, unlockMsg='', unlockBusy=false;
+let reqMine=null, reqSel='', reqBusy=false, reqMsg='', reqWatch=false, tReqs=[], tWatch=false, tReqSeen=new Set();
+const tName=id=>{const x=(teacherList||[]).find(v=>v.id===id);return x?x.name:'';};
+function reqBoxHTML(){
+  if(!db) return `<div class="reqbox"><div class="label">🙋 ${t('reqT')}</div><p class="note">${t('reqN')}</p><button class="btn" id="reqLogin">🔑 ${t('reqLogin')}</button></div>`;
+  if(!teacherList) loadTeachers();
+  startReqWatch();
+  const mine=reqMine&&reqMine.status==='wait'&&!reqMine.local;
+  let body;
+  if(mine) body=`<p class="reqst">⏳ ${esc(t('reqWait',{n:tName(reqMine.teacher_id)||'?'}))}</p><button class="btn link" id="reqAgain" type="button">${t('reqOther')}</button>`;
+  else if(!teacherList) body=`<p class="note">${t('authWait')}</p>`;
+  else if(!teacherList.length) body=`<p class="note">${t('tListNone')}</p>`;
+  else{
+    if(!reqSel||!teacherList.some(x=>x.id===reqSel)) reqSel=teacherList[0].id;
+    body=`${reqMine&&reqMine.status==='no'?`<p class="reqst no">❌ ${esc(t('reqNo',{n:tName(reqMine.teacher_id)||'?'}))}</p>`:''}
+      <label class="f">${t('reqPick')}<select id="reqSel">${teacherList.map(x=>`<option value="${esc(x.id)}" ${x.id===reqSel?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
+      <button class="btn primary" id="reqSend" type="button" ${reqBusy?'disabled':''}>${reqBusy?t('authWait'):t('reqSend')}</button>`;
+  }
+  return `<div class="reqbox"><div class="label">🙋 ${t('reqT')}</div><p class="note">${t('reqN')}</p>${body}<p class="err" role="alert">${esc(reqMsg)}</p></div>`;
+}
+function bindReqBox(){
+  if($('#reqLogin')) $('#reqLogin').onclick=()=>openAuth('login');
+  if($('#reqAgain')) $('#reqAgain').onclick=()=>{reqMine={...reqMine,local:true};reqMsg='';render();};
+  if($('#reqSel')) $('#reqSel').onchange=e=>{reqSel=e.target.value;};
+  if($('#reqSend')) $('#reqSend').onclick=async()=>{
+    reqBusy=true; reqMsg=''; render();
+    try{
+      const r=await sb.rpc('request_unlock',{teacher:reqSel});
+      if(r.error) throw r.error;
+      reqMine={id:r.data,teacher_id:reqSel,status:'wait'};
+    }catch(e){ const m=String((e&&e.message)||e); reqMsg=/too many/i.test(m)?t('reqMany'):t('reqErr',{e:m.slice(0,80)}); }
+    reqBusy=false; render();
+  };
+}
+// 허락을 받으면: 허락받은 시각이 속한 수업 묶음이 끝날 때까지 열어요
+function applyApproval(r){
+  if(!r||r.status!=='ok'||!r.decided_at) return false;
+  const d=new Date(r.decided_at);
+  if(seoulDate(d)!==seoulDate()) return false;
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d);
+  const dm=(+p.find(x=>x.type==='hour').value%24)*60+(+p.find(x=>x.type==='minute').value);
+  const end=blockEndAt(dm); if(end==null) return false;
+  const nowMin=seoulClock().min; if(nowMin>=end) return false;
+  const until=Date.now()+(end-nowMin)*60e3;
+  if(+(lsGet('fm_unlock_until')||0)>=until-60e3) return false;
+  lsSet('fm_unlock_until',String(until)); lsSet('fm_unlock_req',r.id);
+  lastClass=null; unlockOpen=false;
+  renderChrome(); render(); toast(t('reqOk',{n:tName(r.teacher_id)||'',t:hhmm(end)}));
+  return true;
+}
+async function loadMyReq(){
+  if(!sb||!db||teacher||!uid) return;
+  try{
+    const r=await sb.from('unlock_requests').select('id,teacher_id,status,decided_at,created_at').eq('student_id',uid).eq('day',seoulDate()).order('created_at',{ascending:false}).limit(1).maybeSingle();
+    if(r.error) return;
+    const prev=JSON.stringify(reqMine&&{s:reqMine.status,i:reqMine.id});
+    if(!(reqMine&&reqMine.local&&r.data&&r.data.id===reqMine.id&&r.data.status==='wait')) reqMine=r.data||null;
+    if(reqMine&&reqMine.status==='ok'&&lsGet('fm_unlock_req')!==reqMine.id){ if(applyApproval(reqMine)) return; }
+    if(prev!==JSON.stringify(reqMine&&{s:reqMine.status,i:reqMine.id})&&classNow()&&!unlockOpen) render();
+  }catch(_){}
+}
+function startReqWatch(){
+  if(reqWatch||!sb||!db||teacher||!uid) return; reqWatch=true;
+  loadMyReq();
+  try{ sb.channel('req-me').on('postgres_changes',{event:'*',schema:'public',table:'unlock_requests',filter:'student_id=eq.'+uid},()=>loadMyReq()).subscribe(); }catch(_){}
+  setInterval(()=>{ if(classNow()) loadMyReq(); },15000);
+}
+
+/* ----- 선생님: 요청 알림 ----- */
+const hm=iso=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(iso));
+async function loadTeacherReqs(){
+  if(!sb||!teacher||!uid) return;
+  try{
+    const r=await sb.from('unlock_requests').select('id,student_name,student_grade,status,created_at').eq('teacher_id',uid).eq('day',seoulDate()).order('created_at',{ascending:false});
+    if(r.error) return;
+    tReqs=r.data||[];
+    const fresh=tReqs.filter(x=>x.status==='wait'&&!tReqSeen.has(x.id));
+    fresh.forEach(x=>tReqSeen.add(x.id));
+    if(fresh.length){ try{navigator.vibrate&&navigator.vibrate(150);}catch(_){} }
+    renderReqPop();
+    if(view==='teacher'&&$('#modal').hidden) render();
+  }catch(_){}
+}
+function renderReqPop(){
+  let box=$('#reqPop');
+  if(!box){ box=document.createElement('div'); box.id='reqPop'; box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
+  const wait=teacher?tReqs.filter(x=>x.status==='wait').slice(0,5):[];
+  document.title=(wait.length?`(${wait.length}) `:'')+document.title.replace(/^\(\d+\) /,'');
+  box.innerHTML=wait.map(x=>`<div class="rp" data-id="${esc(x.id)}"><p>🙋 ${esc(t('popT',{n:x.student_name}))}<small>${x.student_grade?esc(gl(x.student_grade))+' · ':''}${hm(x.created_at)}</small></p>
+    <div class="btnrow"><button class="btn primary" data-ok="1">${t('popAllow')}</button><button class="btn" data-ok="0">${t('popDeny')}</button></div></div>`).join('');
+  box.querySelectorAll('.rp button').forEach(b=>b.onclick=async()=>{
+    const card=b.closest('.rp'), id=card.dataset.id, ok=b.dataset.ok==='1';
+    const x=tReqs.find(v=>v.id===id); card.querySelectorAll('button').forEach(v=>v.disabled=true);
+    try{ const r=await sb.rpc('decide_unlock',{req:id,allow:ok}); if(r.error) throw r.error;
+      if(x) x.status=ok?'ok':'no'; toast(t(ok?'popDone':'popDenied',{n:x?x.student_name:''})); }
+    catch(e){ toast(t('reqErr',{e:String((e&&e.message)||e).slice(0,60)})); }
+    loadTeacherReqs();
+  });
+}
+function startTeacherWatch(){
+  if(tWatch||!sb||!teacher||!uid) return; tWatch=true;
+  loadTeacherReqs();
+  try{ sb.channel('req-teacher').on('postgres_changes',{event:'*',schema:'public',table:'unlock_requests',filter:'teacher_id=eq.'+uid},()=>loadTeacherReqs()).subscribe(); }catch(_){}
+  setInterval(loadTeacherReqs,15000);
+}
 function renderClassLock(cl){
   closeModal(); $('#inbox').hidden=true;
   const {min}=seoulClock();
@@ -1122,7 +1273,9 @@ function renderClassLock(cl){
       <p class="note">${t('lockOpen')}</p>
       ${unlockOpen?`<form id="unlockForm" class="unlockrow" novalidate><label class="f">${t('unlockL')}<input type="password" id="unlockIn" autocomplete="off" maxlength="20"></label><button class="btn primary" type="submit" ${unlockBusy?'disabled':''}>${t('unlockB')}</button></form><p class="err" role="alert">${esc(unlockMsg)}</p>`
         :`<button class="btn" id="unlockOpenB">🔑 ${t('unlockAsk')}</button>`}
+      ${sb?reqBoxHTML():''}
     </div></section>`;
+  bindReqBox();
   if($('#unlockOpenB')) $('#unlockOpenB').onclick=()=>{unlockOpen=true;unlockMsg='';render();setTimeout(()=>{const i=$('#unlockIn');if(i)i.focus();},30);};
   if($('#unlockForm')) $('#unlockForm').onsubmit=async e=>{
     e.preventDefault(); const code=$('#unlockIn').value.trim().toUpperCase(); if(!code) return;
@@ -1556,10 +1709,10 @@ function openAuth(mode){ authOpen=true; authRole=null; authMode=mode||'login'; a
 async function loadTeachers(){
   await loadSbLib();
   if(!initSb()&&!sb) return;
-  try{const r=await sb.from('teachers').select('name').order('created_at');if(!r.error){teacherList=r.data.map(x=>String(x.name||'').slice(0,30));if(authOpen&&!authRole&&!db)renderAuth();}}catch(_){}
+  try{const r=await sb.from('teachers').select('user_id,name').order('created_at');if(!r.error){teacherList=r.data.map(x=>({id:x.user_id,name:String(x.name||'').slice(0,30)}));if(authOpen&&!authRole&&!db)renderAuth();else if(classNow()&&!unlockOpen)render();}}catch(_){}
 }
 function teacherListHTML(){
-  return `<div class="tlist"><div class="label">${t('tListT')}${teacherList?` · ${teacherList.length}`:''}</div>${teacherList&&teacherList.length?`<ul>${teacherList.map(n=>`<li>🧑‍🏫 ${esc(n)}</li>`).join('')}</ul>`:`<p class="note">${teacherList?t('tListNone'):t('authWait')}</p>`}</div>`;
+  return `<div class="tlist"><div class="label">${t('tListT')}${teacherList?` · ${teacherList.length}`:''}</div>${teacherList&&teacherList.length?`<ul>${teacherList.map(x=>`<li>🧑‍🏫 ${esc(x.name)}</li>`).join('')}</ul>`:`<p class="note">${teacherList?t('tListNone'):t('authWait')}</p>`}</div>`;
 }
 function renderRolePick(){
   $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto"><div class="qtop"><b>HobbyMatch</b><span>🔑</span></div><div class="qbody">
@@ -1633,6 +1786,7 @@ function renderTeacher(){
   const stu=others.filter(o=>o&&o.name).sort((a,b)=>(a.grade-b.grade)||a.name.localeCompare(b.name));
   $('#app').innerHTML=`<section class="quiz lanyard gate" style="margin-inline:auto;max-width:560px"><div class="qtop"><b>🧑‍🏫 ${esc(t('tHomeT',{n:teacher.name}))}</b><span>${hhmm(seoulClock().min)}</span></div><div class="qbody">
     <div><div class="label">${t('tUnlockT')}</div><div class="tcode">${esc(tUnlock||'······')}</div><p class="note">${t('tUnlockN')}</p></div>
+    <div><div class="label">🙋 ${t('tReqT')}</div>${tReqs.length?`<ul class="treq">${tReqs.map(x=>`<li><span>${esc(x.student_name)} ${x.student_grade?`<span class="note">${esc(gl(x.student_grade))}</span>`:''} <span class="note">${hm(x.created_at)}</span></span><b class="${x.status}">${t(x.status==='ok'?'stOk':x.status==='no'?'stNo':'stWait')}</b></li>`).join('')}</ul>`:`<p class="note">${t('tReqNone')}</p>`}</div>
     <div><div class="label">${t('tNowT')}</div><p class="note">${pn?esc(t('tNowClass',{p:periodName(pn.i),t:hhmm(pn.end)})):t('tNowFree')}</p></div>
     <div><div class="label">${t('tStuT',{n:stu.length})}</div>${stu.length?`<ul class="tstu">${stu.map(o=>`<li>${esc(o.name)} <span class="note">${gl(o.grade)}</span></li>`).join('')}</ul>`:`<p class="note">${t('tStuNone')}</p>`}</div>
     ${teacherListHTML()}
@@ -1661,10 +1815,11 @@ async function startDb(d,id,opts){
     db=d; uid=id; sbEmail=opts.email||'';
     if(sb&&opts.noLock){
       try{const r=await sb.from('teachers').select('name').eq('user_id',id).maybeSingle();if(r.data){teacher={name:r.data.name};}}catch(_){}
+      if(!teacher){ loadTeachers(); setTimeout(startReqWatch,0); }
       if(teacher){
         localProfile=false; profile=null; view='teacher'; gate=null;
         sb.rpc('teacher_unlock_code').then(r=>{tUnlock=(r&&r.data)||'';if(view==='teacher')render();});
-        loadTeachers();
+        loadTeachers(); startTeacherWatch();
       }
     }
     // 로그인하기 전에 이 기기에서 만든 이름표가 있으면, 서버에 없을 때 올려 줘요
